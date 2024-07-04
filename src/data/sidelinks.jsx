@@ -1,0 +1,135 @@
+import {
+    IconAddressBook,
+    IconCreditCardPay,
+    IconFingerprint,
+    IconHeadset,
+    IconHome,
+    IconPlant2,
+    IconPuzzle,
+    IconReceiptRefund,
+    IconRosetteDiscount,
+    IconSettings,
+    IconSettingsCog,
+    IconShoppingBag,
+    IconUsers,
+  } from '@tabler/icons-react'
+
+  export const sidelinks = [
+    {
+      title: 'Home',
+      label: '',
+      href: '/',
+      icon: <IconHome  size={20} />,
+    },
+    {
+      title: 'Orders',
+      label: '3',
+      href: '/orders',
+      icon: <IconShoppingBag size={20} />,
+    },
+    {
+      title: 'Plans',
+      label: '',
+      href: '/plans',
+      icon: < IconPlant2  size={20} />,
+    },
+    {
+      title: 'Users',
+      label: '',
+      href: '/users',
+      icon: <IconUsers size={20} />,
+    },
+    {
+      title: 'Content Manage',
+      label: '',
+      href: '/content-manage',
+      icon: <IconSettingsCog size={20} />,
+    },
+    {
+      title: 'Discount',
+      label: '',
+      href: '/discount',
+      icon: < IconRosetteDiscount  size={20} />,
+    },
+    {
+      title: 'Support Ticket',
+      label: '9',
+      href: '/support-ticket',
+      icon: < IconHeadset  size={20} />,
+    },
+    {
+      title: 'Refund Request',
+      label: '2',
+      href: '/refund-request',
+      icon: < IconReceiptRefund  size={20} />,
+    },
+    {
+      title: 'Contact Form',
+      label: '5',
+      href: '/contact',
+      icon: <IconAddressBook  size={20} />,
+    },
+    {
+      title: 'Payment Gateways',
+      label: '',
+      href: '/payment',
+      icon: <IconCreditCardPay  size={20} />,
+    },
+    {
+      title: 'Extension',
+      label: '',
+      href: '/extension',
+      icon: <IconPuzzle  size={20} />,
+    },
+    {
+      title: 'Access Manage',
+      label: '',
+      href: '/access-manage',
+      icon: <IconFingerprint  size={20} />,
+    },
+     
+    // {
+    //   title: 'Authentication',
+    //   label: '',
+    //   href: '',
+    //   icon: <IconUserShield size={20} />,
+    //   sub: [
+    //     {
+    //       title: 'Sign In (email + password)',
+    //       label: '',
+    //       href: '/sign-in',
+    //       icon: <IconHexagonNumber1 size={20} />,
+    //     },
+    //     {
+    //       title: 'Sign In (Box)',
+    //       label: '',
+    //       href: '/sign-in-2',
+    //       icon: <IconHexagonNumber2 size={20} />,
+    //     },
+    //     {
+    //       title: 'Sign Up',
+    //       label: '',
+    //       href: '/sign-up',
+    //       icon: <IconHexagonNumber3 size={20} />,
+    //     },
+    //     {
+    //       title: 'Forgot Password',
+    //       label: '',
+    //       href: '/forgot-password',
+    //       icon: <IconHexagonNumber4 size={20} />,
+    //     },
+    //     {
+    //       title: 'OTP',
+    //       label: '',
+    //       href: '/otp',
+    //       icon: <IconHexagonNumber5 size={20} />,
+    //     },
+    //   ],
+    // },
+    {
+      title: 'Settings',
+      label: '',
+      href: '/settings',
+      icon: <IconSettings size={20} />,
+    },
+  ]
