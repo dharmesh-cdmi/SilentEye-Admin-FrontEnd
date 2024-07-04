@@ -5,6 +5,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CircleDollarSign, Plane } from "lucide-react";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
+import CommonSearch from "@/components/ui/search";
 
 export default function Orders() {
   // this is tabsConfig
@@ -16,6 +17,7 @@ export default function Orders() {
   ];
   return (
     <div>
+      <CommonSearch />
       <div className="w-full">
         <Tabs // This is Shadcn Tabs
           orientation="vertical"
