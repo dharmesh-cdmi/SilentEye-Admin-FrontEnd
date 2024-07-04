@@ -4,6 +4,7 @@ import LineChart from "./components/charts/LineChart";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import HomeCard from "./components/HomeCard";
 
+
 const home = () => {
   const testData = [
     {
@@ -35,6 +36,7 @@ const home = () => {
   const testCategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct"];
   return (
     <div>
+     
       <div className="flex items-center justify-start space-y-2">
         <div>
           <DateRangePicker showCompare={false}/>

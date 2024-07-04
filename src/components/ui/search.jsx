@@ -16,7 +16,7 @@ const CommonSearch = ({ onSearch, className}) => {
 
   return (
     <form onSubmit={handleSearch} className="">
-      <div className={cn(`w-full max-w-sm mx-auto flex justify-center items-center h-[40px] border border-gray-300  pl-3 rounded-lg`,className)}>
+      <div className={cn(`w-full max-w-sm mx-auto flex justify-center items-center h-[43px] border border-gray-300  pl-3 rounded-lg`,className)}>
       <Search className=' w-8 h-8'/>
         <input
           className="appearance-none bg-transparent border-none w-full text-gray-800 text-[16px] mr-3 py-1 px-3 leading-tight focus:outline-none"
