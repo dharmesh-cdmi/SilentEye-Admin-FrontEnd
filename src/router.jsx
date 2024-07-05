@@ -61,7 +61,7 @@ const router = createBrowserRouter([
           {
             path: '/refund-request',
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import('./pages/refund-request')).default,
             }),
           },
           {
