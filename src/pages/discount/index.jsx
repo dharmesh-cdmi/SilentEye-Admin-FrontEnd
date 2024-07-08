@@ -6,8 +6,9 @@ import { CircleDollarSign } from "lucide-react";
 import { columns } from "./components/columns";
 import Header from "@/components/common/header";
 import { data } from "./data";
+import AddCouponForm from "./components/add-coupon-form";
 
-export default function Orders() {
+export default function Discount() {
   // this is tabsConfig
   const tabsConfig = [
     { value: "all", icon: CircleDollarSign, label: "All" },
@@ -30,7 +31,8 @@ export default function Orders() {
             <DataTable data={data} columns={columns} />
           </TabsContent>
           <TabsContent value="active">
-            <DataTable data={data} columns={columns} />
+            {/* <DataTable data={data} columns={columns} /> */}
+            <AddCouponForm />
           </TabsContent>
           <TabsContent value="expired">
             <DataTable data={data} columns={columns} />

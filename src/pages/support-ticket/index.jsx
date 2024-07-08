@@ -10,17 +10,17 @@ import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import { data } from "./data";
 
-export default function Orders() {
+export default function SupportTicket() {
   // this is tabsConfig
   const tabsConfig = [
     { value: "all", icon: CircleDollarSign, label: "All" },
     { value: "pending", icon: OrdersIcon, label: "Pending" },
     { value: "answered", icon: RefundIcons, label: "Answered" },
-    { value: "closed", icon: Plane, label: "CLosed" },
+    { value: "closed", icon: Plane, label: "Closed" },
   ];
   return (
     <div>
-      <Header title="Orders">
+      <Header title="Support Ticket">
         <CommonSearch />
         <DateRangePicker />
         <CommonButton>

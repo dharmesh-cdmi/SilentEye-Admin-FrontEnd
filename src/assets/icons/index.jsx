@@ -390,21 +390,21 @@ const PersonQuestionMarkIcon = ({ className = "", size = 20 }) => (
   >
     <path
       d="M14.1667 13.205C14.1667 12.3553 14.9128 11.6665 15.8333 11.6665C16.7538 11.6665 17.5 12.3553 17.5 13.205C17.5 13.5113 17.4031 13.7966 17.2359 14.0363C16.7378 14.7508 15.8333 15.4323 15.8333 16.2819V16.6665M15.8252 18.3332H15.8327"
-      stroke="black"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M13.3333 18.3332H5.4924C4.20458 18.3332 3.18026 17.7065 2.26056 16.8303C0.37781 15.0366 3.46901 13.6032 4.64798 12.9012C6.77338 11.6356 9.33809 11.343 11.6667 12.0232"
-      stroke="black"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M13.75 5.4165C13.75 7.48757 12.0711 9.1665 10 9.1665C7.92893 9.1665 6.25 7.48757 6.25 5.4165C6.25 3.34544 7.92893 1.6665 10 1.6665C12.0711 1.6665 13.75 3.34544 13.75 5.4165Z"
-      stroke="black"
+      stroke="currentColor"
       strokeWidth="1.5"
     />
   </svg>
@@ -568,6 +568,45 @@ const EyeIcon = ({ className = "", size = 20 }) => (
   </svg>
 );
 
+const ValidityCalendarIcon = ({ className = "", size = 20 }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      d="M18 2V4M6 2V4"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M21.4997 11.5C21.4957 7.63364 21.4267 5.62803 20.2479 4.35364C18.9958 3 16.9805 3 12.95 3H11.05C7.01949 3 5.00424 3 3.75212 4.35364C2.5 5.70728 2.5 7.88594 2.5 12.2432V12.7568C2.5 17.1141 2.5 19.2927 3.75212 20.6464C4.95133 21.9428 6.80467 21.9976 10.5 21.9999"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M3 8H21"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M17.5 20.7143V22M17.5 20.7143C16.3432 20.7143 15.3241 20.1461 14.7263 19.2833M17.5 20.7143C18.6568 20.7143 19.6759 20.1461 20.2737 19.2833M14.7263 19.2833L13.5004 20.0714M14.7263 19.2833C14.3728 18.773 14.1667 18.1597 14.1667 17.5C14.1667 16.8403 14.3727 16.2271 14.7262 15.7169M20.2737 19.2833L21.4996 20.0714M20.2737 19.2833C20.6272 18.773 20.8333 18.1597 20.8333 17.5C20.8333 16.8403 20.6273 16.2271 20.2738 15.7169M17.5 14.2857C18.6569 14.2857 19.6761 14.854 20.2738 15.7169M17.5 14.2857C16.3431 14.2857 15.3239 14.854 14.7262 15.7169M17.5 14.2857V13M20.2738 15.7169L21.5 14.9286M14.7262 15.7169L13.5 14.9286"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 export {
   OrdersIcon,
   RefundIcons,
@@ -589,4 +628,5 @@ export {
   UseLimitIcon,
   UsedCouponLimitIcon,
   EyeIcon,
+  ValidityCalendarIcon,
 };

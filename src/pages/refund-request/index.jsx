@@ -9,8 +9,10 @@ import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import CommonButton from "@/components/ui/common-button";
+import EditRefundForm from "./components/edit-refund-form";
+import RefundSettingForm from "./components/refund-setting-form";
 
-export default function Orders() {
+export default function RefundRequest() {
   // this is tabsConfig
   const tabsConfig = [
     { value: "all", icon: CircleDollarSign, label: "All" },
@@ -22,7 +24,7 @@ export default function Orders() {
   ];
   return (
     <div>
-      <Header title="Orders">
+      <Header title="Refund Request">
         <CommonSearch />
         <DateRangePicker />
         <CommonButton>
@@ -41,10 +43,12 @@ export default function Orders() {
             <DataTable data={data} columns={columns} />
           </TabsContent>
           <TabsContent value="pending">
-            <DataTable data={data} columns={columns} />
+            {/* <DataTable data={data} columns={columns} /> */}
+            <EditRefundForm />
           </TabsContent>
           <TabsContent value="approved">
-            <DataTable data={data} columns={columns} />
+            {/* <DataTable data={data} columns={columns} /> */}
+            <RefundSettingForm />
           </TabsContent>
           <TabsContent value="rejected">
             <DataTable data={data} columns={columns} />
