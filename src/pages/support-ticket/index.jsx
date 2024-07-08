@@ -1,24 +1,22 @@
 import { DataTable } from "@/components/common/Table/data-table";
-import { data } from "./data";
-import { columns } from "./components/columns";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { CircleDollarSign, Download, Plane } from "lucide-react";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
+import CommonButton from "@/components/ui/common-button";
+import { columns } from "./components/columns";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
-import CommonButton from "@/components/ui/common-button";
+import { data } from "./data";
 
 export default function Orders() {
   // this is tabsConfig
   const tabsConfig = [
     { value: "all", icon: CircleDollarSign, label: "All" },
     { value: "pending", icon: OrdersIcon, label: "Pending" },
-    { value: "approved", icon: RefundIcons, label: "Approved" },
-    { value: "rejected", icon: Plane, label: "Rejected" },
-    { value: "refunded", icon: Plane, label: "Refunded" },
-    { value: "true-refunded", icon: Plane, label: "True Refunded" },
+    { value: "answered", icon: RefundIcons, label: "Answered" },
+    { value: "closed", icon: Plane, label: "CLosed" },
   ];
   return (
     <div>
@@ -43,16 +41,10 @@ export default function Orders() {
           <TabsContent value="pending">
             <DataTable data={data} columns={columns} />
           </TabsContent>
-          <TabsContent value="approved">
+          <TabsContent value="answered">
             <DataTable data={data} columns={columns} />
           </TabsContent>
-          <TabsContent value="rejected">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="refunded">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="true-refunded">
+          <TabsContent value="closed">
             <DataTable data={data} columns={columns} />
           </TabsContent>
         </Tabs>

@@ -1,18 +1,16 @@
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-
 import {
   ActionIcon,
   CreatedIcon,
-  DolarIcon,
   EditIcon,
   EmailIcon,
+  MessageIcon,
   PersonQuestionMarkIcon,
-  PlanIcon,
   PointerIcon,
   TrashIcon,
 } from "@/assets/icons";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns = [
   {
@@ -55,16 +53,16 @@ export const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: "requestId",
+    accessorKey: "ticketId",
     header: () => (
-      <div className="inline-flex items-center gap-2 text-base text-black font-medium opacity-60">
-        Req.ID
+      <div className="inline-flex items-center gap-2 text-base text-nowrap text-black font-medium opacity-60">
+        Ticket ID
       </div>
     ),
     cell: ({ row }) => {
       return (
         <div className="text-base text-black font-medium opacity-60">
-          {row.getValue("requestId")}
+          #{row.getValue("ticketId")}
         </div>
       );
     },
@@ -99,40 +97,8 @@ export const columns = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="text-nowrap text-base text-black font-medium">
+        <div className="flex space-x-2 text-base text-nowrap">
           {row.getValue("email")}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "plan",
-    header: () => (
-      <div className="inline-flex items-center gap-2 text-base text-black font-medium">
-        <PlanIcon />
-        Plan
-      </div>
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="text-base text-black font-medium">
-          {row.getValue("plan")}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "amount",
-    header: () => (
-      <div className="inline-flex items-center gap-2 text-base text-black font-medium">
-        <DolarIcon />
-        Amount
-      </div>
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-end text-base text-black font-medium">
-          <span>$</span><h3 className="text-xl">{row.getValue("amount")}</h3><span>.00</span>
         </div>
       );
     },
@@ -156,6 +122,22 @@ export const columns = [
     },
   },
   {
+    accessorKey: "message",
+    header: () => (
+      <div className="inline-flex items-center gap-2 text-base text-black font-medium">
+        <MessageIcon />
+        Message
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
+          {row.getValue("message")}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "createdAt",
     header: () => (
       <div className="inline-flex items-center gap-2 text-base text-black font-medium">
@@ -167,6 +149,22 @@ export const columns = [
       return (
         <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
           {row.getValue("createdAt")}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "lastReply",
+    header: () => (
+      <div className="inline-flex items-center gap-2 text-base text-nowrap text-black font-medium">
+        <MessageIcon />
+        Last Reply
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
+          {row.getValue("lastReply")}
         </div>
       );
     },

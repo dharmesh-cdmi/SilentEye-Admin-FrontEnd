@@ -141,7 +141,7 @@ export const columns = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+        <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
           {row.getValue("createdAt")}
         </div>
       );
