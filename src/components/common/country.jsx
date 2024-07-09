@@ -4,6 +4,7 @@ import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import ReactCountryFlag from "react-country-flag";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const countries = [
   { id: "GB", label: "United Kingdom", icon: "GB" },
@@ -41,32 +42,34 @@ export default function Country() {
     setSearchQuery(event.target.value);
   };
 
-//   const handleSubmit = () => {
-//     alert(`Selected countries: ${JSON.stringify(selectedCountries, null, 2)}`);
-//   };
+  //   const handleSubmit = () => {
+  //     alert(`Selected countries: ${JSON.stringify(selectedCountries, null, 2)}`);
+  //   };
 
   const filteredCountries = countries.filter((country) =>
     country.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="relative">
-      <div
-        className={cn(
-          "cursor-pointer h-[43px] max-w-[146px] rounded-lg border flex justify-center px-4 items-center space-x-2"
-        )}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <WebIcon size={25} />
-        <p className="text-[16px] font-medium">Country</p>
-        {isOpen ? (
-          <ChevronUp className="w-6 h-6" />
-        ) : (
-          <ChevronDown className="w-6 h-6" />
-        )}
-      </div>
-      {isOpen && (
-        <div className="absolute border -right-2 z-10 mt-2 min-w-[280px] max-w-[320px] rounded-xl bg-white shadow-lg ">
+    <Popover>
+      <PopoverTrigger asChild>
+        <div
+          className={cn(
+            "cursor-pointer h-[43px] max-w-[146px] rounded-lg border flex justify-center px-4 items-center space-x-2"
+          )}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <WebIcon size={25} />
+          <p className="text-[16px] font-medium">Country</p>
+          {isOpen ? (
+            <ChevronUp className="w-6 h-6" />
+          ) : (
+            <ChevronDown className="w-6 h-6" />
+          )}
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="max-w-[320px]">
+        <div className=" ">
           <div className="w-full border-b mb-2 ">
             <div className="flex justify-center items-center px-4 w-full">
               <Search className="w-6 h-6 text-gray-400" />
@@ -130,7 +133,7 @@ export default function Country() {
             ))}
           </div>
         </div>
-      )}
-    </div>
+      </PopoverContent>
+    </Popover>
   );
 }
