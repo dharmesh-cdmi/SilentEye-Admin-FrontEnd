@@ -139,8 +139,8 @@ const LoginIcon = ({ className = "", size = 20 }) => (
 
 const ChangePassIcon = ({ className = "", size = 20 }) => (
   <svg
-    width={32}
-    height={32}
+    width={size}
+    height={size}
     viewBox="0 0 32 32"
     // width={size}
     // height={size}
