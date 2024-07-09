@@ -607,6 +607,37 @@ const ValidityCalendarIcon = ({ className = "", size = 20 }) => (
   </svg>
 );
 
+const SubjectIcon = ({ className = "", size = 20 }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    fill="none"
+  >
+    <path
+      d="M2.08334 9.99967C2.08334 6.26772 2.08334 4.40175 3.24271 3.24237C4.40209 2.08301 6.26806 2.08301 10 2.08301C13.7319 2.08301 15.5979 2.08301 16.7573 3.24237C17.9167 4.40175 17.9167 6.26772 17.9167 9.99967C17.9167 13.7316 17.9167 15.5976 16.7573 16.757C15.5979 17.9163 13.7319 17.9163 10 17.9163C6.26806 17.9163 4.40209 17.9163 3.24271 16.757C2.08334 15.5976 2.08334 13.7316 2.08334 9.99967Z"
+      stroke="black"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M15 15H8.33334"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M15 11.667H12.5M10 11.667H8.33334"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export {
   OrdersIcon,
   RefundIcons,
@@ -629,4 +660,5 @@ export {
   UsedCouponLimitIcon,
   EyeIcon,
   ValidityCalendarIcon,
+  SubjectIcon,
 };
