@@ -6,6 +6,9 @@ import {
 } from "@/assets/icons";
 import Header from "@/components/common/header";
 import { Ban, XCircleIcon } from "lucide-react";
+import Conversiation from "./components/conversiation";
+import { chats } from "./data";
+
 export default function SupportTicketView() {
   return (
     <div>
@@ -27,7 +30,7 @@ export default function SupportTicketView() {
         </div>
       </Header>
 
-      <div className="w-full flex flex-col divide-y-[1.5px] border rounded-lg overflow-hidden">
+      <div className="w-full flex flex-col divide-y-[1.5px] border rounded-xl overflow-hidden">
         <div className="flex justify-between gap-4">
           <div className="inline-flex items-center text-xl px-5">
             hello@gmail.com
@@ -47,7 +50,19 @@ export default function SupportTicketView() {
             </button>
           </div>
         </div>
-        <div className="p-10">Conversiation</div>
+        <div className="">
+          <Conversiation chats={chats} />
+
+          <div className="flex justify-between border-t">
+            <input
+              className="w-full py-3 px-4"
+              type="text"
+              placeholder="Type Message Here"
+            />
+
+            <button className="px-4 bg-black text-white">Reply</button>
+          </div>
+        </div>
       </div>
     </div>
   );

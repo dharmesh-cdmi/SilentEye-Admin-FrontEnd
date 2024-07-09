@@ -67,6 +67,12 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: "/support-ticket/open",
+            lazy: async () => ({
+              Component: (await import("./pages/support-ticket-view")).default,
+            }),
+          },
+          {
             path: "/refund-request",
             lazy: async () => ({
               Component: (await import("./pages/refund-request")).default,
