@@ -253,7 +253,7 @@ export const DateRangePicker = ({
 
   const PresetButton = ({ preset, label, isSelected }) => (
     <Button
-      className={cn(
+      className={cn("w-40 flex justify-start",
         isSelected &&
           "pointer-events-none border rounded-lg w-40 flex items-center justify-between "
       )}
@@ -318,8 +318,8 @@ export const DateRangePicker = ({
               </div>
             )}
           </div>
-          <div className="pl-1 opacity-60 -mr-2 scale-125">
-            {isOpen ? <ChevronUp width={24} /> : <ChevronDown width={24} />}
+          <div className="pl-3 opacity-60 -mr-2 scale-125">
+            {isOpen ? <ChevronUp width={20} /> : <ChevronDown width={20} />}
           </div>
         </Button>
       </PopoverTrigger>

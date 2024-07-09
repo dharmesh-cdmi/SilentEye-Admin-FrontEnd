@@ -9,6 +9,7 @@ import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import CommonButton from "@/components/ui/common-button";
+import Country from "@/components/common/country";
 
 export default function Orders() {
   // this is tabsConfig
@@ -22,6 +23,7 @@ export default function Orders() {
     <div>
       <Header title="Orders">
         <CommonSearch />
+        <Country />
         <DateRangePicker />
         <CommonButton>
         <Download className="w-7 h-7"/>
