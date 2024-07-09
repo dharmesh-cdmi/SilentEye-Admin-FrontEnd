@@ -10,6 +10,7 @@ import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import RefundModal from "@/components/common/modals/refund-modal";
+import { RightDrawer } from "@/components/common/drawers/common-right-drawer";
 
 export const columns = [
   {
@@ -133,6 +134,8 @@ export const columns = [
     cell: ({ row }) => {
       const [open, setOpen] = useState(false);
       const [ropen, setROpen] = useState(false);
+      const [dopen, setDOpen] = useState(false);
+
       return (
         <>
           <div className="flex space-x-2 justify-center">
@@ -153,9 +156,18 @@ export const columns = [
             >
               <Trash2 className="w-5 h-5 text-red-400 hover:text-red-600" />
             </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="rounded-lg"
+              onClick={() => setDOpen(true)}
+            >
+              <Trash2 className="w-5 h-5 text-red-400 hover:text-red-600" />
+            </Button>
           </div>
           <RefundModal open={ropen} setOpen={setROpen} />
           <DeleteModal open={open} setOpen={setOpen} />
+          <RightDrawer open={dopen} setOpen={setDOpen} />
         </>
       );
     },

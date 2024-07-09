@@ -225,6 +225,15 @@ const RefundIcon = ({ className = "", size = 20 }) => (
   </svg>
 );
 
+const CheckIcon = ({ className = "", size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 14 11" className={className}
+  stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.1665 7.08325C1.1665 7.08325 2.4165 7.08325 4.08317 9.99992C4.08317 9.99992 8.7155 2.36103 12.8332 0.833252" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+);
+
+
+
 export {
   OrdersIcon,
   RefundIcons,
@@ -234,4 +243,5 @@ export {
   LoginIcon,
   ChangePassIcon,
   WebIcon,
+  CheckIcon
 };

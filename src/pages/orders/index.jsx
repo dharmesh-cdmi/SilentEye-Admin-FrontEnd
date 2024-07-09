@@ -21,12 +21,12 @@ export default function Orders() {
   ];
   return (
     <div>
-      <Header title="Orders">
+      <Header title="Orders" className=" ">
         <CommonSearch />
         <Country />
         <DateRangePicker />
         <CommonButton>
-        <Download className="w-7 h-7"/>
+          <Download className="w-6 h-6" />
         </CommonButton>
       </Header>
 
