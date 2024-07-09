@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import ChartDropdown from "@/components/common/chart-dropdown";
 
 ChartJS.register(
   LineElement,
@@ -26,8 +27,27 @@ const LineChart = ({ data, categories }) => {
   const [chartsData, setChartData] = useState({});
   const labels = useMemo(() => categories, [categories]);
   const [loading, setLoading] = useState(true);
+  const [selectedChartList, setSelectedChartList] = useState([]);
 
   const colors = [
+    "#245CF6",
+    "#FB3E24",
+    "#FFA901",
+    "#09AB19",
+    "#595959",
+    "#AC24FF",
+    "#245CF6",
+    "#FB3E24",
+    "#FFA901",
+    "#09AB19",
+    "#595959",
+    "#AC24FF",
+    "#245CF6",
+    "#FB3E24",
+    "#FFA901",
+    "#09AB19",
+    "#595959",
+    "#AC24FF",
     "#245CF6",
     "#FB3E24",
     "#FFA901",
@@ -37,7 +57,11 @@ const LineChart = ({ data, categories }) => {
   ];
 
   const chartDataConfig = (data) => {
-    const datasets = data.map((dataset, index) => ({
+    const filteredData = data.filter((dataset) =>
+      selectedChartList.includes(dataset.label)
+    );
+
+    const datasets = filteredData.map((dataset, index) => ({
       label: dataset.label,
       data: dataset.data,
       fill: true,
@@ -66,6 +90,7 @@ const LineChart = ({ data, categories }) => {
 
   useEffect(() => {
     if (data?.length > 0) {
+      setSelectedChartList(data.map((dataset) => dataset.label)); // Set all items as selected initially
       chartDataConfig(data);
       if (data[0]?.data?.length > 0) {
         setLoading(false);
@@ -73,25 +98,16 @@ const LineChart = ({ data, categories }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    chartDataConfig(data);
+  }, [selectedChartList]);
+  
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true,
-        padding: 10,
-        align: "center",
-        fontFamily: "Arial",
-        fontWeight: 800,
-        fontSize: 20,
-        labels: {
-        //   usePointStyle: true,
-          boxWidth: 16, // Width of colored box
-          padding: 3, // Padding around labels
-          fontColor: "#000", // Color of labels
-          borderRadius: 20,
-          usePointStyle: false, 
-        },
+        display: false,
       },
       tooltip: {
         enabled: true,
@@ -139,6 +155,22 @@ const LineChart = ({ data, categories }) => {
     },
   };
 
+  const renderCustomLegend = () => (
+    <div className="flex flex-wrap">
+      {data
+        .filter((dataset) => selectedChartList.includes(dataset.label))
+        .map((dataset, index) => (
+          <div key={dataset.label} className="flex items-center mr-4">
+            <div
+              style={{ backgroundColor: colors[index] }}
+              className="w-4 h-4 mr-2 rounded-md"
+            ></div>
+            <span className="font-semibold ">{dataset.label}</span>
+          </div>
+        ))}
+    </div>
+  );
+
   return (
     <>
       {loading ? (
@@ -147,17 +179,27 @@ const LineChart = ({ data, categories }) => {
         </div>
       ) : (
         <>
-          {data[0]?.data?.length > 0 ? (
-            <div className="overflow-x-auto custom-scrollbar">
-              <div className="min-w-[650px] min-h-[290px]" >
-                <Line data={chartsData} options={options} />
+          <div className="">
+            <div className="flex justify-between w-full">
+              <div>{renderCustomLegend()}</div>
+              <ChartDropdown
+                data={data}
+                selectedChartList={selectedChartList}
+                setSelectedChartList={setSelectedChartList}
+              />
+            </div>
+            {data[0]?.data?.length > 0 ? (
+              <div className="overflow-x-auto custom-scrollbar">
+                <div className="min-w-[650px] min-h-[270px] py-2">
+                  <Line data={chartsData} options={options} />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="w-full h-full flex justify-center items-center text-white">
-              No Data Found!
-            </div>
-          )}
+            ) : (
+              <div className="w-full h-full flex justify-center items-center text-white">
+                No Data Found!
+              </div>
+            )}
+          </div>
         </>
       )}
     </>

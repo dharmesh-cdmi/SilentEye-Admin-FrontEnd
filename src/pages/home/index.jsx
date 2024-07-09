@@ -45,7 +45,7 @@ const home = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full bg-white border rounded-xl h-[324px] p-5 shadow-md mt-[30px]">
+      <div className="w-full bg-white border rounded-xl h-[340px] p-5 shadow-md mt-[30px]">
         <LineChart data={testData} categories={testCategories} />
       </div>
 
