@@ -1,118 +1,118 @@
-import { createBrowserRouter } from 'react-router-dom'
-import AppOutlet from './components/outlets/Appoutlet'
-import AuthorizedOutlet from './components/outlets/AuthorizedOutlet'
-import GeneralError from './pages/errors/general-error'
-import NotFoundError from './pages/errors/not-found-error'
+import { createBrowserRouter } from "react-router-dom";
+import AppOutlet from "./components/outlets/Appoutlet";
+import AuthorizedOutlet from "./components/outlets/AuthorizedOutlet";
+import GeneralError from "./pages/errors/general-error";
+import NotFoundError from "./pages/errors/not-found-error";
+import Login from "./pages/login";
 
 const router = createBrowserRouter([
   // Auth routes
   {
-    path: '/',
-    element: <AppOutlet />, 
+    path: "/",
+    element: <AppOutlet />,
     children: [
-      //auth layout 
-      //main layout 
+      //auth layout
+      //main layout
       {
-        path: "", 
-        element: <AuthorizedOutlet />, 
+        path: "",
+        element: <AuthorizedOutlet />,
         children: [
           {
-            path: "/", 
+            path: "/changePass",
             lazy: async () => ({
-              Component: (await import('./pages/home')).default,
+              Component: (await import("./components/common/change-pass"))
+                .default,
             }),
           },
           {
-              path: '/orders',
-              lazy: async () => ({
-                Component: (await import('./pages/orders')).default,
-              }),
-          },
-          {
-            path: '/plans',
+            path: "/",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/home")).default,
             }),
           },
           {
-            path: '/users',
+            path: "/orders",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/content-manage',
+            path: "/plans",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/discount',
+            path: "/users",
             lazy: async () => ({
-              Component: (await import('./pages/discount')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/support-ticket',
+            path: "/content-manage",
             lazy: async () => ({
-              Component: (await import('./pages/support-ticket')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/support-ticket/open',
+            path: "/discount",
             lazy: async () => ({
-              Component: (await import('./pages/support-ticket-view')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/refund-request',
+            path: "/support-ticket",
             lazy: async () => ({
-              Component: (await import('./pages/refund-request')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/contact',
+            path: "/refund-request",
             lazy: async () => ({
-              Component: (await import('./pages/contact-form')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/payment',
+            path: "/contact",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/extension',
+            path: "/payment",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/access-manage',
+            path: "/extension",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
           {
-            path: '/settings',
+            path: "/access-manage",
             lazy: async () => ({
-              Component: (await import('./pages/orders')).default,
+              Component: (await import("./pages/orders")).default,
             }),
           },
-
-
-        ]
-      }
-    ]
+          {
+            path: "/settings",
+            lazy: async () => ({
+              Component: (await import("./pages/orders")).default,
+            }),
+          },
+        ],
+      },
+    ],
   },
 
   // Error routes
-  { path: '/500', Component: GeneralError },
-  { path: '/404', Component: NotFoundError },
+  { path: "/500", Component: GeneralError },
+  { path: "/404", Component: NotFoundError },
 
   // Fallback 404 route
-  { path: '*', Component: NotFoundError },
-])
+  { path: "*", Component: NotFoundError },
+]);
 
-export default router
+export default router;
