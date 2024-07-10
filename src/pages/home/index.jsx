@@ -4,7 +4,6 @@ import LineChart from "./components/charts/LineChart";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import HomeCard from "./components/HomeCard";
 
-
 const home = () => {
   const testData = [
     {
@@ -36,7 +35,6 @@ const home = () => {
   const testCategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct"];
   return (
     <div>
-     
       <div className="flex items-center justify-start space-y-2">
         <div>
           <DateRangePicker showCompare={false}/>
@@ -47,7 +45,7 @@ const home = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full bg-white border rounded-xl h-[324px] p-5 shadow-md mt-[30px]">
+      <div className="w-full bg-white border rounded-xl h-[340px] p-5 shadow-md mt-[30px]">
         <LineChart data={testData} categories={testCategories} />
       </div>
 
