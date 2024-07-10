@@ -138,15 +138,18 @@ export const columns = [
         Action
       </div>
     ),
-    cell: () => (
-      <div className="flex justify-center gap-1.5">
-        <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
-          <EditIcon />
-        </Button>
-        <Button className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200">
-          <TrashIcon />
-        </Button>
-      </div>
-    ),
+    cell: () => {
+      return (
+        <div className="flex justify-center gap-1.5">
+          <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
+            <EditIcon />
+          </Button>
+
+          <Button className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200">
+            <TrashIcon />
+          </Button>
+        </div>
+      );
+    },
   },
 ];

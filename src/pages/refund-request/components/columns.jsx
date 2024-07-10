@@ -13,6 +13,18 @@ import {
   TrashIcon,
 } from "@/assets/icons";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+const statusVariants = (status) => {
+  const variants = {
+    pending: "bg-yellow-500",
+    approved: "bg-green-500",
+    rejected: "bg-red-500",
+    refunded: "bg-gray-500",
+    trueRefunded: "bg-orange-500",
+  };
+  return variants[status];
+};
 
 export const columns = [
   {
@@ -78,11 +90,18 @@ export const columns = [
       </div>
     ),
     cell: ({ row }) => {
+      const status = row.getValue("status");
       return (
         <div className="flex justify-center text-nowrap">
           {
-            <Badge variant="outline" className="text-base">
-              {row.getValue("status")}
+            <Badge
+              variant="outline"
+              className={cn(
+                "font-normal text-base text-white capitalize px-3.5 py-1 border-none",
+                statusVariants(status)
+              )}
+            >
+              {status}
             </Badge>
           }
         </div>
@@ -132,7 +151,9 @@ export const columns = [
     cell: ({ row }) => {
       return (
         <div className="flex items-end text-base text-black font-medium">
-          <span>$</span><h3 className="text-xl">{row.getValue("amount")}</h3><span>.00</span>
+          <span>$</span>
+          <h3 className="text-xl">{row.getValue("amount")}</h3>
+          <span>.00</span>
         </div>
       );
     },
@@ -148,7 +169,7 @@ export const columns = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-start text-nowrap text-base text-black font-medium">
-          <Badge variant="outline" className="text-base">
+          <Badge className={cn("text-base font-normal bg-gray-500")}>
             {row.getValue("type")}
           </Badge>
         </div>
