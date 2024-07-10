@@ -51,11 +51,17 @@ export default function Country() {
   );
 
   return (
-    <Popover>
+    <Popover open={isOpen}
+    onOpenChange={(open) => {
+      if (!open) {
+        // resetValues();
+      }
+      setIsOpen(open);
+    }}>
       <PopoverTrigger asChild>
         <div
           className={cn(
-            "cursor-pointer h-[43px] max-w-[146px] rounded-lg border flex justify-center px-4 items-center space-x-2"
+            "cursor-pointer h-[43px]  rounded-lg border flex justify-center px-4 items-center space-x-2"
           )}
           onClick={() => setIsOpen(!isOpen)}
         >
