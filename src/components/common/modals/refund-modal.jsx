@@ -1,4 +1,5 @@
-import { trash } from "@/assets";
+import { refund } from "@/assets";
+import { RefundIcons } from "@/assets/icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,24 +10,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
 
-const DeleteModal = ({ entry = "delete click", open, setOpen }) => {
+const RefundModal = ({ entry = "delete click", open, setOpen }) => {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent className="">
         <AlertDialogHeader>
           <AlertDialogTitle className="font-semibold text-[22px] border-b pb-2">
-            Do You Want to Delete?
+            Do You Want initiate Refund ?
           </AlertDialogTitle>
           <AlertDialogDescription className="h-[106px] w-[420px]">
             <div className="flex space-x-5 h-full w-full justify-center items-center">
-              <img src={trash} alt="trash" className="w-[64px] h-[64px]" />
+              <img src={refund} alt="trash" className="w-[64px] h-[64px]" />
               <div className="space-y-2">
-                <h3 className="font-semibold text-[20px]">Delete ? </h3>
+                <h3 className="font-semibold text-[20px]">Refund ? </h3>
                 <p className="text-[18px] text-gray-500 ">
                   {" "}
-                  Are you sure you want to permanently delete ?
+                  Are you sure you want to initiate Refund ?
                 </p>
               </div>
             </div>
@@ -37,13 +37,13 @@ const DeleteModal = ({ entry = "delete click", open, setOpen }) => {
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-          className="w-[80%] h-[40px] bg-red-200 hover:bg-red-300 border border-red-700 text-black text-[20px] flex justify-center items-center space-x-4"
+          className="w-[80%] h-[40px] text-[20px] flex justify-center items-center space-x-4"
             onClick={async () => {
               // await deleteEntry(entry);
               console.log("Delete Click ", entry);
             }}
           >
-            <Trash2 className="w-6 h-6 text-red-500"/> <h3 className="">Delete Permanently</h3>
+            <RefundIcons size={20}/> <h3 className="">Initiate Refund</h3>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -51,4 +51,4 @@ const DeleteModal = ({ entry = "delete click", open, setOpen }) => {
   );
 };
 
-export default DeleteModal;
+export default RefundModal;

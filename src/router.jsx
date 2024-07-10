@@ -57,31 +57,31 @@ const router = createBrowserRouter([
           {
             path: "/discount",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/discount")).default,
             }),
           },
           {
             path: "/support-ticket",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/support-ticket")).default,
             }),
           },
           {
             path: "/refund-request",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/refund-request")).default,
             }),
           },
           {
             path: "/contact",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/contact-form")).default,
             }),
           },
           {
             path: "/payment",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/payment-gateway")).default,
             }),
           },
           {

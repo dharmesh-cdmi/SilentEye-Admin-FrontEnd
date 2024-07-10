@@ -87,7 +87,7 @@ function NavLink({ title, icon, label, href, closeNav, subLink = false }) {
           {title}
           </div>
           {label && (
-            <div className={`ml-2 ${checkActiveNav(href) ? "text-white " : "text-black bg-[#b9ffc070]"} border-2 border-[#0BE320]   w-[28px] h-[28px] rounded-lg items-center text-center flex justify-center  text-[12px] text-primary-foreground `}>
+            <div className={`ml-2 ${checkActiveNav(href) ? "text-white " : "text-gray-600 bg-[#b9ffc070]"} border-2 border-[#0BE320]   w-[28px] h-[28px] rounded-lg items-center text-center flex justify-center  text-[12px] `}>
               {label}
             </div>
           )}

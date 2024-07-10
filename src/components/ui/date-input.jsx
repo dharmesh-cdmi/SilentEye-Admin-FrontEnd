@@ -201,7 +201,7 @@ const DateInput = ({ value, onChange }) => {
           }
         }}
         onBlur={handleBlur('month')}
-        className="p-0 outline-none w-6 border-none text-center"
+        className="p-0 outline-none w-6 border-none text-center py-2"
         placeholder="M"
       />
       <span className="opacity-20 -mx-px">/</span>
