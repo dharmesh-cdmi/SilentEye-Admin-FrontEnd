@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -14,6 +15,9 @@ import {
 } from "@/assets/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import DeleteModal from "@/components/common/modals/delet-modal";
+import { useState } from "react";
+import EditRefundForm from "./edit-refund-form";
 
 const statusVariants = (status) => {
   const variants = {
@@ -200,15 +204,32 @@ export const columns = [
         Action
       </div>
     ),
-    cell: () => (
-      <div className="flex justify-center gap-1.5">
-        <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
-          <EditIcon />
-        </Button>
-        <Button className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200">
-          <TrashIcon />
-        </Button>
-      </div>
-    ),
+    cell: () => {
+      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+      return (
+        <>
+          <div className="flex justify-center gap-1.5">
+            <EditRefundForm>
+              <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
+                <EditIcon />
+              </Button>
+            </EditRefundForm>
+
+            <Button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200"
+            >
+              <TrashIcon />
+            </Button>
+          </div>
+
+          <DeleteModal
+            open={isDeleteModalOpen}
+            setOpen={setIsDeleteModalOpen}
+          />
+        </>
+      );
+    },
   },
 ];

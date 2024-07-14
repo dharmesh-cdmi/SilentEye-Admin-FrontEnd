@@ -5,32 +5,14 @@ import CustomTabs from "@/components/common/custom-tabs";
 import { CircleDollarSign } from "lucide-react";
 import { columns } from "./components/columns";
 import Header from "@/components/common/header";
-import CouponForm from "./components/coupon-form";
 import { data } from "./data";
 
 export default function Discount() {
-  // this is tabsConfig
   const tabsConfig = [
     { value: "all", icon: CircleDollarSign, label: "All" },
     { value: "active", icon: OrdersIcon, label: "Active" },
     { value: "expired", icon: RefundIcons, label: "Expired" },
   ];
-
-  const initialValues = {
-    coupon: "",
-    discount: "",
-    validityDate: "",
-    validityTime: "",
-    limit: "",
-  };
-
-  const handleAddSubmit = (values) => {
-    console.log("Adding coupon:", values);
-  };
-
-  const handleEditSubmit = (values) => {
-    console.log("Editing coupon:", values);
-  };
 
   return (
     <div>
@@ -47,22 +29,10 @@ export default function Discount() {
             <DataTable data={data} columns={columns} />
           </TabsContent>
           <TabsContent value="active">
-            <CouponForm
-              initialValues={{
-                coupon: "SUMMER2024",
-                discount: 20,
-                validityDate: "2024-07-31",
-                validityTime: "12:00",
-                limit: 100,
-              }}
-              onSubmit={handleEditSubmit}
-            />
+            <DataTable data={data} columns={columns} />
           </TabsContent>
           <TabsContent value="expired">
-            <CouponForm
-              initialValues={initialValues}
-              onSubmit={handleAddSubmit}
-            />
+            <DataTable data={data} columns={columns} />
           </TabsContent>
         </Tabs>
       </div>

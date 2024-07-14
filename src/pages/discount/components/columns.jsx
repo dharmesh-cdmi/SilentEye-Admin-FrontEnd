@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   ActionIcon,
   CouponIcon,
@@ -10,8 +11,11 @@ import {
   UseLimitIcon,
   ValidityIcon,
 } from "@/assets/icons";
+import DeleteModal from "@/components/common/modals/delet-modal";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
+import CouponForm from "./coupon-form";
 
 export const columns = [
   {
@@ -125,7 +129,10 @@ export const columns = [
       let isLive = row.getValue("isLive");
       return (
         <div className="text-base font-medium">
-          <Switch className="bg-green-500" checked={isLive} />
+          <Switch
+            className="data-[state=checked]:bg-[#34C759]"
+            defaultChecked={isLive}
+          />
         </div>
       );
     },
@@ -139,16 +146,29 @@ export const columns = [
       </div>
     ),
     cell: () => {
+      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
       return (
-        <div className="flex justify-center gap-1.5">
-          <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
-            <EditIcon />
-          </Button>
+        <>
+          <div className="flex justify-center gap-1.5">
+            <CouponForm>
+              <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
+                <EditIcon />
+              </Button>
+            </CouponForm>
 
-          <Button className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200">
-            <TrashIcon />
-          </Button>
-        </div>
+            <Button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200"
+            >
+              <TrashIcon />
+            </Button>
+          </div>
+
+          <DeleteModal
+            open={isDeleteModalOpen}
+            setOpen={setIsDeleteModalOpen}
+          />
+        </>
       );
     },
   },

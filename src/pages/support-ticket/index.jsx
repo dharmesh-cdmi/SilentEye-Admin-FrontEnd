@@ -1,10 +1,8 @@
 import { DataTable } from "@/components/common/Table/data-table";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { CircleDollarSign, Download, Plane } from "lucide-react";
+import { CircleDollarSign, Plane } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
-import CommonButton from "@/components/ui/common-button";
 import { columns } from "./components/columns";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
@@ -22,10 +20,6 @@ export default function SupportTicket() {
     <div>
       <Header title="Support Ticket">
         <CommonSearch />
-        <DateRangePicker />
-        <CommonButton>
-          <Download className="w-7 h-7" />
-        </CommonButton>
       </Header>
 
       <div className="w-full">
