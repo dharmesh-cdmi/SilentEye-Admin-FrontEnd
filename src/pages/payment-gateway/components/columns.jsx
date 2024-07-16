@@ -18,7 +18,7 @@ export const columns = [
   {
     accessorKey: "name",
     header: () => (
-      <div className="!min-w-full w-full inline-flex items-center gap-2 text-base text-black font-medium">
+      <div className="min-w-fit w-full flex flex-nowrap text-nowrap items-center gap-2 text-base text-black font-medium">
         <PaymentGateWayIcon />
         Payment Gateways
       </div>
@@ -35,7 +35,7 @@ export const columns = [
   {
     accessorKey: "status",
     header: () => (
-      <div className="inline-flex items-center gap-2 text-base text-nowrap text-black font-medium">
+      <div className="flex items-center justify-end gap-2 text-base text-nowrap text-black font-medium">
         <EyeIcon />
         Live
       </div>
@@ -44,7 +44,7 @@ export const columns = [
       const status = row.getValue("status");
       const isLive = status === "live";
       return (
-        <div className="text-base font-medium">
+        <div className="flex justify-end text-base font-medium">
           <Switch
             className="data-[state=checked]:bg-[#34C759]"
             defaultChecked={isLive}
@@ -56,7 +56,7 @@ export const columns = [
   {
     id: "actions",
     header: () => (
-      <div className="max-w-fit inline-flex items-center justify-end gap-2 text-base text-black font-medium">
+      <div className="flex items-center justify-end gap-2 text-base text-black font-medium">
         <ActionIcon />
         Action
       </div>
@@ -65,7 +65,7 @@ export const columns = [
       const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
       return (
         <>
-          <div className="flex justify-center gap-1.5">
+          <div className="flex justify-end gap-1.5">
             <PaymentGatewayForm
               initialValues={row.original}
               trigger={
