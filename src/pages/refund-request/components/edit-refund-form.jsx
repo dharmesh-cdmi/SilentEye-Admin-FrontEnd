@@ -8,8 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useFormik } from "formik";
-import { ArrowLeft, Package } from "lucide-react";
+import { ArrowLeft, Info, Package } from "lucide-react";
 import * as Yup from "yup";
 
 const schema = Yup.object({
@@ -34,80 +41,90 @@ export default function EditRefundForm({ children }) {
   });
 
   return (
-    <Dialog>
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="p-0 max-w-xl !rounded-xl">
-        <DialogHeader className="flex flex-row gap-5 p-4 border-b">
-          <DialogClose asChild>
-            <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-200 border shadow">
-              <ArrowLeft />
-            </Button>
-          </DialogClose>
-
-          <div>
-            <DialogTitle className="flex items-center gap-3">
-              <Package /> Edit Refund Request
-            </DialogTitle>
-          </div>
-        </DialogHeader>
-        <form onSubmit={formik.handleSubmit} className="px-4">
-          <section className="flex flex-col border divide-y-[1.5px] rounded-lg overflow-hidden">
-            <div className="flex divide-x-[1.5px]">
-              <div className="min-w-48 flex items-center text-nowrap px-5">
-                Status
-              </div>
-              <div className="w-full">
-                <select
-                  className="h-12 w-full px-5 outline-none bg-orange-400 text-white"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.status}
-                >
-                  <option selected>Pending</option>
-                  <option>Approved</option>
-                  <option>Reject</option>
-                  <option>Refunded</option>
-                  <option>True Refunded</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex divide-x-[1.5px]">
-              <div className="min-w-48 flex items-center text-nowrap px-5">
-                Message
-              </div>
-              <div className="w-full">
-                <textarea
-                  rows={3}
-                  name="message"
-                  className="w-full px-5 py-2 outline-none"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.message}
-                  placeholder="Write your message"
-                >
-                  {formik.values.message}
-                </textarea>
-
-                {formik.touched.message && formik.errors.message ? (
-                  <p className="text-red-500 text-xs px-5">
-                    {formik.errors.message}
-                  </p>
-                ) : null}
-              </div>
-            </div>
-          </section>
-          <DialogFooter className="flex justify-between gap-2 py-5">
+    <TooltipProvider>
+      <Dialog>
+        <DialogTrigger>{children}</DialogTrigger>
+        <DialogContent className="p-0 max-w-xl !rounded-xl">
+          <DialogHeader className="flex flex-row gap-5 p-4 border-b">
             <DialogClose asChild>
-              <Button className="h-12 text-lg px-10 bg-white text-black hover:bg-gray-200 border shadow">
-                Cancel
+              <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-200 border shadow">
+                <ArrowLeft />
               </Button>
             </DialogClose>
-            <Button type="submit" className="h-12 w-full text-lg">
-              Send to User
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+
+            <div>
+              <DialogTitle className="flex items-center gap-3">
+                <Package /> Edit Refund Request
+              </DialogTitle>
+            </div>
+          </DialogHeader>
+          <form onSubmit={formik.handleSubmit} className="px-4">
+            <section className="flex flex-col border divide-y-[1.5px] rounded-lg overflow-hidden">
+              <div className="flex divide-x-[1.5px]">
+                <div className="min-w-24 flex items-center text-nowrap px-5">
+                  Status
+                </div>
+                <div className="w-full">
+                  <select
+                    className="h-12 w-full px-5 outline-none bg-orange-400 text-white"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.status}
+                  >
+                    <option selected>Pending</option>
+                    <option>Approved</option>
+                    <option>Reject</option>
+                    <option>Refunded</option>
+                    <option>True Refunded</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex divide-x-[1.5px]">
+                <div className="min-w-24 flex items-center text-nowrap px-5">
+                  Message
+                </div>
+                <div className="relative w-full">
+                  <textarea
+                    rows={3}
+                    name="message"
+                    className={cn(
+                      "h-full w-full px-5 py-2 outline-none",
+                      formik.errors.message && "border border-rose-500"
+                    )}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.message}
+                    placeholder="Write your message"
+                  >
+                    {formik.values.message}
+                  </textarea>
+
+                  {formik.errors.message && (
+                    <Tooltip>
+                      <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
+                        <Info size={20} />
+                      </TooltipTrigger>
+                      <TooltipContent className="border-none bg-rose-50 text-rose-500">
+                        {formik.errors.message}
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
+              </div>
+            </section>
+            <DialogFooter className="flex justify-between gap-2 py-5">
+              <DialogClose asChild>
+                <Button className="h-12 text-lg px-10 bg-white text-black hover:bg-gray-200 border shadow">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="h-12 w-full text-lg">
+                Send to User
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </TooltipProvider>
   );
 }
