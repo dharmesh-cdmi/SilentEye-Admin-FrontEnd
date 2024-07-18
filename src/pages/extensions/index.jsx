@@ -5,6 +5,7 @@ import {
   TwoFactorAuthIcon,
   UploadIcon,
 } from "@/assets/icons";
+import Header from "@/components/common/header";
 import { Button } from "@/components/ui/button";
 import ExtensionBox from "@/components/ui/extension-box";
 import { isNotNullOrEmpty } from "@/lib/utils";
@@ -67,9 +68,7 @@ const Extensions = () => {
   return (
     <main className="flex flex-col gap-6">
       <section className="flex justify-between items-center">
-        <div>
-          <h3 className="text-xl font-semibold">Extensions</h3>
-        </div>
+        <Header title="Extensions" className="m-0" />
         <Button
           variant="outline"
           className="text-[17px] text-gray-500 shadow-xl shadow-gray-100"

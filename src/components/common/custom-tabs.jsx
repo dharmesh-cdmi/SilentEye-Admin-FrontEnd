@@ -1,8 +1,11 @@
+import { cn } from "@/lib/utils";
 import { TabsList, TabsTrigger } from "../ui/tabs";
 
-export default function CustomTabs({ tabs }) {
+export default function CustomTabs({ tabs, className = "" }) {
   return (
-    <div className="w-full overflow-x-auto border rounded-t-lg">
+    <div
+      className={cn("w-full overflow-x-auto border rounded-t-lg", className)}
+    >
       <TabsList className="">
         {tabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value} className="border-r ">

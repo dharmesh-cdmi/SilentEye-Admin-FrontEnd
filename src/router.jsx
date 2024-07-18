@@ -20,8 +20,9 @@ const router = createBrowserRouter([
           {
             path: "/changePass",
             lazy: async () => ({
-              Component: (await import("./components/common/change-pass"))
-                .default,
+              Component: (
+                await import("./components/layout/change-pass-dialog")
+              ).default,
             }),
           },
           {
@@ -99,13 +100,13 @@ const router = createBrowserRouter([
           {
             path: "/access-manage",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/access-manage")).default,
             }),
           },
           {
             path: "/settings",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/settings")).default,
             }),
           },
         ],

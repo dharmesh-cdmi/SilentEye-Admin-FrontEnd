@@ -137,7 +137,7 @@ const LoginIcon = ({ className = "", size = 20 }) => (
   </svg>
 );
 
-const ChangePassIcon = ({ className = "" }) => (
+const ChangePassIcon = ({ className = "", size = 20 }) => (
   <svg
     width={size}
     height={size}
@@ -1001,6 +1001,145 @@ const CheckedIcon = ({ className = "", size = 24 }) => (
   </svg>
 );
 
+const RedirectIcon = ({ className = "", size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    className={className}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M13.75 6.25L5 15"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M6.66666 5.15659C6.66666 5.15659 13.3732 4.59124 14.391 5.60899C15.4088 6.62674 14.8433 13.3333 14.8433 13.3333"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const ListIcon = ({ className = "", size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    className={className}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z"
+      stroke="black"
+      strokeWidth="1.5"
+    />
+    <path d="M11 7H17" stroke="black" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M7 7H8" stroke="black" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M7 12H8" stroke="black" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M7 17H8" stroke="black" strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M11 12H17"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M11 17H17"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const SalesNotificationIcon = ({ className = "", size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    className={className}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M11.5 22H9.62182C7.27396 22 6.10003 22 5.28565 21.2945C4.47127 20.5889 4.27181 19.3991 3.87289 17.0194L2.66933 9.83981C2.48735 8.75428 2.39637 8.21152 2.68773 7.85576C2.9791 7.5 3.51461 7.5 4.58564 7.5H19.4144C20.4854 7.5 21.0209 7.5 21.3123 7.85576C21.6036 8.21152 21.5126 8.75428 21.3307 9.83981L21.0524 11.5"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <g clipPath="url(#clip0_209_12521)">
+      <path
+        d="M13.0541 19.1537C12.9655 19.7345 13.3617 20.1377 13.8467 20.3386C15.7062 21.1089 18.2938 21.1089 20.1533 20.3386C20.6383 20.1377 21.0344 19.7345 20.9459 19.1537C20.8914 18.7967 20.6222 18.4995 20.4227 18.2092C20.1614 17.8244 20.1354 17.4046 20.1354 16.958C20.1354 15.2321 18.7316 13.833 17 13.833C15.2684 13.833 13.8646 15.2321 13.8646 16.958C13.8646 17.4046 13.8386 17.8244 13.5773 18.2092C13.3778 18.4995 13.1086 18.7967 13.0541 19.1537Z"
+        stroke="black"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.3333 20.917C15.5244 21.6358 16.1981 22.167 17 22.167C17.8019 22.167 18.4756 21.6358 18.6667 20.917"
+        stroke="black"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <path
+      d="M17.5 7.5C17.5 4.46243 15.0376 2 12 2C8.96243 2 6.5 4.46243 6.5 7.5"
+      stroke="black"
+      strokeWidth="1.5"
+    />
+    <defs>
+      <clipPath id="clip0_209_12521">
+        <rect
+          width={10}
+          height={10}
+          fill="white"
+          transform="translate(12 13)"
+        />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const EmailVerificationIcon = ({ className = "", size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    className={className}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M2 5L8.91302 8.92462C11.4387 10.3585 12.5613 10.3585 15.087 8.92462L22 5"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M11 19.5C11 19.5 10.0691 19.4878 9.09883 19.4634C5.95033 19.3843 4.37608 19.3448 3.24496 18.2094C2.11383 17.0739 2.08114 15.5412 2.01577 12.4756C1.99475 11.4899 1.99474 10.5101 2.01576 9.52438C2.08114 6.45885 2.11382 4.92608 3.24495 3.79065C4.37608 2.65521 5.95033 2.61566 9.09882 2.53656C11.0393 2.48781 12.9607 2.48781 14.9012 2.53657C18.0497 2.61568 19.6239 2.65523 20.7551 3.79066C21.8862 4.92609 21.9189 6.45886 21.9842 9.52439C21.9947 10.0172 22 10.5086 22 11"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M17.9992 13.5C16.7328 13.5 15.9117 14.3076 14.9405 14.602C14.5456 14.7217 14.3482 14.7815 14.2683 14.8659C14.1884 14.9502 14.165 15.0735 14.1182 15.3201C13.6174 17.9584 14.712 20.3976 17.3222 21.347C17.6027 21.449 17.7429 21.5 18.0006 21.5C18.2583 21.5 18.3986 21.449 18.679 21.347C21.2891 20.3976 22.3826 17.9584 21.8817 15.3201C21.8349 15.0735 21.8114 14.9502 21.7315 14.8658C21.6516 14.7814 21.4542 14.7216 21.0593 14.602C20.0878 14.3077 19.2657 13.5 17.9992 13.5Z"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 export {
   OrdersIcon,
   RefundIcons,
@@ -1037,4 +1176,8 @@ export {
   SubjectIcon,
   PaymentGateWayIcon,
   CheckedIcon,
+  RedirectIcon,
+  ListIcon,
+  SalesNotificationIcon,
+  EmailVerificationIcon,
 };
