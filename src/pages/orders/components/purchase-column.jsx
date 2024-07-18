@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "./data-table-column-header";
 
 import { labels, priorities, statuses } from "../data/data";
-import { RefundIcons, WebIcon } from "@/assets/icons";
+import { ActionIcon, AmountIcon, EmailIcon, PlanIcon, PurchasedIcon, RefundIcons, WebIcon } from "@/assets/icons";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
@@ -12,35 +10,14 @@ import DeleteModal from "@/components/common/modals/delet-modal";
 import RefundModal from "@/components/common/modals/refund-modal";
 import { RightDrawer } from "@/components/common/drawers/common-right-drawer";
 
-export const columns = [
+export const PurchaseColumns = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Task" />
+    accessorKey: "email",
+    header: () => (
+      <div className="flex space-x-2 px-2">
+      <EmailIcon size={19} className="text-black"/>{" "}
+      <p className="text-[17px] text-primary">Email</p>
+    </div>
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
     enableSorting: false,
@@ -69,8 +46,11 @@ export const columns = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+    header: () => (
+      <div className="flex space-x-2 px-2">
+        <PurchasedIcon size={19} />{" "}
+        <p className="text-[17px] text-primary">Purchased</p>
+      </div>
     ),
     cell: ({ row }) => {
       const status = statuses.find(
@@ -95,9 +75,72 @@ export const columns = [
     },
   },
   {
-    accessorKey: "priority",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Priority" />
+    accessorKey: "plan",
+    header: () => (
+      <div className="flex space-x-2 px-2">
+      <PlanIcon size={19} className="fill-white text-black"/>{" "}
+      <p className="text-[17px] text-primary">Plan</p>
+    </div>
+    ),
+    cell: ({ row }) => {
+      const priority = priorities.find(
+        (priority) => priority.value === row.getValue("priority")
+      );
+
+      if (!priority) {
+        return null;
+      }
+
+      return (
+        <div className="flex items-center">
+          {priority.icon && (
+            <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+          )}
+          <span>{priority.label}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: () => (
+      <div className="flex space-x-2 px-2">
+      <AmountIcon size={19} className="fill-white text-black"/>{" "}
+      <p className="text-[17px] text-primary">Amount</p>
+    </div>
+    ),
+    cell: ({ row }) => {
+      const priority = priorities.find(
+        (priority) => priority.value === row.getValue("priority")
+      );
+
+      if (!priority) {
+        return null;
+      }
+
+      return (
+        <div className="flex items-center">
+          {priority.icon && (
+            <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+          )}
+          <span>{priority.label}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "method",
+    header: () => (
+      <div className="flex space-x-2 px-2">
+      <PlanIcon size={19} className="fill-white text-black"/>{" "}
+      <p className="text-[17px] text-primary">Method</p>
+    </div>
     ),
     cell: ({ row }) => {
       const priority = priorities.find(
@@ -125,9 +168,10 @@ export const columns = [
     id: "actions",
     accessorKey: "Action",
     header: () => (
-      <div className="flex space-x-2 px-2 w-[40px]">
-        <WebIcon size={19} /> <p className="text-[17px] text-primary">Action</p>
-      </div>
+      <div className="inline-flex items-center justify-end gap-2 text-base text-black font-medium">
+      <ActionIcon />
+      Action
+    </div>
     ),
 
     // eslint-disable-next-line no-unused-vars

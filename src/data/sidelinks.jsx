@@ -1,17 +1,6 @@
+import { AccessManageIcon, BagIcon, ContactFormIcon, ContentManementIcon, CustomersIcon, DiscountnavIcon, ExtensionIcon, HomeIcon, PaymentGateWayIcon, PlanIcon, RefundIcons, SettingIcon } from '@/assets/icons'
 import {
-    IconAddressBook,
-    IconCreditCardPay,
-    IconFingerprint,
     IconHeadset,
-    IconHome,
-    IconPlant2,
-    IconPuzzle,
-    IconReceiptRefund,
-    IconRosetteDiscount,
-    IconSettings,
-    IconSettingsCog,
-    IconShoppingBag,
-    IconUsers,
   } from '@tabler/icons-react'
 
   export const sidelinks = [
@@ -19,37 +8,37 @@ import {
       title: 'Home',
       label: '',
       href: '/',
-      icon: <IconHome  size={20} />,
+      icon: <HomeIcon  size={20} className=' fill-black' />,
     },
     {
       title: 'Orders',
       label: '3',
       href: '/orders',
-      icon: <IconShoppingBag size={20} />,
+      icon:<BagIcon  size={20} className=' fill-black' />,
     },
     {
       title: 'Plans',
       label: '',
       href: '/plans',
-      icon: < IconPlant2  size={20} />,
+      icon: < PlanIcon  size={20} className='fill-white'/>,
     },
     {
       title: 'Users',
       label: '',
       href: '/users',
-      icon: <IconUsers size={20} />,
+      icon: <CustomersIcon size={20} className='fill-white'/>,
     },
     {
       title: 'Content Manage',
       label: '',
       href: '/content-manage',
-      icon: <IconSettingsCog size={20} />,
+      icon: <ContentManementIcon size={20} className='text-black fill-white'/>,
     },
     {
       title: 'Discount',
       label: '',
       href: '/discount',
-      icon: < IconRosetteDiscount  size={20} />,
+      icon: <DiscountnavIcon  size={23} />,
     },
     {
       title: 'Support Ticket',
@@ -61,31 +50,31 @@ import {
       title: 'Refund Request',
       label: '2',
       href: '/refund-request',
-      icon: < IconReceiptRefund  size={20} />,
+      icon: <RefundIcons size={20} className='fill-white '/>,
     },
     {
       title: 'Contact Form',
       label: '5',
       href: '/contact',
-      icon: <IconAddressBook  size={20} />,
+      icon: <ContactFormIcon  size={20} />,
     },
     {
       title: 'Payment Gateways',
       label: '',
       href: '/payment',
-      icon: <IconCreditCardPay  size={20} />,
+      icon: <PaymentGateWayIcon  size={20} className="fill-white "/>,
     },
     {
       title: 'Extension',
       label: '',
       href: '/extension',
-      icon: <IconPuzzle  size={20} />,
+      icon: <ExtensionIcon  size={20} className="fill-white"/>,
     },
     {
       title: 'Access Manage',
       label: '',
       href: '/access-manage',
-      icon: <IconFingerprint  size={20} />,
+      icon: <AccessManageIcon  size={20} className=''/>,
     },
      
     // {
@@ -100,36 +89,12 @@ import {
     //       href: '/sign-in',
     //       icon: <IconHexagonNumber1 size={20} />,
     //     },
-    //     {
-    //       title: 'Sign In (Box)',
-    //       label: '',
-    //       href: '/sign-in-2',
-    //       icon: <IconHexagonNumber2 size={20} />,
-    //     },
-    //     {
-    //       title: 'Sign Up',
-    //       label: '',
-    //       href: '/sign-up',
-    //       icon: <IconHexagonNumber3 size={20} />,
-    //     },
-    //     {
-    //       title: 'Forgot Password',
-    //       label: '',
-    //       href: '/forgot-password',
-    //       icon: <IconHexagonNumber4 size={20} />,
-    //     },
-    //     {
-    //       title: 'OTP',
-    //       label: '',
-    //       href: '/otp',
-    //       icon: <IconHexagonNumber5 size={20} />,
-    //     },
     //   ],
     // },
     {
       title: 'Settings',
       label: '',
       href: '/settings',
-      icon: <IconSettings size={20} />,
+      icon: <SettingIcon size={20} />,
     },
   ]

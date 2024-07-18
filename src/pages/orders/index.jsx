@@ -1,15 +1,18 @@
-import { DataTable } from "@/components/common/Table/data-table";
-import { tasks } from "./data/task";
-import { columns } from "./components/columns";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CircleDollarSign, Download, Plane } from "lucide-react";
+import { tasks } from "./data/task";
+import { DataTable } from "@/components/common/Table/data-table";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import CustomTabs from "@/components/common/custom-tabs";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
 import CommonButton from "@/components/ui/common-button";
 import Country from "@/components/common/country";
+import { PurchaseColumns } from "./components/purchase-column";
+import { Order } from "@/api/endpoints";
+import useGet from "@/hooks/use-get";
+import Loader from "@/components/common/loader";
 
 export default function Orders() {
   // this is tabsConfig
@@ -19,6 +22,13 @@ export default function Orders() {
     { value: "refunded", icon: RefundIcons, label: "Refunded" },
     { value: "shipping", icon: Plane, label: "Shipping" },
   ];
+
+  const { mutate: ordersData, isLoading: ordersLoading } = useGet({
+    endpoint: Order.Order_Details,
+  });
+
+  console.log("Orders Data ", ordersData);
+
   return (
     <div>
       <Header title="Orders" className=" ">
@@ -39,7 +49,11 @@ export default function Orders() {
           {/* This is Common TabsListCompnent  */}
           <CustomTabs tabs={tabsConfig} />
           <TabsContent value="purchase" className="">
-            <DataTable data={tasks} columns={columns} />
+            {ordersLoading ? (
+              <Loader />
+            ) : (
+              <DataTable data={tasks} columns={PurchaseColumns} />
+            )}
           </TabsContent>
           <TabsContent value="checkout" className=" bg-orange-400 ">
             <div>hello</div>

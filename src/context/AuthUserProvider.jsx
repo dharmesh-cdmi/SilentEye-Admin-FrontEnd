@@ -16,12 +16,13 @@ const AuthUserProvider = ({ children }) => {
     refetchOnWindowFocus: false,
     cacheTime: 0,
   });
+  console.log("userData", userData);
 
   const userContextValues = {
     // states
     userData,
     userLoading,
-    userFound: Boolean(!userLoading && !!userData?.email),
+    userFound: Boolean(!userLoading && !!userData?.data?.email),
     // methods
     userRefetch,
   };
