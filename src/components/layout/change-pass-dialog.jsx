@@ -8,6 +8,9 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { LabeledInput } from "../ui/data-entry-comps";
+import axios from "axios";
+import { ADMIN_BASE_URL } from "@/api/adminAPI";
+import { getApiHeaders, handleApiError } from "@/lib/utils";
 
 const passwordObj = {
   currentPass: "",
@@ -18,14 +21,36 @@ const passwordObj = {
 const ChangePassDialog = ({ openDialog, setOpenDialog }) => {
   const [passwords, setPasswords] = useState(passwordObj);
 
-  const handleChangePass = (e) => {
-    e.preventDefault();
-    console.log(passwords);
-  };
-
   const closeDialog = () => {
     setPasswords(passwordObj);
     setOpenDialog(!openDialog);
+  };
+
+  const handleChangePass = async (e) => {
+    e.preventDefault();
+
+    const { currentPass, newPass, confirmNewPass } = passwords;
+    if (newPass !== confirmNewPass) {
+      return alert("New Password and Confirm Password doesn't match");
+    }
+
+    try {
+      const response = await axios.post(
+        `${ADMIN_BASE_URL}/admin/change-password`,
+        {
+          oldPassword: currentPass,
+          newPassword: newPass,
+        },
+        getApiHeaders()
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        closeDialog();
+      }
+    } catch (error) {
+      handleApiError(error);
+    }
   };
 
   return (
@@ -41,7 +66,7 @@ const ChangePassDialog = ({ openDialog, setOpenDialog }) => {
         >
           <LabeledInput
             type="password"
-            minLength="8"
+            // minLength="8"
             label="Current Password"
             value={passwords.currentPass}
             onChange={(e) =>

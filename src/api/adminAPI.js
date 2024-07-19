@@ -1,5 +1,5 @@
 import axios from "axios";
-import adminQueryClient from "./adminQueryClient";
+// import adminQueryClient from "./adminQueryClient";
 import {
   getAccessToken,
   removeTokens,
