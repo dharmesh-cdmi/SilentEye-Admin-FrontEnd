@@ -1,3 +1,4 @@
+import { ADMIN_BASE_URL } from "@/api/adminAPI";
 import {
   CaptchaIcon,
   ChatBotIcon,
@@ -8,61 +9,78 @@ import {
 import Header from "@/components/common/header";
 import { Button } from "@/components/ui/button";
 import ExtensionBox from "@/components/ui/extension-box";
-import { isNotNullOrEmpty } from "@/lib/utils";
+import { getApiHeaders, handleApiError, isNotNullOrEmpty } from "@/lib/utils";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import TagManager from "./components/tag-manager";
 
 const extensionsArr = [
   {
-    id: 5,
+    key: "captcha",
     name: "Captcha",
     logo: <CaptchaIcon />,
   },
   {
-    id: 6,
+    key: "twoFA",
     name: "Two-Factor Authentication (2FA)",
     logo: <TwoFactorAuthIcon />,
   },
   {
-    id: 7,
+    key: "tagManager",
     name: "Tag Manager",
     logo: <TagManagerIcon />,
   },
   {
-    id: 8,
+    key: "chatBot",
     name: "ChatBot",
     logo: <ChatBotIcon />,
   },
 ];
 
 const Extensions = () => {
-  const [extensions, setExtensions] = useState(extensionsArr);
-  const [extForm, setExtForm] = useState([]);
+  const [extensions, setExtensions] = useState({});
+  let count = 0;
+
+  const fetchExtensions = async () => {
+    try {
+      const response = await axios.get(
+        `${ADMIN_BASE_URL}/extension/fetch-extensions`,
+        getApiHeaders()
+      );
+      let ext = response.data.extensions;
+      setExtensions({
+        captcha: ext.captcha,
+        twoFA: ext.twoFA,
+        tagManager: ext.tagManager,
+        chatBot: ext.chatBot,
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
+  };
 
   useEffect(() => {
-    if (extensions.length !== extForm.length) {
-      console.log("Itea");
-      extensions.map(({ id }, ind) =>
-        extForm.push({
-          id,
-          index: ind,
-          enable: true,
-          key: "",
-          secretKey: "",
-          edit: false,
-        })
-      );
-
-      setExtForm([...extForm]);
+    if (count === 0) {
+      fetchExtensions();
+      count++;
     }
   }, []);
 
-  useEffect(() => {
-    console.log(extForm);
-  }, [extForm]);
+  const saveExtensions = async () => {
+    try {
+      const response = await axios.put(
+        `${ADMIN_BASE_URL}/extension/update-extensions`,
+        extensions,
+        getApiHeaders()
+      );
+      alert("Extensions saved successfully.");
+    } catch (error) {
+      handleApiError(error);
+    }
+  };
 
-  const onStateChange = (obj) => {
-    extForm[obj.index] = { ...obj, edit: true };
-    setExtForm([...extForm]);
+  const onStateChange = (obj, key) => {
+    setExtensions({ ...extensions, [key]: obj });
   };
 
   return (
@@ -71,21 +89,35 @@ const Extensions = () => {
         <Header title="Extensions" className="m-0" />
         <Button
           variant="outline"
+          onClick={saveExtensions}
           className="text-[17px] text-gray-500 shadow-xl shadow-gray-100"
         >
           <UploadIcon size={19} className="mr-1.5" />
           Save
         </Button>
       </section>
-      {isNotNullOrEmpty(extForm[0]) &&
-        extensions.map((ele, ind) => (
-          <ExtensionBox
-            key={ind}
-            extDetails={ele}
-            state={extForm[ind]}
-            onStateChange={onStateChange}
-          />
-        ))}
+      {isNotNullOrEmpty(extensions.captcha) &&
+        extensionsArr.map((ele, ind) => {
+          if (ele.key !== "tagManager") {
+            return (
+              <ExtensionBox
+                key={ind}
+                extDetails={ele}
+                state={extensions[ele.key]}
+                onStateChange={onStateChange}
+              />
+            );
+          }
+
+          return (
+            <TagManager
+              key={ind}
+              extDetails={ele}
+              state={extensions[ele.key]}
+              onStateChange={onStateChange}
+            />
+          );
+        })}
     </main>
   );
 };
