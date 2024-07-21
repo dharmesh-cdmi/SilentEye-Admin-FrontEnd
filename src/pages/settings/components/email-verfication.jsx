@@ -8,8 +8,10 @@ const EmailVerification = ({ emailVerification, setEmailVerification }) => {
       <LabeledSwitch
         logo={<EmailVerificationIcon />}
         name="Email Verification"
-        checked={emailVerification}
-        onCheckedChange={(e) => setEmailVerification(e)}
+        checked={emailVerification.status === "enabled"}
+        onCheckedChange={(e) =>
+          setEmailVerification({ status: e ? "enabled" : "disabled" })
+        }
       />
     </section>
   );

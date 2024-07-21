@@ -9,12 +9,21 @@ export const isNotNullOrEmpty = (value) => {
   return value !== "" && value !== null && value !== undefined;
 };
 
-export const getApiHeaders = () => {
+export const getApiHeaders = (additionalHeaders = {}) => {
   const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
-  return { headers: { Authorization: `Bearer ${accessToken}` } };
+  const headers = {
+    headers: { Authorization: `Bearer ${accessToken}`, ...additionalHeaders },
+  };
+  // console.log(headers, "Headers");
+  return headers;
 };
 
 export const handleApiError = (error) => {
   console.log(error);
-  alert(error.response.data.message);
+  let err = error.response.data;
+  if (isNotNullOrEmpty(err.message)) {
+    alert(err.message);
+  } else if (isNotNullOrEmpty(err.error)) {
+    alert(err.error);
+  }
 };

@@ -41,8 +41,6 @@
   color: #888;
 }
 
-
-
 .custom-scrollbar::-webkit-scrollbar {
   height: 3px; /* Height of the horizontal scrollbar */
 }
@@ -57,7 +55,7 @@
 }
 
 .custom-scrollbar {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: thin;  /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: thin; /* Firefox */
   scrollbar-color: #242a5ad4 #181c3a; /* Color of the scrollbar thumb and track for Firefox */
 }

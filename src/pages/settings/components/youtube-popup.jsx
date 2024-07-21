@@ -8,8 +8,10 @@ const YoutubePopup = ({ youtubePopup, setYoutubePopup }) => (
     <LabeledSwitch
       logo={<Youtube />}
       name="Youtube Video Popup"
-      checked={youtubePopup.enable}
-      onCheckedChange={(e) => setYoutubePopup({ ...youtubePopup, enable: e })}
+      checked={youtubePopup.status === "enabled"}
+      onCheckedChange={(e) =>
+        setYoutubePopup({ ...youtubePopup, status: e ? "enabled" : "disabled" })
+      }
     />
     <TabularInput
       label="Title"

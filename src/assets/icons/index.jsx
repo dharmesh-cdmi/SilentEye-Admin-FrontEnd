@@ -1140,6 +1140,76 @@ const EmailVerificationIcon = ({ className = "", size = 24 }) => (
   </svg>
 );
 
+const DelayIcon = ({ className = "", size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    className={className}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g opacity="0.5" clipPath="url(#clip0_22_7917)">
+      <path
+        d="M10 6.66699V10.0003L11.25 11.2503"
+        stroke="black"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.2878 13.7111C17.6515 14.4475 18.3333 14.8157 18.3333 15.4166C18.3333 16.0176 17.6515 16.3858 16.2878 17.1221L15.3592 17.6236C14.312 18.1891 13.7884 18.4719 13.5366 18.2663C12.92 17.7628 13.8806 16.4634 14.1169 16.0031C14.3564 15.5366 14.3521 15.2882 14.1169 14.8302C13.8806 14.3699 12.92 13.0705 13.5366 12.567C13.7884 12.3614 14.312 12.6441 15.3592 13.2096L16.2878 13.7111Z"
+        stroke="black"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M10.8551 18.2903C10.574 18.319 10.2887 18.3337 9.99999 18.3337C5.39761 18.3337 1.66666 14.6027 1.66666 10.0003C1.66666 5.39795 5.39761 1.66699 9.99999 1.66699C14.6023 1.66699 18.3333 5.39795 18.3333 10.0003C18.3333 10.5711 18.2759 11.1285 18.1667 11.667"
+        stroke="black"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_22_7917">
+        <rect width={20} height={20} fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const TimeGapIcon = ({ className = "", size = 20 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    className={className}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g opacity="0.5" clipPath="url(#clip0_209_12534)">
+      <path
+        d="M9.23407 10.9597L6.66666 5.83301L11.183 9.39934C11.8251 9.90634 11.8284 10.8723 11.1897 11.3836C10.5512 11.8949 9.59907 11.6885 9.23407 10.9597Z"
+        stroke="black"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.16666 4.01687C2.62386 5.53272 1.66666 7.64508 1.66666 9.98149C1.66666 14.5942 5.39761 18.3337 9.99999 18.3337C14.6023 18.3337 18.3333 14.5942 18.3333 9.98149C18.3333 5.93704 15.4651 2.56401 11.656 1.79427C10.9593 1.65349 10.611 1.5831 10.3055 1.83372C9.99999 2.08435 9.99999 2.48949 9.99999 3.29978V4.135"
+        stroke="black"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_209_12534">
+        <rect width={20} height={20} fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 export {
   OrdersIcon,
   RefundIcons,
@@ -1180,4 +1250,6 @@ export {
   ListIcon,
   SalesNotificationIcon,
   EmailVerificationIcon,
+  DelayIcon,
+  TimeGapIcon,
 };

@@ -1,7 +1,7 @@
-import { SalesNotificationIcon } from "@/assets/icons";
+import { DelayIcon, SalesNotificationIcon, TimeGapIcon } from "@/assets/icons";
 import { TabularInput } from "@/components/ui/data-entry-comps";
 import LabeledSwitch from "@/components/ui/labeled-switch";
-import React from "react";
+import { TimeDropdown } from "./core-comps";
 
 const SalesNotification = ({ salesNotification, setSalesNotification }) => {
   return (
@@ -9,11 +9,34 @@ const SalesNotification = ({ salesNotification, setSalesNotification }) => {
       <LabeledSwitch
         logo={<SalesNotificationIcon />}
         name="Sales Notification"
-        checked={salesNotification.enable}
+        checked={salesNotification.status === "enabled"}
         onCheckedChange={(e) =>
-          setSalesNotification({ ...salesNotification, enable: e })
+          setSalesNotification({
+            ...salesNotification,
+            status: e ? "enabled" : "disabled",
+          })
         }
       />
+      <section className="flex justify-between">
+        <TimeDropdown
+          label="Time Gap"
+          icon={<TimeGapIcon size={18} />}
+          labelClass="px-2"
+          state={salesNotification.timeGap}
+          onStateChange={(obj) =>
+            setSalesNotification({ ...salesNotification, timeGap: obj })
+          }
+        />
+        <TimeDropdown
+          label="Delayed"
+          icon={<DelayIcon size={18} />}
+          labelClass="border-l"
+          state={salesNotification.delayed}
+          onStateChange={(obj) =>
+            setSalesNotification({ ...salesNotification, delayed: obj })
+          }
+        />
+      </section>
       <TabularInput
         label="Name"
         value={salesNotification.name}
@@ -23,31 +46,31 @@ const SalesNotification = ({ salesNotification, setSalesNotification }) => {
       />
       <TabularInput
         label="City, State"
-        value={salesNotification.city_state}
+        value={salesNotification.cityState}
         onChange={(e) =>
           setSalesNotification({
             ...salesNotification,
-            city_state: e.target.value,
+            cityState: e.target.value,
           })
         }
       />
       <TabularInput
         label="Plan Name"
-        value={salesNotification.plan_name}
+        value={salesNotification.planName}
         onChange={(e) =>
           setSalesNotification({
             ...salesNotification,
-            plan_name: e.target.value,
+            planName: e.target.value,
           })
         }
       />
       <TabularInput
         label="Purchase Time"
-        value={salesNotification.purchase_time}
+        value={salesNotification.purchaseTime}
         onChange={(e) =>
           setSalesNotification({
             ...salesNotification,
-            purchase_time: e.target.value,
+            purchaseTime: e.target.value,
           })
         }
       />
