@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   ActionIcon,
   CallIcon,
@@ -8,7 +9,9 @@ import {
   SubjectIcon,
   TrashIcon,
 } from "@/assets/icons";
+import DeleteModal from "@/components/common/modals/delet-modal";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export const columns = [
   {
@@ -130,12 +133,24 @@ export const columns = [
         Action
       </div>
     ),
-    cell: () => (
-      <div className="flex justify-center">
-        <Button className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200">
-          <TrashIcon />
-        </Button>
-      </div>
-    ),
+    cell: () => {
+      const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+      return (
+        <>
+          <div className="flex justify-center">
+            <Button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="h-9 w-9 p-1.5 bg-white text-rose-500 hover:bg-rose-600 hover:text-white border rounded-lg shadow-md duration-200"
+            >
+              <TrashIcon />
+            </Button>
+          </div>
+          <DeleteModal
+            open={isDeleteModalOpen}
+            setOpen={setIsDeleteModalOpen}
+          />
+        </>
+      );
+    },
   },
 ];

@@ -3,9 +3,15 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import CommonSearch from "@/components/ui/search";
 import { columns } from "./components/columns";
 import Header from "@/components/common/header";
-import { data } from "./data";
+import useGet from "@/hooks/use-get";
+import Loader from "@/components/common/loader";
+import { ContactFormAPI } from "@/api/endpoints";
 
 export default function ContactForm() {
+  const { data, isLoading } = useGet({
+    endpoint: ContactFormAPI.get,
+  });
+
   return (
     <div>
       <Header title="Contact Form">
@@ -15,7 +21,11 @@ export default function ContactForm() {
       <div className="w-full">
         <Tabs orientation="vertical" defaultValue="purchase">
           <TabsContent value="purchase" className="">
-            <DataTable data={data} columns={columns} />
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <DataTable data={data.data.contactsForm} columns={columns} />
+            )}
           </TabsContent>
         </Tabs>
       </div>
