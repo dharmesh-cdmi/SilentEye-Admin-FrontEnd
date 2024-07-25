@@ -52,12 +52,12 @@ export default function Nav({ links, isCollapsed, className, closeNav }) {
     <div
       data-collapsed={isCollapsed}
       className={cn(
-        "group border-b bg-background py-2 transition-[max-height,padding] duration-500 data-[collapsed=true]:py-2 md:border-none",
+        "group bg-background  transition-[max-height,padding] duration-500 data-[collapsed=true]:py-2 md:border-none",
         className
       )}
     >
       <TooltipProvider delayDuration={0}>
-        <nav className="grid gap-1 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+        <nav className="grid group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
           {links.map(renderLink)}
         </nav>
       </TooltipProvider>
@@ -73,10 +73,10 @@ function NavLink({ title, icon, label, href, closeNav, subLink = false }) {
       onClick={closeNav}
       className={cn(
         buttonVariants({
-          variant: checkActiveNav(href) ? "" : "ghost",
+          variant: checkActiveNav(href) ? "" : "nav",
           size: "sm",
         }),
-        "h-11 justify-start text-wrap rounded-none px-6",
+        `h-[48px] justify-start flex rounded-none px-6 `,
         subLink && "h-10 w-full border-l border-l-slate-500 px-2"
       )}
       aria-current={checkActiveNav(href) ? "page" : undefined}
@@ -84,14 +84,13 @@ function NavLink({ title, icon, label, href, closeNav, subLink = false }) {
       <div className="flex justify-between items-center w-full">
         <div className="flex justify-start items-center">
           <div className="mr-2">{icon}</div>
-          {title}
-          </div>
-          {label && (
+          <p className="text-[18px]">{title}</p>
+        </div>
+        {label && (
             <div className={`ml-2 ${checkActiveNav(href) ? "text-white " : "text-gray-600 bg-[#b9ffc070]"} border-2 border-[#0BE320]   w-[28px] h-[28px] rounded-lg items-center text-center flex justify-center  text-[12px] `}>
               {label}
             </div>
           )}
-       
       </div>
     </Link>
   );

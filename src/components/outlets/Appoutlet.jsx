@@ -1,12 +1,11 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Loader from "../common/loader";
-import Login from "@/pages/login";
-// import { useAuthUserContext } from "../context/AuthUserProvider";
+
+import { useAuthUserContext } from "@/context/AuthUserProvider";
 
 const AppOutlet = () => {
-  //   const { userLoading } = useAuthUserContext();
-  const [auth, setAuth] = useState(true);
+  const { userLoading } = useAuthUserContext();
 
   // Scroll-to-top
   const { pathname } = useLocation();
@@ -18,13 +17,9 @@ const AppOutlet = () => {
     });
   }, [pathname]);
 
-  if (!auth) {
-    return <Login />;
-  }
-
   return (
     <Suspense fallback={<Loader />}>
-      <Outlet />
+      {userLoading ? <Loader /> : <Outlet />}
     </Suspense>
   );
 };
