@@ -145,12 +145,12 @@ export const columns = [
         Action
       </div>
     ),
-    cell: () => {
+    cell: ({ row }) => {
       const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
       return (
         <>
           <div className="flex justify-center gap-1.5">
-            <CouponForm>
+            <CouponForm initialValues={row.original}>
               <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
                 <EditIcon />
               </Button>

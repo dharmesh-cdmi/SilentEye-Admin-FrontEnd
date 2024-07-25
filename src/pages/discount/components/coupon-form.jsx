@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn, isEmptyObject } from "@/lib/utils";
 import { useFormik } from "formik";
 import { ArrowLeft, Info, Package, Percent } from "lucide-react";
 import * as Yup from "yup";
@@ -59,7 +59,7 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
     <TooltipProvider>
       <Dialog>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="max-w-2xl p-0">
+        <DialogContent className="max-w-xl p-0">
           <DialogHeader className="flex flex-row gap-5 p-4 border-b">
             <DialogClose asChild>
               <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-200 border shadow">
@@ -69,7 +69,10 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
 
             <div>
               <DialogTitle className="flex items-center gap-3">
-                <Package /> Edit Coupon
+                <Package />{" "}
+                {isEmptyObject(initialValues)
+                  ? "Add New Coupon"
+                  : "Edit Coupon"}
               </DialogTitle>
             </div>
           </DialogHeader>

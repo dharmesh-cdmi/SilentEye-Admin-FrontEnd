@@ -12,7 +12,7 @@ import { Button } from "@/components/custom/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { cn } from "@/lib/utils";
+import { cn, isEmptyObject } from "@/lib/utils";
 import * as Yup from "yup";
 import {
   Tooltip,
@@ -111,9 +111,9 @@ const PaymentGatewayForm = ({
             <div>
               <DialogTitle className="flex items-center gap-3">
                 <Package />
-                {initialValues
-                  ? "Edit Payment Gateway"
-                  : "Add New Payment Gateway"}
+                {isEmptyObject(initialValues)
+                  ? "Add New Payment Gateway"
+                  : "Edit Payment Gateway"}
               </DialogTitle>
             </div>
             <DialogDescription></DialogDescription>

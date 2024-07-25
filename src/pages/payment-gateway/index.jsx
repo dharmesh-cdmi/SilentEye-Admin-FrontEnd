@@ -9,9 +9,6 @@ import { Button } from "@/components/custom/button";
 import Header from "@/components/common/header";
 import { columns } from "./components/columns";
 import { data } from "./data";
-import { useEffect } from "react";
-import adminAPI from "@/api/adminAPI";
-import { API } from "@/api/endpoints";
 
 export default function PaymentGateWay() {
   const tabsConfig = [
@@ -19,20 +16,6 @@ export default function PaymentGateWay() {
     { value: "active", icon: OrdersIcon, label: "Active" },
     { value: "disabled", icon: RefundIcons, label: "Disabled" },
   ];
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        const response = await adminAPI.get(API.getTickets);
-        console.log(response.data);
-      } catch(error) {
-        console.log(error);
-      }
-
-    }
-
-    getData()
-  }, []);
 
   return (
     <div>
@@ -45,7 +28,7 @@ export default function PaymentGateWay() {
           className="h-full rounded-none"
         >
           <CustomTabs tabs={tabsConfig} />
-          <TabsContent value="all" className="">
+          <TabsContent value="all">
             <DataTable data={data} columns={columns} />
           </TabsContent>
           <TabsContent value="active">

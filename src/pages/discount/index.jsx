@@ -2,10 +2,12 @@ import { DataTable } from "@/components/common/Table/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
-import { CircleDollarSign } from "lucide-react";
+import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { columns } from "./components/columns";
 import Header from "@/components/common/header";
 import { data } from "./data";
+import CouponForm from "./components/coupon-form";
+import { Button } from "@/components/custom/button";
 
 export default function Discount() {
   const tabsConfig = [
@@ -18,8 +20,8 @@ export default function Discount() {
     <div>
       <Header title="Discount"></Header>
 
-      <div className="w-full">
-        <Tabs // This is Shadcn Tabs
+      <div className="h-fit w-full relative">
+        <Tabs
           orientation="vertical"
           defaultValue="all"
           className="h-full rounded-none"
@@ -35,6 +37,12 @@ export default function Discount() {
             <DataTable data={data} columns={columns} />
           </TabsContent>
         </Tabs>
+
+        <CouponForm onSubmit={(data) => console.log(data)}>
+          <Button className="h-12 flex items-center gap-1.5 absolute top-0 right-0 bg-transparent text-lg text-black hover:text-white shadow-none border-l rounded-none rounded-tr-xl">
+            <PlusCircle size={20} /> Add Coupon
+          </Button>
+        </CouponForm>
       </div>
     </div>
   );

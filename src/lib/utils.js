@@ -8,3 +8,7 @@ export function cn(...inputs) {
 export const isNotNullOrEmpty = (value) => {
   return value !== "" && value !== null && value !== undefined;
 };
+
+export const isEmptyObject = (obj) => {
+  return Object.keys(obj).length === 0;
+};
