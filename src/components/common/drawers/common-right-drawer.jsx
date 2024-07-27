@@ -7,12 +7,16 @@ import {
 } from "@/components/ui/sheet";
 import { ArrowLeft } from "lucide-react";
 
-export function RightDrawer({ children, open, setOpen,title="Order Detail" }) {
+export function RightDrawer({
+  children,
+  open,
+  setOpen,
+  title = "Order Detail",
+}) {
   return (
     <Sheet open={open}>
-      <SheetContent className="w-[400px] sm:w-[540px]">
+      <SheetContent className="min-w-full md:min-w-md sm:min-w-[540px]">
         <SheetHeader>
-          
           <SheetTitle className="">
             <div className="flex justify-start space-x-3 items-center">
               <Button
@@ -25,11 +29,10 @@ export function RightDrawer({ children, open, setOpen,title="Order Detail" }) {
               </Button>
               <h2 className="text-[20px] line-clamp-1">{title}</h2>
             </div>
-            </SheetTitle>
-          
+          </SheetTitle>
         </SheetHeader>
         {children}
-        
+
         {/* <SheetFooter>
           <SheetClose onClick={() => setOpen(false)}>
             <Button type="submit">Save changes</Button>

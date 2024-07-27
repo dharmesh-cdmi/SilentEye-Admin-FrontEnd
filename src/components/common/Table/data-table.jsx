@@ -121,8 +121,8 @@ export function DataTable({ columns, data, DataTableToolbar }) {
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell?.column?.columnDef.cell,
+                        cell?.getContext()
                       )}
                     </TableCell>
                   ))}

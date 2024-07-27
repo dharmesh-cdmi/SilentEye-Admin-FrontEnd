@@ -5,6 +5,7 @@ const Auth = {
 }
 const Order = {
     Order_Details : "admin/orders",
+    Delete_Order : "admin/orders-delete",
 }
 
 const Admin = {
