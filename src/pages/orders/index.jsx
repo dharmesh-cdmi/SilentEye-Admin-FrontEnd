@@ -1,5 +1,4 @@
 import { CircleDollarSign, Download, Plane } from "lucide-react";
-import { tasks } from "./data/task";
 import { DataTable } from "@/components/common/Table/data-table";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -23,7 +22,8 @@ export default function Orders() {
     { value: "shipping", icon: Plane, label: "Shipping" },
   ];
 
-  const { mutate: ordersData, isLoading: ordersLoading } = useGet({
+  const { data:{data: {data: ordersData} = {}} = {}, isLoading: ordersLoading } = useGet({
+    key: "ordersData",
     endpoint: Order.Order_Details,
   });
 
@@ -52,7 +52,8 @@ export default function Orders() {
             {ordersLoading ? (
               <Loader />
             ) : (
-              <DataTable data={tasks} columns={PurchaseColumns} />
+              <DataTable data={ordersData?.orders || []} columns={PurchaseColumns} />
+            
             )}
           </TabsContent>
           <TabsContent value="checkout" className=" bg-orange-400 ">

@@ -6,7 +6,7 @@ import {
   removeTokens,
   setAccessToken,
 } from "@/utils/localStorageUtils";
-import { PROD_ADMIN_BASE_URL } from "./endpoints";
+import { Auth, PROD_ADMIN_BASE_URL } from "./endpoints";
 
 
 
@@ -50,7 +50,7 @@ adminAPI.interceptors.response.use(undefined, (error) => {
     if (!isRefreshingToken) {
       isRefreshingToken = true;
       axios
-        .post(`${ADMIN_BASE_URL}/refresh-token`, {
+        .post(`${ADMIN_BASE_URL}${Auth.Refresh}`, {
           refreshToken,
         })
         .then(({ data = {} }) => {

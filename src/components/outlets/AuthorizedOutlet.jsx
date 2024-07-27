@@ -4,7 +4,6 @@ import useIsCollapsed from "@/hooks/use-is-collapsed";
 import Loader from "../common/loader";
 import Sidebar from "../layout/sidebar";
 import { Layout, LayoutBody, LayoutHeader } from "../custom/layout";
-import ThemeSwitch from "../theme-switch";
 import { UserNav } from "../layout/user-nav";
 import { useAuthUserContext } from "@/context/AuthUserProvider";
 
@@ -12,6 +11,8 @@ const AuthorizedOutlet = () => {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed();
     const { userFound } = useAuthUserContext();
     const { pathname } = useLocation();
+
+    console.log("user FOund", userFound)
 
     if (!userFound) {
       return <Navigate to={"/login"} state={{ authSuccessRedirect: pathname }} />;
@@ -31,7 +32,6 @@ const AuthorizedOutlet = () => {
             <LayoutHeader>
               {/* <TopNav links={topNav} /> */}
               <div className="ml-auto flex items-center space-x-4">
-                <ThemeSwitch />
                 <UserNav />
               </div>
             </LayoutHeader>

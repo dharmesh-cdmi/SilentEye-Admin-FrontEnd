@@ -37,7 +37,6 @@ const Login = () => {
     };
     try {
       const response = await signInMutation(payload);
-      console.log("Response", response);
       if (response?.status === 200) {
         // Set the cookies with the tokens received from the response
         setAccessToken(response?.data?.data?.access_token);
