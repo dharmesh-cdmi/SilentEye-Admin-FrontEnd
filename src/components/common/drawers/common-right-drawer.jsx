@@ -1,48 +1,44 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
+import { ArrowLeft } from "lucide-react";
 
-export function RightDrawer({children,open,setOpen}) {
+export function RightDrawer({
+  children,
+  open,
+  setOpen,
+  title = "Order Detail",
+}) {
   return (
     <Sheet open={open}>
-      
-      <SheetContent className="w-[400px] sm:w-[540px]">
-        <SheetHeader >
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you are done.
-          </SheetDescription>
+      <SheetContent className="min-w-full md:min-w-md sm:min-w-[540px]">
+        <SheetHeader>
+          <SheetTitle className="">
+            <div className="flex justify-start space-x-3 items-center">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="rounded-lg border"
+                onClick={() => setOpen(false)}
+              >
+                <ArrowLeft size={24} />
+              </Button>
+              <h2 className="text-[20px] line-clamp-1">{title}</h2>
+            </div>
+          </SheetTitle>
         </SheetHeader>
         {children}
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <SheetFooter>
+
+        {/* <SheetFooter>
           <SheetClose onClick={() => setOpen(false)}>
             <Button type="submit">Save changes</Button>
           </SheetClose>
-        </SheetFooter>
+        </SheetFooter> */}
       </SheetContent>
     </Sheet>
-  )
+  );
 }
