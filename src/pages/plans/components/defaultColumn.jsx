@@ -3,7 +3,6 @@ import {
   ActionIcon,
   AmountIcon,
   EmailIcon,
-  OpenIcon,
   PlanIcon,
   PurchasedIcon,
   RefundIcons,
@@ -14,58 +13,37 @@ import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import RefundModal from "@/components/common/modals/refund-modal";
-import { RightDrawer } from "@/components/common/drawers/common-right-drawer";
 import { formatDate } from "@/utils/dateConfig";
-import OrderDetailsSide from "./order-details-side";
 import { Order } from "@/api/endpoints";
 
-export const PurchaseColumns = ({tabKey,orderRefetch}) => {
-
+export const DefaultColumn = ({ tabKey, orderRefetch }) => {
   const columns = [
-    ...(tabKey !== "purchase"
-      ? [
-          {
-            accessorKey: "_id",
-            header: () => (
-              <div className="flex space-x-2 px-2 w-12">
-                <p className="text-[17px] text-gray-500">Index</p>
-              </div>
-            ),
-            cell: ({ row }) => (
-              <div className="items-center flex justify-center text-gray-500">
-                {"#" + row?.id}
-              </div>
-            ),
-            enableSorting: false,
-            enableHiding: false,
-          },
-          {
-            accessorKey: "orderId",
-            header: () => (
-              <div className="flex space-x-2 px-2 w-20">
-                <p className="text-[17px] text-gray-500">Order ID</p>
-              </div>
-            ),
-            cell: ({ row }) => (
-              <div className="items-center text-gray-500">
-                {"#" + row?.original?.orderId}
-              </div>
-            ),
-            enableSorting: false,
-            enableHiding: false,
-          },
-        ]
-      : []),
+    {
+      accessorKey: "_id",
+      header: () => (
+        <div className="flex space-x-2 px-2 w-12">
+          <p className="text-[17px] text-gray-500">Order</p>
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="items-center flex justify-center text-gray-500">
+          { row?.id}
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+   
     {
       accessorKey: "email",
       header: () => (
-        <div className="flex space-x-2 px-2 w-28">
+        <div className="flex space-x-2 px-2">
           <EmailIcon size={19} className="text-black" />{" "}
           <p className="text-[17px] text-primary">Email</p>
         </div>
       ),
       cell: ({ row }) => (
-        <div className="w-32 break-normal text-wrap pr-2 ">{row?.original?.orderDetails?.email}</div>
+        <div className="">{row?.original?.orderDetails?.email}</div>
       ),
       enableSorting: false,
       enableHiding: false,
@@ -246,7 +224,6 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
       cell: ({ row }) => {
         const [open, setOpen] = useState(false);
         const [ropen, setROpen] = useState(false);
-        const [dopen, setDOpen] = useState(false);
         const [id, setId] = useState("");
 
         return (
@@ -255,32 +232,18 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
               <Button
                 size="icon"
                 variant="ghost"
-                className="rounded-lg hover:bg-black hover:text-white"
-                onClick={() => {
-                  setDOpen(true);
-                  setId(row.original?._id);
-                }}
+                className="rounded-lg hover:bg-blue-500 hover:text-white"
+                onClick={() => setROpen(true)}
               >
-                {" "}
-                <OpenIcon size={24} />
+                <RefundIcons size={24} className="" />
               </Button>
-              {tabKey === "purchase" && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-lg hover:bg-blue-500 hover:text-white"
-                  onClick={() => setROpen(true)}
-                >
-                  <RefundIcons size={24} className="" />
-                </Button>
-              )}
 
               <Button
                 size="icon"
                 variant="ghost"
                 className="rounded-lg hover:bg-red-500 hover:text-white text-red-500"
                 onClick={() => {
-                  setOpen(true)
+                  setOpen(true);
                   setId(row.original?._id);
                 }}
               >
@@ -288,10 +251,13 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
               </Button>
             </div>
             <RefundModal open={ropen} setOpen={setROpen} />
-            <DeleteModal open={open} setOpen={setOpen} endpoint={Order.Delete_Order} id={id} dataRefetch={orderRefetch}/>
-            <RightDrawer open={dopen} setOpen={setDOpen}>
-              <OrderDetailsSide id={id} />
-            </RightDrawer>
+            <DeleteModal
+              open={open}
+              setOpen={setOpen}
+              endpoint={Order.Delete_Order}
+              id={id}
+              dataRefetch={orderRefetch}
+            />
           </>
         );
       },

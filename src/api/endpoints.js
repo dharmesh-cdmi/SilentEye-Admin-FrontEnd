@@ -1,16 +1,33 @@
 const PROD_ADMIN_BASE_URL = "http://143.244.140.6:5000/api/";
 const Auth = {
   Login: "admin/login",
-  Refresh: "/",
+  Refresh: "refresh-token",
 };
 const Order = {
   Order_Details: "admin/orders",
+  Delete_Order: "admin/orders-delete",
+};
+
+const Admin = {
+  admin_details: "admin/details",
+};
+
+const RefundRequestAPI = {
+  AllRefundRequest: "/refund-request?page=1&limit=10",
+  DeleteRefund: "/refund-request/",
 };
 
 const ContactFormAPI = {
-  get: "/contact-form/fetch-all-contacts-form",
-  search: "/contact-form/fetch-all-contacts-form",
-  delete: "/contact-form/fetch-all-contacts-form",
+  AllData: "/contact-form/fetch-all-contacts-form",
+  Search: "/contact-form/search-contact-form",
+  Delete: "/contact-form/delete-contact-form",
 };
 
-export { PROD_ADMIN_BASE_URL, Auth, Order, ContactFormAPI };
+export {
+  PROD_ADMIN_BASE_URL,
+  Auth,
+  Order,
+  Admin,
+  RefundRequestAPI,
+  ContactFormAPI,
+};

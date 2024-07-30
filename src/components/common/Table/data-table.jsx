@@ -74,7 +74,7 @@ export function DataTable({ columns, data, DataTableToolbar }) {
   return (
     <div className='border rounded-b-lg'>
       <div className="flex justify-between">
-        {Object.keys(rowSelection).length > 0 ? (
+        {Object.keys(rowSelection)?.length > 0 ? (
           <div className="flex items-center p-4">
             <Checkbox
               checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
@@ -91,7 +91,7 @@ export function DataTable({ columns, data, DataTableToolbar }) {
       </div>
       <div className=''>
         <Table>
-          {Object.keys(rowSelection).length === 0 && (
+          {Object.keys(rowSelection)?.length === 0 && (
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -121,8 +121,8 @@ export function DataTable({ columns, data, DataTableToolbar }) {
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell?.column?.columnDef.cell,
+                        cell?.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -131,7 +131,7 @@ export function DataTable({ columns, data, DataTableToolbar }) {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns?.length}
                   className='h-24 text-center'
                 >
                   No results.

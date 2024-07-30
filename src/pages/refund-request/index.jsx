@@ -4,10 +4,12 @@ import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import SettingDialog from "./components/setting-dialog";
 import CustomTabs from "@/components/common/custom-tabs";
 import { CircleDollarSign, Plane } from "lucide-react";
+import { RefundRequestAPI } from "@/api/endpoints";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
-import { columns } from "./components/columns";
-import { data } from "./data";
+import RefundColumns from "./components/columns";
+import Loader from "@/components/common/loader";
+import useGet from "@/hooks/use-get";
 
 export default function RefundRequest() {
   const tabsConfig = [
@@ -18,6 +20,15 @@ export default function RefundRequest() {
     { value: "refunded", icon: Plane, label: "Refunded" },
     { value: "true-refunded", icon: Plane, label: "True Refunded" },
   ];
+
+  const {
+    isLoading,
+    data: { data: { data: refundData } = {} } = {},
+    refetch: refundRefecth,
+  } = useGet({
+    key: "refundData",
+    endpoint: RefundRequestAPI.AllRefundRequest,
+  });
 
   return (
     <div>
@@ -34,24 +45,19 @@ export default function RefundRequest() {
           className="h-full rounded-none"
         >
           <CustomTabs tabs={tabsConfig} />
-          <TabsContent value="all" className="">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="pending">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="approved">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="rejected">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="refunded">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="true-refunded">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
+
+          {tabsConfig.map((item, index) => (
+            <TabsContent key={index} value={item.value}>
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <DataTable
+                  data={refundData?.docs || []}
+                  columns={RefundColumns(refundRefecth)}
+                />
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </div>

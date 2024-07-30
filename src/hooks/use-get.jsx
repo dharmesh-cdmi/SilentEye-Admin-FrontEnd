@@ -1,17 +1,21 @@
-import adminAPI from "@/api/adminAPI";
-import { useQuery } from "@tanstack/react-query";
+import adminAPI from '@/api/adminAPI';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
-const useGet = ({ endpoint,enabled = true, onSuccess = () => {}, onError = () => {}, onSettled = () => {} }) => {
+const useGet = ({ endpoint,key, enabled = true, onSuccess = () => {}, onSettled = () => {} }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const query = useQuery({
-    queryKey: ["getData", endpoint], // Include the endpoint in the query key
-    queryFn: () => adminAPI.get(endpoint), // Fetch data using adminAPI.get
+    queryKey: [key, endpoint],
+    queryFn: () => adminAPI.get(endpoint),
     enabled: enabled,
-    onSuccess, // Callback for successful data fetching (optional)
-    onError, // Callback for errors during data fetching (optional)
-    onSettled, // Callback after data fetching is settled (optional)
+    onSuccess,
+    onSettled,
+    onQueryStart: () => setIsLoading(true),
+    onQuerySuccess: () => setIsLoading(false),
+    onError: () => setIsLoading(false),
   });
 
-  return query;
+  return { ...query, isLoading };
 };
 
 export default useGet;

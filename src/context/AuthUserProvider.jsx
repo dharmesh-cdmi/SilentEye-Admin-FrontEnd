@@ -1,4 +1,5 @@
 import adminAPI from "@/api/adminAPI";
+import { Admin } from "@/api/endpoints";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 
@@ -11,18 +12,18 @@ const AuthUserProvider = ({ children }) => {
     refetch: userRefetch,
   } = useQuery({
     queryKey: ["userInfo"],
-    queryFn: () => adminAPI.get("/admin/details").then(res => res.data),
+    queryFn: () => adminAPI.get(Admin.admin_details).then(res => res.data),
     retry: false,
     refetchOnWindowFocus: false,
     cacheTime: 0,
   });
-  console.log("userData", userData);
+  // console.log("userData", userData);
 
   const userContextValues = {
     // states
     userData,
     userLoading,
-    userFound: Boolean(!userLoading && !!userData?.data?.email),
+    userFound: Boolean(userData?.data?.email),
     // methods
     userRefetch,
   };
