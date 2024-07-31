@@ -22,7 +22,7 @@ export function RightDrawer({
               <Button
                 size="icon"
                 variant="ghost"
-                className="rounded-lg border"
+                className="rounded-lg border z-50"
                 onClick={() => setOpen(false)}
               >
                 <ArrowLeft size={24} />

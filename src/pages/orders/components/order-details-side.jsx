@@ -1,6 +1,7 @@
 import { Order } from "@/api/endpoints";
 import { AmountIcon, EmailIcon, PurchasedIcon, WebIcon } from "@/assets/icons";
-import InputField from "@/components/common/common-form";
+import { InputField } from "@/components/common/common-form";
+
 import Loader from "@/components/common/loader";
 import useGet from "@/hooks/use-get";
 import { cn } from "@/lib/utils";
