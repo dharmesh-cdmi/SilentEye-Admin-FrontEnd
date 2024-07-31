@@ -20,10 +20,10 @@ import {
 } from '@/components/ui/table';
 
 import { DataTablePagination } from './data-table-pagination';
-import axios from 'axios';
 import { Checkbox } from '@/components/ui/checkbox'; // Assuming you are using this component
+import { cn } from '@/lib/utils';
 
-export function DataTable({ columns, data, DataTableToolbar }) {
+export function DataTable({ columns, data, DataTableToolbar, actionButtons }) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -51,25 +51,25 @@ export function DataTable({ columns, data, DataTableToolbar }) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const handleDeleteAll = async () => {
-    const selectedIds = Object.keys(rowSelection).map(key => table.getRowModel().rows[parseInt(key)].original.id);
-    try {
-      await axios.post('/api/delete', { ids: selectedIds });
-      // Handle successful delete, e.g., refresh table data
-    } catch (error) {
-      console.error('Failed to delete selected rows:', error);
-    }
-  };
+  // const handleDeleteAll = async () => {
+  //   const selectedIds = Object.keys(rowSelection).map(key => table.getRowModel().rows[parseInt(key)].original.id);
+  //   try {
+  //     await axios.post('/api/delete', { ids: selectedIds });
+  //     // Handle successful delete, e.g., refresh table data
+  //   } catch (error) {
+  //     console.error('Failed to delete selected rows:', error);
+  //   }
+  // };
 
-  const handleBlockAll = async () => {
-    const selectedIds = Object.keys(rowSelection).map(key => table.getRowModel().rows[parseInt(key)].original.id);
-    try {
-      await axios.post('/api/block', { ids: selectedIds });
-      // Handle successful block, e.g., refresh table data
-    } catch (error) {
-      console.error('Failed to block selected rows:', error);
-    }
-  };
+  // const handleBlockAll = async () => {
+  //   const selectedIds = Object.keys(rowSelection).map(key => table.getRowModel().rows[parseInt(key)].original.id);
+  //   try {
+  //     await axios.post('/api/block', { ids: selectedIds });
+  //     // Handle successful block, e.g., refresh table data
+  //   } catch (error) {
+  //     console.error('Failed to block selected rows:', error);
+  //   }
+  // };
 
   return (
     <div className='border rounded-b-lg'>
@@ -82,8 +82,19 @@ export function DataTable({ columns, data, DataTableToolbar }) {
               aria-label="Select all"
               className="translate-y-[2px] mr-4"
             />
-            <button className="btn btn-danger" onClick={handleDeleteAll}>Delete All</button>
-            <button className="btn btn-warning ml-2" onClick={handleBlockAll}>Block All</button>
+           
+            {actionButtons.map((button, index) => (
+              <button
+                key={index}
+                className={cn("ml-2 font-semibold  flex justify-center items-center w-32 text-[15px] bg-white shadow-md hover:shadow-lg px-2 rounded-full  border ",button.className)}
+                onClick={button.onClick}
+              >
+                {
+                  button.icon && <button.icon className={cn("w-8 h-8 px-2",button.iconClassName)} />
+                }
+                {button.label}
+              </button>
+            ))}
           </div>
         ) : (
           DataTableToolbar && <DataTableToolbar table={table} />
