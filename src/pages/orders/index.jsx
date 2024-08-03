@@ -12,7 +12,7 @@ import { Order } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
 import Loader from "@/components/common/loader";
 import { PurchaseColumns } from "./components/purchase-column";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function Orders() {
   // this is tabsConfig
@@ -23,7 +23,27 @@ export default function Orders() {
     { value: "shipping", icon: Plane, label: "Shipping" },
   ];
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [isActive,setIsActive] = useState("purchase");
+  const [enabled,setIsEnable] = useState(false);
+
+  const filter = useMemo(() => ({
+    // status: isActive,
+    search: searchTerm || null,
+    country: selectedCountries || null, 
+    startDate: dateRange.from || null,
+    endDate: dateRange.to || null,
+  }), [searchTerm, selectedCountries, dateRange]);
+
+
+  console.log("date range : ", dateRange);
+
+  const handleDateRangeUpdate = (range) => {
+    console.log("RANGE => ", range)
+    setDateRange(range);
+  };
 
   const {
     data: { data: { data: ordersData } = {} } = {},
@@ -31,16 +51,35 @@ export default function Orders() {
     refetch: OrderRefetch, 
   } = useGet({
     key: "ordersData",
-    endpoint: Order.Order_Details,
+    endpoint: `${Order.Order_Details}?${new URLSearchParams(filter)}`
   });
+
+  const {
+    data,  
+    refetch: DownlaodRefetch,
+  } = useGet({
+    key: "downloadData",
+    endpoint: Order.Download_Order,
+    enabled : enabled
+  });
+  console.log("data: ", data)
+
+  const handleDownload = () =>{
+    setIsEnable(true); 
+    DownlaodRefetch();
+  }
+
+
+
+
   return (
     <div>
       <Header title="Orders" className=" ">
-        <CommonSearch />
-        <Country />
-        <DateRangePicker />
+      <CommonSearch onSearch={setSearchTerm}/>
+      <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
+      <DateRangePicker onUpdate={handleDateRangeUpdate}/>
         <CommonButton>
-          <Download className="w-6 h-6" />
+          <Download className="w-6 h-6" onClick={handleDownload}/>
         </CommonButton>
       </Header>
 

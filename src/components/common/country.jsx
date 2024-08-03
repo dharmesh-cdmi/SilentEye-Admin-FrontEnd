@@ -17,10 +17,11 @@ const countries = [
   { id: "ES", label: "Spain", icon: "ES" },
 ];
 
-export default function Country() {
+export default function Country({selectedCountries,setSelectedCountries}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountries, setSelectedCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  console.log({selectedCountries})
 
   const handleCheckboxChange = (id) => {
     setSelectedCountries((prev) =>

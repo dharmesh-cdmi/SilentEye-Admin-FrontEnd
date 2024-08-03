@@ -2,7 +2,7 @@ import { TabsList, TabsTrigger } from "../ui/tabs";
 
 export default function CustomTabs({ tabs,setIsActive}) {
   return (
-    <div className="w-full overflow-x-auto border rounded-t-lg ">
+    <div className="w-full overflow-x-auto custom-scrollbar border rounded-t-lg ">
       <TabsList className="rounded-bl-none rounded-r-none">
         {tabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value} className="border-r " onClick={()=> setIsActive(tab.value)}>

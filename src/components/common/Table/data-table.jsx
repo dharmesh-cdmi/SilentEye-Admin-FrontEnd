@@ -23,7 +23,7 @@ import { DataTablePagination } from './data-table-pagination';
 import { Checkbox } from '@/components/ui/checkbox'; // Assuming you are using this component
 import { cn } from '@/lib/utils';
 
-export function DataTable({ columns, data, DataTableToolbar, actionButtons }) {
+export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPaginate = true}) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -152,7 +152,10 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons }) {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {
+        isPaginate &&  <DataTablePagination table={table} />
+      }
+     
     </div>
   );
 }
