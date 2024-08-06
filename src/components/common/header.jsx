@@ -2,8 +2,10 @@ import { MoveLeft } from "lucide-react";
 import CommonButton from "../ui/common-button";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header({ children, title, className }) {
+  const navigate = useNavigate();
   const [isSmallScreen, setIsSmallScreen] = useState(
     typeof window !== "undefined" ? window.innerWidth < 960 : false
   );
@@ -27,7 +29,7 @@ export default function Header({ children, title, className }) {
       )}
     >
       <div className="flex justify-start items-center">
-        <CommonButton>
+        <CommonButton onClick={()=> navigate(-1)}>
           <MoveLeft />
         </CommonButton>
         <p className="lg:text-[20px] text-[16px] font-semibold px-2">{title}</p>

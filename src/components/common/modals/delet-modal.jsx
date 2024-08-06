@@ -9,9 +9,33 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
+import useDelete from "@/hooks/use-delete";
+import { LoaderCircle, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 
-const DeleteModal = ({ entry = "delete click", open, setOpen }) => {
+const DeleteModal = ({
+  endpoint,
+  open,
+  setOpen,
+  msg = "Delete Successfully !",
+  dataRefetch,
+  id,
+}) => {
+  const { mutateAsync: deleteMutation, isLoading: deleteLoading } = useDelete({
+    endpoint: endpoint,
+  });
+
+  const handleDelete = async () => {
+    try {
+      const res = await deleteMutation(id);
+      toast.success(res?.data?.message || msg);
+      await dataRefetch();
+      setOpen(false);
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
+
   return (
     <AlertDialog open={open}>
       <AlertDialogContent className="">
@@ -33,17 +57,22 @@ const DeleteModal = ({ entry = "delete click", open, setOpen }) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="border-t w-full pt-4">
-          <AlertDialogCancel onClick={() => setOpen(false)} className="w-[79px] h-[40px] text-[20px]">
+          <AlertDialogCancel
+            onClick={() => setOpen(false)}
+            className="w-[79px] h-[40px] text-[20px]"
+          >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-          className="w-[80%] h-[40px] bg-red-200 hover:bg-red-300 border border-red-700 text-black text-[20px] flex justify-center items-center space-x-4"
-            onClick={async () => {
-              // await deleteEntry(entry);
-              console.log("Delete Click ", entry);
-            }}
+            className="w-[80%] h-[40px] bg-red-200 hover:bg-red-300 border border-red-700 text-black text-[20px] flex justify-center items-center space-x-4"
+            onClick={handleDelete}
           >
-            <Trash2 className="w-6 h-6 text-red-500"/> <h3 className="">Delete Permanently</h3>
+            {deleteLoading ? (
+              <LoaderCircle size={22} className="animate-spin" />
+            ) : (
+              <Trash2 className="w-6 h-6 text-red-500" />
+            )}{" "}
+            <h3 className="">Delete Permanently</h3>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

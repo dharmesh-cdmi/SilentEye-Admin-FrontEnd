@@ -15,22 +15,22 @@ export const getAccessToken = () => {
     }
   };
   
-//   // Get refresh token from localstorage
-//   export const getRefreshToken = () => {
-//     const state = JSON.parse(localStorage.getItem("__auth_tokens") ?? "{}");
-//     return state["refreshToken"];
-//   };
+  // Get refresh token from localstorage
+  export const getRefreshToken = () => {
+    const state = JSON.parse(localStorage.getItem("__auth_tokens") ?? "{}");
+    return state["refreshToken"];
+  };
   
-//   // Set access token to localstorage
-//   export const setRefreshToken = (refreshToken) => {
-//     if (refreshToken) {
-//       const state = JSON.parse(localStorage.getItem("__auth_tokens") ?? "{}");
-//       const newState = { ...state, refreshToken };
+  // Set access token to localstorage
+  export const setRefreshToken = (refreshToken) => {
+    if (refreshToken) {
+      const state = JSON.parse(localStorage.getItem("__auth_tokens") ?? "{}");
+      const newState = { ...state, refreshToken };
   
-//       // mutate local storage state
-//       localStorage.setItem("__auth_tokens", JSON.stringify(newState));
-//     }
-//   };
+      // mutate local storage state
+      localStorage.setItem("__auth_tokens", JSON.stringify(newState));
+    }
+  };
   
   // Remove access token and refresh token from localstorage
   export const removeTokens = () => {

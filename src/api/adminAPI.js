@@ -2,11 +2,13 @@ import axios from "axios";
 import adminQueryClient from "./adminQueryClient";
 import {
   getAccessToken,
+  getRefreshToken,
   removeTokens,
   setAccessToken,
 } from "@/utils/localStorageUtils";
+import { Auth, PROD_ADMIN_BASE_URL } from "./endpoints";
 
-const PROD_ADMIN_BASE_URL = "http://143.244.140.6:5000/api/";
+
 
 export const ADMIN_BASE_URL =
   import.meta.env.VITE_ADMIN_BASE_URL ?? PROD_ADMIN_BASE_URL;
@@ -48,7 +50,7 @@ adminAPI.interceptors.response.use(undefined, (error) => {
     if (!isRefreshingToken) {
       isRefreshingToken = true;
       axios
-        .post(`${ADMIN_BASE_URL}/api/Authentication/TokenRefresh`, {
+        .post(`${ADMIN_BASE_URL}${Auth.Refresh}`, {
           refreshToken,
         })
         .then(({ data = {} }) => {

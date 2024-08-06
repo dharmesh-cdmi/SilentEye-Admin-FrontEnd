@@ -33,7 +33,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
-    "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "formik": "^2.4.6",
     "lucide-react": "^0.396.0",
@@ -47,7 +46,6 @@
     "react-router-dom": "^6.24.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "yup": "^1.4.0",
     "vaul": "^0.9.1",
     "yup": "^1.4.0",
     "zod": "^3.23.8"

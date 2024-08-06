@@ -1,8 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppOutlet from "./components/outlets/Appoutlet";
 import AuthorizedOutlet from "./components/outlets/AuthorizedOutlet";
 import GeneralError from "./pages/errors/general-error";
 import NotFoundError from "./pages/errors/not-found-error";
+import UnauthorizedOutlet from "./components/outlets/UnAuthorizedOutlet";
 import Login from "./pages/login";
 
 const router = createBrowserRouter([
@@ -12,6 +13,31 @@ const router = createBrowserRouter([
     element: <AppOutlet />,
     children: [
       //auth layout
+      // {
+      //   path:"/forgotpassword",
+      //   exact: true,
+      //   element:<ForgotPassword />
+      // },
+      // {
+      //   path:"/reset-password/:id",
+      //   exact: true,
+      //   element:<ResetPassword />
+      // },
+
+      {
+        path: "login",
+        element: <UnauthorizedOutlet />,
+        children: [
+          {
+            path: "",
+            element: <Login />,
+          },
+          {
+            path: "*",
+            element: <Navigate to={"/login"} />,
+          },
+        ],
+      },
       //main layout
       {
         path: "",
@@ -39,13 +65,13 @@ const router = createBrowserRouter([
           {
             path: "/plans",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/plans")).default,
             }),
           },
           {
             path: "/users",
             lazy: async () => ({
-              Component: (await import("./pages/orders")).default,
+              Component: (await import("./pages/users")).default,
             }),
           },
           {
