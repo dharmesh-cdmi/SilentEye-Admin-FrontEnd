@@ -7,6 +7,9 @@ import { columns } from "./components/columns";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import { data } from "./data";
+import { SupportTicketAPI } from "@/api/endpoints";
+import useGet from "@/hooks/use-get";
+import Loader from "@/components/common/loader";
 
 export default function SupportTicket() {
   // this is tabsConfig
@@ -16,6 +19,14 @@ export default function SupportTicket() {
     { value: "answered", icon: RefundIcons, label: "Answered" },
     { value: "closed", icon: Plane, label: "Closed" },
   ];
+
+  const { isLoading, data: { data: { data: supportData } = {} } = {} } = useGet(
+    {
+      key: "supportData",
+      endpoint: `${SupportTicketAPI.AllData}`,
+    }
+  );
+
   return (
     <div>
       <Header title="Support Ticket">
@@ -30,7 +41,11 @@ export default function SupportTicket() {
         >
           <CustomTabs tabs={tabsConfig} />
           <TabsContent value="all" className="">
-            <DataTable data={data} columns={columns} />
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <DataTable data={supportData?.tickets || []} columns={columns} />
+            )}
           </TabsContent>
           <TabsContent value="pending">
             <DataTable data={data} columns={columns} />

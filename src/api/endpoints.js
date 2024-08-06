@@ -13,7 +13,7 @@ const Admin = {
 };
 
 const RefundRequestAPI = {
-  AllRefundRequest: "/refund-request?page=1&limit=10",
+  AllRefundRequest: "/refund-request?page=1&limit=10&search=RE69",
   DeleteRefund: "/refund-request/",
 };
 
@@ -23,6 +23,15 @@ const ContactFormAPI = {
   Delete: "/contact-form/delete-contact-form",
 };
 
+const SupportTicketAPI = {
+  AllData: "/tickets",
+};
+
+const DiscountAPI = {
+  GetAll: "/discount",
+  DeleteDiscount: "/discount",
+};
+
 export {
   PROD_ADMIN_BASE_URL,
   Auth,
@@ -30,4 +39,6 @@ export {
   Admin,
   RefundRequestAPI,
   ContactFormAPI,
+  SupportTicketAPI,
+  DiscountAPI,
 };

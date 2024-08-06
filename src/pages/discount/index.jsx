@@ -1,13 +1,15 @@
 import { DataTable } from "@/components/common/Table/data-table";
+import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
-import { CircleDollarSign, PlusCircle } from "lucide-react";
-import { columns } from "./components/columns";
-import Header from "@/components/common/header";
-import { data } from "./data";
-import CouponForm from "./components/coupon-form";
 import { Button } from "@/components/custom/button";
+import DiscountColumns from "./components/columns";
+import CouponForm from "./components/coupon-form";
+import Header from "@/components/common/header";
+import Loader from "@/components/common/loader";
+import { DiscountAPI } from "@/api/endpoints";
+import useGet from "@/hooks/use-get";
 
 export default function Discount() {
   const tabsConfig = [
@@ -15,6 +17,19 @@ export default function Discount() {
     { value: "active", icon: OrdersIcon, label: "Active" },
     { value: "expired", icon: RefundIcons, label: "Expired" },
   ];
+
+  const {
+    isLoading,
+    data: { data: { data: discountData } = {} } = {},
+    refetch: discountRefetch,
+  } = useGet({
+    key: "discountData",
+    endpoint: `${DiscountAPI.GetAll}${new URLSearchParams()}`,
+  });
+
+  const handleTabActive = (activeTabData) => {
+    console.log(activeTabData);
+  };
 
   return (
     <div>
@@ -26,16 +41,19 @@ export default function Discount() {
           defaultValue="all"
           className="h-full rounded-none"
         >
-          <CustomTabs tabs={tabsConfig} />
-          <TabsContent value="all" className="">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="active">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="expired">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
+          <CustomTabs setIsActive={handleTabActive} tabs={tabsConfig} />
+          {isLoading ? (
+            <Loader />
+          ) : (
+            tabsConfig.map(({ value }) => (
+              <TabsContent key={value} value={value}>
+                <DataTable
+                  data={discountData?.docs || []}
+                  columns={DiscountColumns(discountRefetch)}
+                />
+              </TabsContent>
+            ))
+          )}
         </Tabs>
 
         <CouponForm onSubmit={(data) => console.log(data)}>

@@ -10,6 +10,7 @@ import Header from "@/components/common/header";
 import RefundColumns from "./components/columns";
 import Loader from "@/components/common/loader";
 import useGet from "@/hooks/use-get";
+import { useState } from "react";
 
 export default function RefundRequest() {
   const tabsConfig = [
@@ -21,19 +22,21 @@ export default function RefundRequest() {
     { value: "true-refunded", icon: Plane, label: "True Refunded" },
   ];
 
+  const [searchKey, setSearchKey] = useState("");
+
   const {
     isLoading,
     data: { data: { data: refundData } = {} } = {},
     refetch: refundRefecth,
   } = useGet({
     key: "refundData",
-    endpoint: RefundRequestAPI.AllRefundRequest,
+    endpoint: `${RefundRequestAPI.AllRefundRequest}`,
   });
 
   return (
     <div>
       <Header title="Refund Request">
-        <CommonSearch onSearch={(key) => console.log(key)} />
+        <CommonSearch onSearch={setSearchKey} />
 
         <SettingDialog />
       </Header>

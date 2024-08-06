@@ -56,7 +56,7 @@ export default function RefundColumns(refundRefecth) {
       ),
     },
     {
-      accessorKey: "_id",
+      accessorKey: "index",
       header: () => (
         <div className="text-nowrap text-base text-black font-medium opacity-60">
           Index
@@ -64,7 +64,7 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => (
         <div className="text-black font-medium text-center text-nowrap opacity-60">
-          #{Number(row.id) + 1}
+          #{row.getValue("index")}
         </div>
       ),
       enableSorting: false,
@@ -80,7 +80,7 @@ export default function RefundColumns(refundRefecth) {
       cell: ({ row }) => {
         return (
           <div className="text-base text-black font-medium opacity-60">
-            {row.getValue("requestId")}
+            #{row.getValue("requestId")}
           </div>
         );
       },
@@ -139,7 +139,7 @@ export default function RefundColumns(refundRefecth) {
       cell: ({ row }) => {
         return (
           <div className="text-base text-black font-medium">
-            {row.getValue("planId")}
+            {row.original.planId.name}
           </div>
         );
       },

@@ -411,7 +411,7 @@ const CheckIcon = ({ className = "", size = 20 }) => (
   >
     <path
       d="M1.1665 7.08325C1.1665 7.08325 2.4165 7.08325 4.08317 9.99992C4.08317 9.99992 8.7155 2.36103 12.8332 0.833252"
-      stroke="black"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -1202,6 +1202,13 @@ const AddonsIcon = ({className="", size=20}) =>(
 
 )
 
+const ShildIcon = ({className="", size=20 }) =>(
+  <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 2L21 8M21 2L15 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M6 22C7.65685 22 9 20.6569 9 19C9 17.3431 7.65685 16 6 16C4.34315 16 3 17.3431 3 19C3 20.6569 4.34315 22 6 22Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 5H8.5C6.567 5 5 6.567 5 8.5C5 10.433 6.567 12 8.5 12H15.5C17.433 12 19 13.567 19 15.5C19 17.433 17.433 19 15.5 19H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
 
 
 export {
@@ -1256,5 +1263,6 @@ export {
   OpenIcon,
   LogoutIcon,
   ProductsIcon,
-  AddonsIcon
+  AddonsIcon,
+  ShildIcon
 };
