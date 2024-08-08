@@ -14,7 +14,7 @@ import {
   TrashIcon,
 } from "@/assets/icons";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatDateTime } from "@/lib/utils";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import { useState } from "react";
 import EditRefundForm from "./edit-refund-form";
@@ -191,7 +191,7 @@ export default function RefundColumns(refundRefecth) {
       cell: ({ row }) => {
         return (
           <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
-            {row.getValue("createdAt")}
+            {formatDateTime(row.original.createdAt)}
           </div>
         );
       },

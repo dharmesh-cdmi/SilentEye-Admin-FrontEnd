@@ -17,6 +17,8 @@ import { Switch } from "@/components/ui/switch";
 import { DiscountAPI } from "@/api/endpoints";
 import CouponForm from "./coupon-form";
 import { useState } from "react";
+import useUpdate from "@/hooks/use-update";
+import { formatDateTime } from "@/lib/utils";
 
 export default function DiscountColumns(discountRefetch) {
   return [
@@ -47,7 +49,7 @@ export default function DiscountColumns(discountRefetch) {
       cell: ({ row }) => {
         return (
           <div className="text-nowrap text-base text-black font-medium">
-            {row.getValue("createdAt")}
+            {formatDateTime(row.original.createdAt)}
           </div>
         );
       },
@@ -127,7 +129,15 @@ export default function DiscountColumns(discountRefetch) {
         </div>
       ),
       cell: ({ row }) => {
-        const isLive = row.original.status === "test" ? false : true;
+        let isLive = row.original.status === "test" ? false : true;
+
+        const {
+          mutateAsync: discountMutateAsync,
+          isLoading: discountStatusChanging,
+        } = useUpdate({
+          isMultiPart: false,
+          endpoint: DiscountAPI.ChangeStatus + row.original._id,
+        });
 
         const handleStatusChange = async (updatedIsLive) => {
           try {
@@ -142,11 +152,15 @@ export default function DiscountColumns(discountRefetch) {
 
         return (
           <div className="text-base font-medium">
-            <Switch
-              className="data-[state=checked]:bg-[#34C759]"
-              defaultChecked={isLive}
-              onCheckedChange={handleStatusChange}
-            />
+            {discountStatusChanging ? (
+              "Loading.."
+            ) : (
+              <Switch
+                className="data-[state=checked]:bg-[#34C759]"
+                defaultChecked={isLive}
+                onCheckedChange={handleStatusChange}
+              />
+            )}
           </div>
         );
       },

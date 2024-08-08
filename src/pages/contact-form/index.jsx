@@ -6,8 +6,11 @@ import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
 import { ContactFormAPI } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
+import { useMemo, useState } from "react";
 
 export default function ContactForm() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {
     isLoading,
     data: { data: contactData = {} } = {},
@@ -20,7 +23,7 @@ export default function ContactForm() {
   return (
     <div>
       <Header title="Contact Form">
-        <CommonSearch />
+        <CommonSearch onSearch={setSearchQuery} />
       </Header>
 
       <div className="w-full">

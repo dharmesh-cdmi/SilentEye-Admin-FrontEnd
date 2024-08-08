@@ -3,59 +3,71 @@ import { CircleDollarSign, Plane } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
-import { columns } from "./components/columns";
-import CommonSearch from "@/components/ui/search";
-import Header from "@/components/common/header";
-import { data } from "./data";
 import { SupportTicketAPI } from "@/api/endpoints";
-import useGet from "@/hooks/use-get";
+import CommonSearch from "@/components/ui/search";
+import TicketColumns from "./components/columns";
+import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
+import { useMemo, useState } from "react";
+import useGet from "@/hooks/use-get";
 
 export default function SupportTicket() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "all", icon: CircleDollarSign, label: "All" },
-    { value: "pending", icon: OrdersIcon, label: "Pending" },
-    { value: "answered", icon: RefundIcons, label: "Answered" },
-    { value: "closed", icon: Plane, label: "Closed" },
+    { value: "All", icon: CircleDollarSign, label: "All" },
+    { value: "Pending", icon: OrdersIcon, label: "Pending" },
+    { value: "Answered", icon: RefundIcons, label: "Answered" },
+    { value: "Closed", icon: Plane, label: "Closed" },
   ];
 
-  const { isLoading, data: { data: { data: supportData } = {} } = {} } = useGet(
-    {
-      key: "supportData",
-      endpoint: `${SupportTicketAPI.AllData}`,
-    }
-  );
+  const [activeTab, setActiveTab] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filter = useMemo(() => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.append("searchQuery", searchQuery);
+    if (activeTab !== "All") params.append("status", activeTab);
+    return params.toString();
+  }, [activeTab, searchQuery]);
+
+  const {
+    isLoading,
+    data: { data: { data: supportData } = {} } = {},
+    refetch: ticketRefecth,
+  } = useGet({
+    key: "supportData",
+    endpoint: `${SupportTicketAPI.AllData}?${filter}`,
+  });
 
   return (
     <div>
       <Header title="Support Ticket">
-        <CommonSearch />
+        <CommonSearch onSearch={setSearchQuery} />
       </Header>
 
       <div className="w-full">
         <Tabs // This is Shadcn Tabs
           orientation="vertical"
-          defaultValue="all"
+          defaultValue={activeTab}
           className="h-full rounded-none"
         >
-          <CustomTabs tabs={tabsConfig} />
-          <TabsContent value="all" className="">
-            {isLoading ? (
-              <Loader />
-            ) : (
-              <DataTable data={supportData?.tickets || []} columns={columns} />
-            )}
-          </TabsContent>
-          <TabsContent value="pending">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="answered">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="closed">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
+          <CustomTabs
+            value={activeTab}
+            tabs={tabsConfig}
+            setIsActive={setActiveTab}
+          />
+          {tabsConfig.map(({ value }) => (
+            <TabsContent key={value} value={value}>
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <DataTable
+                  data={supportData?.tickets || []}
+                  columns={TicketColumns(ticketRefecth)}
+                />
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </div>

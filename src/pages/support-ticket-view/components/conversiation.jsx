@@ -18,7 +18,7 @@ function Message({ message, isOwner }) {
   return (
     <div
       className={cn(
-        "self-end w-fit max-w-[50%] py-1.5 px-3 bg-gray-200 rounded-xl",
+        "self-end w-fit max-w-[90%] md:max-w-[50%] py-1.5 px-3 bg-gray-200 rounded-xl",
         isOwner ? "self-end bg-blue-500 text-white" : "self-start"
       )}
     >

@@ -25,11 +25,13 @@ const ContactFormAPI = {
 
 const SupportTicketAPI = {
   AllData: "/tickets",
+  DeleteTicket: "/tickets/",
 };
 
 const DiscountAPI = {
   GetAll: "/discount",
-  DeleteDiscount: "/discount",
+  DeleteDiscount: "/discount/",
+  ChangeStatus: "/discount/",
 };
 
 export {
