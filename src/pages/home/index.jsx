@@ -3,8 +3,11 @@ import { Download } from "lucide-react";
 import LineChart from "./components/charts/LineChart";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import HomeCard from "./components/HomeCard";
+import useGet from "@/hooks/use-get";
+import { Dashboard } from "@/api/endpoints";
+import useFilteredParams from "@/hooks/useFilterParams";
 
-const home = () => {
+const Home = () => {
   const testData = [
     {
       label: "Checkout Page Visitor",
@@ -33,6 +36,38 @@ const home = () => {
   ];
 
   const testCategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct"];
+
+  const filter = {
+    groupBy : "country"
+  }
+  const filterCheck = useFilteredParams(filter);
+  const analyticsFilter = {
+    // startDate : "", 
+    // endDate : "", 
+    // page : "",
+    // action : "",
+  }
+  const filterParams = useFilteredParams(analyticsFilter);
+
+  const {
+    data: { data: { data: tableData } = {} } = {},
+    isLoading: TableLoading,
+    refetch: TableRefetch, 
+  } = useGet({
+    key: "tableData",
+    endpoint: `${Dashboard.Table}?${new URLSearchParams(filterCheck)}`
+  });
+
+  const {
+    data: { data: { data: analyticsData } = {} } = {},
+    isLoading: analyticsLoading,
+    refetch: AnalyticsRefetch, 
+  } = useGet({
+    key: "analyticsData",
+    endpoint: `${Dashboard.Analytics}?${new URLSearchParams(filterParams)}`
+  });
+
+  console.log("analyticsData ", analyticsData)
   return (
     <div>
       <div className="flex items-center justify-start space-y-2">
@@ -45,32 +80,51 @@ const home = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full bg-white border rounded-xl h-[340px] p-5 shadow-md mt-[30px]">
+      <div className="w-full bg-white border rounded-xl min-h-[340px] p-5 shadow-md mt-[30px]">
         <LineChart data={testData} categories={testCategories} />
       </div>
 
-      <div className="mt-[30px] grid grid-cols-5 gap-5">
+      <div className="mt-[30px] grid lg:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
         <HomeCard title="Visitor" value="645.21k" />
         <HomeCard title="Demo Viewer" value="645.21k" />
         <HomeCard title="Plan Page Visitor" value="645.21k" />
         <HomeCard title="Checkout Page Visitor" value="645.21k" />
         <HomeCard title="Add Ons Sales" value="645.21k" isImage={false} amount="$32,000.00" />
       </div>
-      <div className="mt-[30px] grid grid-cols-5 gap-5">
+      <div className="mt-[30px] grid lg:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
         <HomeCard title="Payment Initiated" value="645.21k" isImage={false} amount="$32,000.00"/>
         <HomeCard title="Total Order" value="645.21k" isImage={false} amount="$42,000.00"/>
         <HomeCard title="Total Purchased User" value="645.21k" isImage={false} amount="$52,000.00"/>
         <HomeCard title="Conversion" value="645.21k" />
         <HomeCard title="Logged In Users" value="645.21k" />
       </div>
-      <div className="mt-[30px] grid grid-cols-5 gap-5">
+      <div className="mt-[30px] grid lg:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
         <HomeCard title="Support Tickets" value="645.21k" />
         <HomeCard title="Refund Request" value="645.21k" isImage={false} amount="$82,000.00000"/>
         <HomeCard title="Total Refunds" value="645.21k" isImage={false} amount="$22,000.0000"/>
         <HomeCard title="True Refunds" value="645.21k" isImage={false} amount="$62,000.009000"/>
         <HomeCard title="Contact Us" value="645.21k" />
       </div>
+      <div className="py-5">
+        <h2 className="text-[20px] font-semibold">User Statistics By Country</h2>
+
+      </div>
+      <div className="py-5">
+        <h2 className="text-[20px] font-semibold">User Statistics By Plans & Add Ons</h2>
+
+      </div>
+      <div className="py-5 grid lg:grid-cols-2 grid-cols-1 ">
+        <div>
+        <h2 className="text-[20px] font-semibold">User Statistics By Product & Shipping</h2>
+        </div>
+        <div>
+        <h2 className="text-[20px] font-semibold">User Statistics By Product & Shipping</h2>
+        </div>
+        
+
+      </div>
+      
     </div>
   );
 };
-export default home;
+export default Home;

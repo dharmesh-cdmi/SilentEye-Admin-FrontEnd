@@ -299,6 +299,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
             console.log(err);
           }
         };
+        
         return (
           <div className="flex justify-center items-center">
             {blockLoading ? (

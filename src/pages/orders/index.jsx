@@ -13,6 +13,7 @@ import useGet from "@/hooks/use-get";
 import Loader from "@/components/common/loader";
 import { PurchaseColumns } from "./components/purchase-column";
 import { useMemo, useState } from "react";
+import useFilteredParams from "@/hooks/useFilterParams";
 
 export default function Orders() {
   // this is tabsConfig
@@ -37,11 +38,9 @@ export default function Orders() {
     endDate: dateRange.to || null,
   }), [searchTerm, selectedCountries, dateRange]);
 
-
-  console.log("date range : ", dateRange);
+  const filterParams = useFilteredParams(filter);
 
   const handleDateRangeUpdate = (range) => {
-    console.log("RANGE => ", range)
     setDateRange(range);
   };
 
@@ -51,7 +50,7 @@ export default function Orders() {
     refetch: OrderRefetch, 
   } = useGet({
     key: "ordersData",
-    endpoint: `${Order.Order_Details}?${new URLSearchParams(filter)}`
+    endpoint: `${Order.Order_Details}?${new URLSearchParams(filterParams)}`
   });
 
   const {
@@ -62,15 +61,12 @@ export default function Orders() {
     endpoint: Order.Download_Order,
     enabled : enabled
   });
-  console.log("data: ", data)
+
 
   const handleDownload = () =>{
     setIsEnable(true); 
     DownlaodRefetch();
   }
-
-
-
 
   return (
     <div>
@@ -87,7 +83,6 @@ export default function Orders() {
         <Tabs // This is Shadcn Tabs
           orientation="vertical"
           defaultValue="purchase"
-          //  className="space-y-4 h-full" //</div>==> You can add ClassName here according to your customization
         >
           {/* This is Common TabsListCompnent  */}
           <CustomTabs tabs={tabsConfig} setIsActive={setIsActive}/>

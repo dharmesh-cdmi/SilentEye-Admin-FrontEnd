@@ -81,6 +81,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: "/content-manage/:id",
+            lazy: async () => ({
+              Component: (await import("./pages/content-manage")).default,
+            }),
+          },
+          {
+            path: "/content-manage/add-pages",
+            lazy: async () => ({
+              Component: (await import("./pages/content-manage/components/pages")).default,
+            }),
+          },
+          {
             path: "/discount",
             lazy: async () => ({
               Component: (await import("./pages/discount")).default,
