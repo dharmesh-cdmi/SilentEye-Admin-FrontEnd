@@ -58,8 +58,9 @@ export default function Orders() {
     refetch: DownlaodRefetch,
   } = useGet({
     key: "downloadData",
+    enabled : enabled,
     endpoint: Order.Download_Order,
-    enabled : enabled
+   
   });
 
 
@@ -74,8 +75,8 @@ export default function Orders() {
       <CommonSearch onSearch={setSearchTerm}/>
       <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
       <DateRangePicker onUpdate={handleDateRangeUpdate}/>
-        <CommonButton>
-          <Download className="w-6 h-6" onClick={handleDownload}/>
+        <CommonButton onClick={handleDownload}>
+          <Download className="w-6 h-6" />
         </CommonButton>
       </Header>
 
