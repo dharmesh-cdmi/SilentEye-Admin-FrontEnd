@@ -23,7 +23,7 @@ import { DataTablePagination } from './data-table-pagination';
 import { Checkbox } from '@/components/ui/checkbox'; // Assuming you are using this component
 import { cn } from '@/lib/utils';
 
-export function DataTable({ columns, data, DataTableToolbar, actionButtons }) {
+export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPaginate = true,className}) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -72,7 +72,7 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons }) {
   // };
 
   return (
-    <div className='border rounded-b-lg'>
+    <div className={cn("border rounded-b-lg",className)}>
       <div className="flex justify-between">
         {Object.keys(rowSelection)?.length > 0 ? (
           <div className="flex items-center p-4">
@@ -152,7 +152,10 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons }) {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {
+        isPaginate &&  <DataTablePagination table={table} />
+      }
+     
     </div>
   );
 }

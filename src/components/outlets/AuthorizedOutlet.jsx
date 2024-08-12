@@ -12,11 +12,9 @@ const AuthorizedOutlet = () => {
     const { userFound } = useAuthUserContext();
     const { pathname } = useLocation();
 
-    console.log("user FOund", userFound)
-
-    if (!userFound) {
-      return <Navigate to={"/login"} state={{ authSuccessRedirect: pathname }} />;
-    }
+    // if (!userFound) {
+    //   return <Navigate to={"/login"} state={{ authSuccessRedirect: pathname }} />;
+    // }
 
   return (
     <Fragment>

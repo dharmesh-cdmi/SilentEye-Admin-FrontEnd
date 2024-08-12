@@ -12,7 +12,8 @@ import { Order } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
 import Loader from "@/components/common/loader";
 import { PurchaseColumns } from "./components/purchase-column";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import useFilteredParams from "@/hooks/useFilterParams";
 
 export default function Orders() {
   // this is tabsConfig
@@ -23,7 +24,25 @@ export default function Orders() {
     { value: "shipping", icon: Plane, label: "Shipping" },
   ];
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [isActive,setIsActive] = useState("purchase");
+  const [enabled,setIsEnable] = useState(false);
+
+  const filter = useMemo(() => ({
+    // status: isActive,
+    search: searchTerm || null,
+    country: selectedCountries || null, 
+    startDate: dateRange.from || null,
+    endDate: dateRange.to || null,
+  }), [searchTerm, selectedCountries, dateRange]);
+
+  const filterParams = useFilteredParams(filter);
+
+  const handleDateRangeUpdate = (range) => {
+    setDateRange(range);
+  };
 
   const {
     data: { data: { data: ordersData } = {} } = {},
@@ -31,15 +50,32 @@ export default function Orders() {
     refetch: OrderRefetch, 
   } = useGet({
     key: "ordersData",
-    endpoint: Order.Order_Details,
+    endpoint: `${Order.Order_Details}?${new URLSearchParams(filterParams)}`
   });
+
+  const {
+    data,  
+    refetch: DownlaodRefetch,
+  } = useGet({
+    key: "downloadData",
+    enabled : enabled,
+    endpoint: Order.Download_Order,
+   
+  });
+
+
+  const handleDownload = () =>{
+    setIsEnable(true); 
+    DownlaodRefetch();
+  }
+
   return (
     <div>
       <Header title="Orders" className=" ">
-        <CommonSearch />
-        <Country />
-        <DateRangePicker />
-        <CommonButton>
+      <CommonSearch onSearch={setSearchTerm}/>
+      <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
+      <DateRangePicker onUpdate={handleDateRangeUpdate}/>
+        <CommonButton onClick={handleDownload}>
           <Download className="w-6 h-6" />
         </CommonButton>
       </Header>
@@ -48,7 +84,6 @@ export default function Orders() {
         <Tabs // This is Shadcn Tabs
           orientation="vertical"
           defaultValue="purchase"
-          //  className="space-y-4 h-full" //</div>==> You can add ClassName here according to your customization
         >
           {/* This is Common TabsListCompnent  */}
           <CustomTabs tabs={tabsConfig} setIsActive={setIsActive}/>
