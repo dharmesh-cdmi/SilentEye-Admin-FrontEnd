@@ -14,6 +14,10 @@ import Loader from "@/components/common/loader";
 import { PurchaseColumns } from "./components/purchase-column";
 import { useMemo, useState } from "react";
 import useFilteredParams from "@/hooks/useFilterParams";
+import axios from "axios";
+
+export const ADMIN_BASE_URL =
+  import.meta.env.VITE_ADMIN_BASE_URL ?? PROD_ADMIN_BASE_URL;
 
 export default function Orders() {
   // this is tabsConfig
@@ -64,10 +68,60 @@ export default function Orders() {
   });
 
 
-  const handleDownload = () =>{
-    setIsEnable(true); 
-    DownlaodRefetch();
-  }
+  // const handleDownload = () =>{
+  //   setIsEnable(true); 
+  //   DownlaodRefetch();
+  // }
+  
+  const handleDownload = async () => {
+    try {
+      const tokenObject = JSON.parse(localStorage.getItem('__auth_tokens')); // Parse the token object
+      const token = tokenObject?.accessToken; // Extract the access token
+  
+      if (!token) {
+        throw new Error('No access token found');
+      }
+      
+      // Make API call to get the file
+      const response = await fetch(`${ADMIN_BASE_URL}${Order.Download_Order}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        method: 'GET',
+      });
+      
+      if (response.status === 401) {
+        throw new Error('Unauthorized: Please log in.');
+      }
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      
+      // Convert response to blob
+      const blob = await response.blob();
+      
+      // Create a URL for the blob and trigger download
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a link element to trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'orders.xlsx'; // Specify file name here
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+      alert('There was an error downloading the file. Please try again.');
+    }
+  };
+    
+  
 
   return (
     <div>
