@@ -63,10 +63,10 @@ export default function DiscountColumns(discountRefetch) {
         </div>
       ),
       cell: ({ row }) => {
-        const validity = row.getValue("validity");
+        const isValidity = row.original.validity !== "No Limit";
         return (
           <div className="text-nowrap text-black text-base font-medium">
-            {validity || "No limit"}
+            {isValidity ? formatDateTime(row.original.validity) : "No limit"}
           </div>
         );
       },
@@ -82,7 +82,7 @@ export default function DiscountColumns(discountRefetch) {
       cell: ({ row }) => {
         return (
           <div className="text-base text-black font-medium">
-            {row.getValue("useLimit")}
+            {row.original.useLimit || "-"}
           </div>
         );
       },
@@ -129,7 +129,9 @@ export default function DiscountColumns(discountRefetch) {
         </div>
       ),
       cell: ({ row }) => {
-        let isLive = row.original.status === "test" ? false : true;
+        const [isLive, setIsLive] = useState(
+          row.original.status === "test" ? false : true
+        );
 
         const {
           mutateAsync: discountMutateAsync,
@@ -140,13 +142,14 @@ export default function DiscountColumns(discountRefetch) {
         });
 
         const handleStatusChange = async (updatedIsLive) => {
+          setIsLive((prev) => !prev);
           try {
-            const res = await discountMutateAsync({
+            await discountMutateAsync({
               status: updatedIsLive ? "live" : "test",
             });
-            console.log(res);
+            setIsLive(updatedIsLive);
           } catch (error) {
-            console.log(error);
+            setIsLive(row.original.status === "test" ? false : true);
           }
         };
 
@@ -158,6 +161,7 @@ export default function DiscountColumns(discountRefetch) {
               <Switch
                 className="data-[state=checked]:bg-[#34C759]"
                 defaultChecked={isLive}
+                checked={isLive}
                 onCheckedChange={handleStatusChange}
               />
             )}
@@ -175,10 +179,40 @@ export default function DiscountColumns(discountRefetch) {
       ),
       cell: ({ row }) => {
         const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+        const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+        const { mutateAsync: updateDiscountMutation } = useUpdate({
+          endpoint: DiscountAPI.ChangeStatus + row.original._id,
+        });
+
+        const handleUpdate = async (values) => {
+          const validity = values.isValidity
+            ? new Date(
+                `${values.validityDate}T${values.validityTime}`
+              ).toISOString()
+            : "No Limit";
+
+          await updateDiscountMutation({
+            coupon: values.coupon,
+            discountPercent: values.discountPercent,
+            useLimit: values.useLimit,
+            status: values.status,
+            validity,
+          });
+
+          discountRefetch();
+          setIsEditModalOpen(false);
+        };
+
         return (
           <>
             <div className="flex justify-center gap-1.5">
-              <CouponForm initialValues={row.original}>
+              <CouponForm
+                open={isEditModalOpen}
+                setOpen={setIsEditModalOpen}
+                initialValues={row.original}
+                onSubmit={handleUpdate}
+              >
                 <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
                   <EditIcon />
                 </Button>

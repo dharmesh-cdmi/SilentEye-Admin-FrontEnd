@@ -146,14 +146,14 @@ export default function TicketColumns(ticketRefecth) {
     {
       accessorKey: "message",
       header: () => (
-        <div className="inline-flex items-center gap-2 text-base text-black font-medium">
+        <div className="inline-flex items-center gap-2 text-base text-black">
           <MessageIcon />
           Message
         </div>
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
+          <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate font-normal text-base text-black">
             {row.original.message}
           </div>
         );
@@ -162,14 +162,14 @@ export default function TicketColumns(ticketRefecth) {
     {
       accessorKey: "createdAt",
       header: () => (
-        <div className="inline-flex items-center gap-2 text-base text-black font-medium">
+        <div className="inline-flex items-center gap-2 text-base text-black">
           <CreatedIcon />
           Created
         </div>
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] font-normal text-base text-black">
             {formatDateTime(row.original.createdAt)}
           </div>
         );
@@ -178,15 +178,15 @@ export default function TicketColumns(ticketRefecth) {
     {
       accessorKey: "lastReply",
       header: () => (
-        <div className="inline-flex items-center gap-2 text-base text-nowrap text-black font-medium">
+        <div className="inline-flex items-center gap-2 text-base text-nowrap text-black">
           <MessageIcon />
           Last Reply
         </div>
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
-            {row.original?.lastReply}
+          <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate font-normal text-base text-black">
+            {row.original.lastReply || "-"}
           </div>
         );
       },
@@ -194,8 +194,8 @@ export default function TicketColumns(ticketRefecth) {
     {
       id: "actions",
       header: () => (
-        <div className="inline-flex items-center justify-end gap-2 text-base text-black font-medium">
-          <ActionIcon />
+        <div className="inline-flex items-center justify-end gap-2 text-base text-black">
+          <ActionIcon size={20} />
           Action
         </div>
       ),
@@ -206,7 +206,7 @@ export default function TicketColumns(ticketRefecth) {
           <>
             <div className="flex justify-center gap-1.5">
               <Link
-                to="open"
+                to={`${row.original._id}`}
                 className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200"
               >
                 <EditIcon />

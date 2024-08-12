@@ -40,6 +40,8 @@ const PaymentGatewayForm = ({
   children,
   initialValues = {},
   onSubmit,
+  open,
+  setOpen,
 }) => {
   const [iconPreview, setIconPreview] = useState(null);
 
@@ -75,9 +77,7 @@ const PaymentGatewayForm = ({
       icon: initialValues.icon || "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
+    onSubmit,
   });
 
   const handleIconChange = (event) => {
@@ -99,8 +99,10 @@ const PaymentGatewayForm = ({
 
   return (
     <TooltipProvider>
-      <Dialog>
-        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <span onClick={() => setOpen(true)}>{trigger}</span>
+        </DialogTrigger>
         <DialogContent className="max-w-2xl p-0 !rounded-xl">
           <DialogHeader className="flex flex-row gap-5 p-4 border-b">
             <DialogClose asChild>

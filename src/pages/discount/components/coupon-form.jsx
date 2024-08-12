@@ -16,49 +16,78 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ArrowLeft, Info, Package, Percent } from "lucide-react";
 import { cn, isEmptyObject } from "@/lib/utils";
 import { useFormik } from "formik";
-import { ArrowLeft, Info, Package, Percent } from "lucide-react";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
   coupon: Yup.string().required("Coupon code is required"),
-  discount: Yup.number()
+  discountPercent: Yup.number()
     .min(0, "Discount must be at least 0")
     .max(100, "Discount cannot exceed 100")
     .required("Discount is required"),
-  validityDate: Yup.date().when("isLive", {
+  validityDate: Yup.date().when("isValidity", {
     is: true,
     then: (schema) => schema.required("Validity date is required"),
   }),
-  validityTime: Yup.string().when("isLive", {
+  validityTime: Yup.string().when("isValidity", {
     is: true,
     then: (schema) => schema.required("Validity time is required"),
   }),
-  limit: Yup.number()
+  useLimit: Yup.number()
     .min(1, "Limit must be at least 1")
     .required("Limit is required"),
-  isLive: Yup.boolean().default(false),
+  isValidity: Yup.boolean().default(false),
 });
 
-const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
+const formatDate = (date) => {
+  if (!date || isNaN(new Date(date).getTime())) {
+    return "";
+  }
+  const d = new Date(date);
+  const month = `${d.getMonth() + 1}`.padStart(2, "0");
+  const day = `${d.getDate()}`.padStart(2, "0");
+  const year = d.getFullYear();
+  return `${year}-${month}-${day}`;
+};
+
+const formatTime = (date) => {
+  if (!date || isNaN(new Date(date).getTime())) {
+    return "";
+  }
+  const d = new Date(date);
+  const hours = `${d.getUTCHours()}`.padStart(2, "0");
+  const minutes = `${d.getUTCMinutes()}`.padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
+const CouponForm = ({
+  open,
+  setOpen,
+  children,
+  initialValues = {},
+  onSubmit,
+}) => {
   const formik = useFormik({
     initialValues: {
       coupon: initialValues.coupon || "",
-      discount: initialValues.discount || "",
-      validityDate: initialValues.validityDate || "",
-      validityTime: initialValues.validityTime || "",
-      limit: initialValues.limit || "",
-      isLive: initialValues.isLive || false,
+      discountPercent: initialValues.discountPercent || "",
+      validityDate: formatDate(initialValues.validity),
+      validityTime: formatTime(initialValues.validity),
+      useLimit: initialValues.useLimit || "",
+      isValidity: initialValues.validity !== "No Limit" ? true : false,
     },
     validationSchema: validationSchema,
-    onSubmit: onSubmit,
+    onSubmit,
   });
 
   return (
     <TooltipProvider>
-      <Dialog>
-        <DialogTrigger>{children}</DialogTrigger>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger>
+          <span onClick={() => setOpen(true)}>{children}</span>
+        </DialogTrigger>
         <DialogContent className="max-w-xl p-0">
           <DialogHeader className="flex flex-row gap-5 p-4 border-b">
             <DialogClose asChild>
@@ -77,7 +106,7 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
             </div>
           </DialogHeader>
           <form onSubmit={formik.handleSubmit} className="px-4">
-            <section className="">
+            <section>
               <div className="flex flex-col border divide-y-[1.5px] rounded-lg overflow-hidden">
                 <div className="flex divide-x-[1.5px]">
                   <div className="min-w-24 flex items-center text-nowrap px-5">
@@ -136,8 +165,8 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
                     <div
                       className={cn(
                         "relative h-full flex items-center",
-                        formik.touched.discount &&
-                          formik.errors.discount &&
+                        formik.touched.discountPercent &&
+                          formik.errors.discountPercent &&
                           "border border-red-500"
                       )}
                     >
@@ -148,22 +177,23 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
                       <div className="w-full flex flex-col">
                         <input
                           className="h-full w-full px-5 outline-none"
-                          name="discount"
+                          name="discountPercent"
                           type="number"
-                          value={formik.values.discount}
+                          value={formik.values.discountPercent}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           placeholder="0.00"
                         />
                       </div>
 
-                      {formik.touched.discount && formik.errors.discount ? (
+                      {formik.touched.discountPercent &&
+                      formik.errors.discountPercent ? (
                         <Tooltip>
                           <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
                             <Info size={20} />
                           </TooltipTrigger>
                           <TooltipContent className="border-none bg-rose-50 text-rose-500">
-                            {formik.errors.discount}
+                            {formik.errors.discountPercent}
                           </TooltipContent>
                         </Tooltip>
                       ) : null}
@@ -192,32 +222,34 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
                       <div className="h-full w-full flex justify-between items-center divide-x-[1.5px]">
                         <div className="h-full w-full grid grid-cols-2 divide-x-[1.5px]">
                           <input
-                            className="h-full w-full px-5 outline-none"
+                            className="h-full w-full pl-5 pr-2 outline-none"
                             name="validityDate"
                             type="date"
                             value={formik.values.validityDate}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             placeholder="Enter Validity Date"
+                            disabled={!formik.values.isValidity}
                           />
 
                           <input
-                            className="h-full w-full px-5 outline-none"
+                            className="h-full w-full pl-5 pr-2 outline-none"
                             name="validityTime"
                             type="time"
                             value={formik.values.validityTime}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             placeholder="Enter Validity Time"
+                            disabled={!formik.values.isValidity}
                           />
                         </div>
 
                         <div className="h-full inline-flex items-center justify-center px-9">
                           <Switch
-                            name="isLive"
-                            checked={formik.values.isLive}
+                            name="isValidity"
+                            checked={formik.values.isValidity}
                             onCheckedChange={(checked) =>
-                              formik.setFieldValue("isLive", checked)
+                              formik.setFieldValue("isValidity", checked)
                             }
                             className="data-[state=checked]:bg-[#34C759]"
                           />
@@ -231,8 +263,8 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
                             <Info size={20} />
                           </TooltipTrigger>
                           <TooltipContent className="border-none bg-rose-50 text-rose-500">
-                            <li>{formik.errors.validityDate}</li>
-                            <li>{formik.errors.validityTime}</li>
+                            {formik.errors.validityTime ||
+                              formik.errors.validityDate}
                           </TooltipContent>
                         </Tooltip>
                       )}
@@ -242,33 +274,45 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
 
                 <div className="flex divide-x-[1.5px]">
                   <div className="min-w-24 flex items-center text-nowrap px-5">
-                    Limit
+                    Use Limit
                   </div>
-                  <div className="relative w-full flex flex-col">
-                    <input
+
+                  <div className="h-12 w-full">
+                    <div
                       className={cn(
-                        "h-12 w-full px-5 outline-none",
-                        formik.touched.limit &&
-                          formik.errors.limit &&
-                          "border border-red-400"
+                        "relative h-full flex items-center",
+                        formik.touched.useLimit &&
+                          formik.errors.useLimit &&
+                          "border border-red-500"
                       )}
-                      name="limit"
-                      type="number"
-                      value={formik.values.limit}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      placeholder="Enter Use Limit"
-                    />
-                    {formik.touched.limit && formik.errors.limit ? (
-                      <Tooltip>
-                        <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
-                          <Info size={20} />
-                        </TooltipTrigger>
-                        <TooltipContent className="border-none bg-rose-50 text-rose-500">
-                          {formik.errors.limit}
-                        </TooltipContent>
-                      </Tooltip>
-                    ) : null}
+                    >
+                      <div className="h-full w-14 flex items-center justify-center border-r-[1.5px]">
+                        <Percent size={20} />
+                      </div>
+
+                      <div className="w-full flex flex-col">
+                        <input
+                          className="h-full w-full px-5 outline-none"
+                          name="useLimit"
+                          type="number"
+                          value={formik.values.useLimit}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          placeholder="0"
+                        />
+                      </div>
+
+                      {formik.touched.useLimit && formik.errors.useLimit ? (
+                        <Tooltip>
+                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
+                            <Info size={20} />
+                          </TooltipTrigger>
+                          <TooltipContent className="border-none bg-rose-50 text-rose-500">
+                            {formik.errors.useLimit}
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -279,7 +323,10 @@ const CouponForm = ({ children, initialValues = {}, onSubmit }) => {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="h-12 w-full text-lg">
+              <Button
+                type="submit"
+                className="w-full h-12 text-lg px-10 text-white border"
+              >
                 Add & Save Coupon
               </Button>
             </DialogFooter>

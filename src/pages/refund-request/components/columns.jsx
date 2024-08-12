@@ -132,14 +132,15 @@ export default function RefundColumns(refundRefecth) {
       accessorKey: "planId",
       header: () => (
         <div className="inline-flex items-center gap-2 text-base text-black font-medium">
-          <PlanIcon />
+          <PlanIcon className="fill-none" />
           Plan
         </div>
       ),
       cell: ({ row }) => {
         return (
           <div className="text-base text-black font-medium">
-            {row.original.planId.name}
+            {row.getValue("planId")?.name}
+            {/* {row.original?.planId} */}
           </div>
         );
       },
@@ -210,7 +211,7 @@ export default function RefundColumns(refundRefecth) {
         return (
           <>
             <div className="flex justify-center gap-1.5">
-              <EditRefundForm>
+              <EditRefundForm initialValues={row.original}>
                 <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
                   <EditIcon />
                 </Button>

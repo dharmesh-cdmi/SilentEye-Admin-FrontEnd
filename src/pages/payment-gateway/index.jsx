@@ -7,15 +7,65 @@ import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { Button } from "@/components/custom/button";
 import Header from "@/components/common/header";
-import { columns } from "./components/columns";
-import { data } from "./data";
+import GatewayColumns from "./components/columns";
+import useGet from "@/hooks/use-get";
+import { PaymentGateWayAPI } from "@/api/endpoints";
+import { useMemo, useState } from "react";
+import Loader from "@/components/common/loader";
+import usePost from "@/hooks/use-post";
 
 export default function PaymentGateWay() {
   const tabsConfig = [
-    { value: "all", icon: CircleDollarSign, label: "All" },
-    { value: "active", icon: OrdersIcon, label: "Active" },
-    { value: "disabled", icon: RefundIcons, label: "Disabled" },
+    { value: "All", icon: CircleDollarSign, label: "All" },
+    { value: "live", icon: OrdersIcon, label: "Active" },
+    { value: "test", icon: RefundIcons, label: "Disabled" },
   ];
+
+  const [activeTab, setActiveTab] = useState("All");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const filter = useMemo(() => {
+    const params = new URLSearchParams();
+    params.append("page", page);
+    params.append("limit", limit);
+    if (activeTab !== "All") params.append("filterStatus", activeTab);
+    return params.toString();
+  }, [activeTab, limit, page]);
+
+  const {
+    isLoading,
+    data: { data: { data: gatewayData } = {} } = {},
+    refetch: gatewayRefetch,
+  } = useGet({
+    key: "gatewayData",
+    endpoint: PaymentGateWayAPI.GetAll + filter,
+  });
+
+  const { mutateAsync: gatewayMutation, isLoading: isCreating } = usePost({
+    endpoint: PaymentGateWayAPI.AddGateway,
+    isMultiPart: true,
+  });
+
+  const handleFormSubmit = async (values, { resetForm }) => {
+    const formData = new FormData();
+    formData.append("status", values.status);
+    formData.append("name", values.name);
+    formData.append("key", values.key);
+    formData.append("saltKey", values.saltKey);
+
+    if (values.icon instanceof File) {
+      formData.append("icon", values.icon);
+    } else if (typeof values.icon === "string") {
+      formData.append("icon", values.icon);
+    }
+
+    await gatewayMutation(formData);
+    gatewayRefetch();
+    resetForm();
+    setIsFormOpen(false);
+  };
 
   return (
     <div>
@@ -24,28 +74,33 @@ export default function PaymentGateWay() {
       <div className="h-fit w-full relative">
         <Tabs
           orientation="vertical"
-          defaultValue="all"
+          defaultValue={activeTab}
           className="h-full rounded-none"
         >
-          <CustomTabs tabs={tabsConfig} />
-          <TabsContent value="all">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="active">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="disabled">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
+          <CustomTabs tabs={tabsConfig} setIsActive={setActiveTab} />
+          {tabsConfig.map(({ value }) => (
+            <TabsContent key={value} value={value}>
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <DataTable
+                  data={gatewayData?.docs || []}
+                  columns={GatewayColumns(gatewayRefetch)}
+                />
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
 
         <PaymentGatewayForm
+          open={isFormOpen}
+          setOpen={setIsFormOpen}
           trigger={
             <Button className="h-12 flex items-center gap-1.5 absolute top-0 right-0 bg-transparent text-lg text-black hover:text-white shadow-none border-l rounded-none rounded-tr-xl">
               <PlusCircle size={20} /> Add
             </Button>
           }
-          onSubmit={(data) => console.log(data)}
+          onSubmit={handleFormSubmit}
         >
           <DialogFooter className="flex justify-between gap-2 py-5">
             <DialogClose asChild>
@@ -53,8 +108,12 @@ export default function PaymentGateWay() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" className="h-12 w-full text-lg">
-              Add & Save Payment Gateway
+            <Button
+              type="submit"
+              className="h-12 w-full text-lg"
+              disabled={isCreating}
+            >
+              {isCreating ? "Adding..." : "Add & Save Payment Gateway"}
             </Button>
           </DialogFooter>
         </PaymentGatewayForm>

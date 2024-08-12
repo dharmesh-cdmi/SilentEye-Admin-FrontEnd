@@ -5,11 +5,21 @@ import ContactColums from "./components/columns";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
 import { ContactFormAPI } from "@/api/endpoints";
-import useGet from "@/hooks/use-get";
 import { useMemo, useState } from "react";
+import useGet from "@/hooks/use-get";
 
 export default function ContactForm() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const filter = useMemo(() => {
+    const params = new URLSearchParams();
+    params.append("pageIndex", page);
+    params.append("limit", limit);
+    if (searchQuery) params.append("searchQuery", searchQuery);
+    return params.toString();
+  }, [limit, page, searchQuery]);
 
   const {
     isLoading,
@@ -17,7 +27,7 @@ export default function ContactForm() {
     refetch: contactRefecth,
   } = useGet({
     key: "contactForm",
-    endpoint: ContactFormAPI.AllData,
+    endpoint: `${ContactFormAPI.AllData}?${filter}`,
   });
 
   return (
@@ -27,13 +37,13 @@ export default function ContactForm() {
       </Header>
 
       <div className="w-full">
-        <Tabs orientation="vertical" defaultValue="purchase">
-          <TabsContent value="purchase" className="">
+        <Tabs orientation="vertical" defaultValue="all">
+          <TabsContent value="all" className="">
             {isLoading ? (
               <Loader />
             ) : (
               <DataTable
-                data={contactData?.contactsForm || []}
+                data={contactData?.result?.contactsForm || []}
                 columns={ContactColums(contactRefecth)}
               />
             )}

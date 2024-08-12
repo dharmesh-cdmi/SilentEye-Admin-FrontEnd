@@ -12,6 +12,7 @@ import {
 } from "@/assets/icons";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import { Button } from "@/components/ui/button";
+import { formatDateTime } from "@/lib/utils";
 import { useState } from "react";
 
 export default function ContactColums(contactRefetch) {
@@ -121,8 +122,8 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="h-5 max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
-            {row?.getValue("createdAt")}
+          <div className="h-6 max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
+            {formatDateTime(row.original.createdAt)}
           </div>
         );
       },

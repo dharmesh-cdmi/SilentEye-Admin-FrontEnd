@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/custom/button";
 import {
   Dialog,
@@ -14,36 +15,66 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { useFormik } from "formik";
 import { ArrowLeft, Info, Package } from "lucide-react";
+import { RefundRequestAPI } from "@/api/endpoints";
+import useUpdate from "@/hooks/use-update";
+import toast from "react-hot-toast";
+import { useFormik } from "formik";
+import { cn } from "@/lib/utils";
 import * as Yup from "yup";
 
 const schema = Yup.object({
   status: Yup.string()
     .oneOf(["Pending", "Approved", "Reject", "Refunded", "True Refunded"])
-    .required("Required"),
+    .required("Status is required"),
   message: Yup.string()
     .required("Message is required")
     .min(10, "Message should be at least 10 characters"),
 });
 
-export default function EditRefundForm({ children }) {
+const optionColor = {
+  Pending: "bg-yellow-500",
+  Approved: "bg-green-500",
+  Rejected: "bg-red-500",
+  Refunded: "bg-gray-500",
+  "True Refunded": "bg-orange-500",
+};
+
+export default function EditRefundForm({ initialValues, children }) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { mutateAsync: refundMutation } = useUpdate({
+    endpoint: RefundRequestAPI.Update + initialValues._id,
+    isMultiPart: false,
+  });
+
   const formik = useFormik({
-    initialValues: {
-      status: "Pending",
-      message: "",
-    },
+    initialValues: initialValues,
     validationSchema: schema,
-    onSubmit: (values) => {
-      console.log("Form values:", values);
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        await refundMutation({
+          status: values.status,
+          message: values.message,
+        });
+        setOpen(false);
+        toast.success("Refund request updated successfully");
+      } catch (error) {
+        toast.success(error.message || "Failed to update refund request");
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
   return (
     <TooltipProvider>
-      <Dialog>
-        <DialogTrigger>{children}</DialogTrigger>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <span onClick={() => setOpen(true)}>{children}</span>
+        </DialogTrigger>
         <DialogContent className="p-0 max-w-xl !rounded-xl">
           <DialogHeader className="flex flex-row gap-5 p-4 border-b">
             <DialogClose asChild>
@@ -51,7 +82,6 @@ export default function EditRefundForm({ children }) {
                 <ArrowLeft />
               </Button>
             </DialogClose>
-
             <div>
               <DialogTitle className="flex items-center gap-3">
                 <Package /> Edit Refund Request
@@ -66,16 +96,20 @@ export default function EditRefundForm({ children }) {
                 </div>
                 <div className="w-full">
                   <select
-                    className="h-12 w-full px-5 outline-none bg-orange-400 text-white"
+                    className={cn(
+                      "h-12 w-full px-5 outline-none text-white",
+                      optionColor[formik.values.status]
+                    )}
+                    name="status"
+                    value={formik.values.status}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.status}
                   >
-                    <option selected>Pending</option>
-                    <option>Approved</option>
-                    <option>Reject</option>
-                    <option>Refunded</option>
-                    <option>True Refunded</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Reject">Reject</option>
+                    <option value="Refunded">Refunded</option>
+                    <option value="True Refunded">True Refunded</option>
                   </select>
                 </div>
               </div>
@@ -118,8 +152,12 @@ export default function EditRefundForm({ children }) {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="h-12 w-full text-lg">
-                Send to User
+              <Button
+                type="submit"
+                disabled={loading}
+                className="h-12 w-full text-lg"
+              >
+                {loading ? "Sending..." : "Send to User"}
               </Button>
             </DialogFooter>
           </form>

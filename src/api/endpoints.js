@@ -13,25 +13,34 @@ const Admin = {
 };
 
 const RefundRequestAPI = {
-  AllRefundRequest: "/refund-request?page=1&limit=10&search=RE69",
+  AllRefundRequest: "/refund-request",
+  Update: "/refund-request/",
   DeleteRefund: "/refund-request/",
 };
 
 const ContactFormAPI = {
-  AllData: "/contact-form/fetch-all-contacts-form",
-  Search: "/contact-form/search-contact-form",
+  AllData: "/contact-form/search-contact-form",
   Delete: "/contact-form/delete-contact-form",
 };
 
 const SupportTicketAPI = {
   AllData: "/tickets",
   DeleteTicket: "/tickets/",
+  TicketDetails: "/tickets/",
+  TicketComment: "/tickets/",
 };
 
 const DiscountAPI = {
   GetAll: "/discount",
   DeleteDiscount: "/discount/",
   ChangeStatus: "/discount/",
+};
+
+const PaymentGateWayAPI = {
+  GetAll: "/payment-gateway?",
+  AddGateway: "/payment-gateway",
+  Delete: "/payment-gateway/",
+  Update: "/payment-gateway/",
 };
 
 export {
@@ -43,4 +52,5 @@ export {
   ContactFormAPI,
   SupportTicketAPI,
   DiscountAPI,
+  PaymentGateWayAPI,
 };
