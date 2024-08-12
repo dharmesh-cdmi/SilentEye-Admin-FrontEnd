@@ -60,6 +60,31 @@ const ContentManage = {
     DeleteReviews : "content-manage/delete-review",
 }
 
+const Plan = {
+    AllPlans : "plan", 
+    SinglePlan: "plan/",
+}
+
+const Upsell = {
+    AllUpsell : "upsell",
+    UpdateUpsell : "upsell/"
+}
+
+const Addons = {
+    AllAddons : "addon", 
+    UpdateAddons : "addon/"
+}
+
+const Product = {
+    AllProduct : "product", 
+    UpdateProduct : "product/"
+}
+
+const Shipping = {
+    AllShipping : "shipping", 
+    UpdateShipping : "shipping/"
+}
+
 export {
     PROD_ADMIN_BASE_URL,
     PROD_IMG_Prefix,
@@ -69,4 +94,9 @@ export {
     Admin,
     UserAPI,
     ContentManage,
+    Plan,
+    Upsell,
+    Addons,
+    Product,
+    Shipping
 }

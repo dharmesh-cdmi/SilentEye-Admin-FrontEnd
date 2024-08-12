@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 const EditCategory = () => {
   const [open, setDOpen] = useState(false);
   const [id, setId] = useState();
+  const [title, setTitle] = useState();
   const [status, setStatus] = useState();
   const {
     data: { data: faqsData = {} } = {},
@@ -25,13 +26,17 @@ const EditCategory = () => {
 
   const { mutateAsync: statusMutation } = useUpdate({
     isMultiPart: false,
-    endpoint: ContentManage.UpdateFaq,
+    endpoint: ContentManage.UpdateFaq + id,
   });
 
   const handleStatus = async () => {
     try {
       const newStatus = !status;
-      const res = await statusMutation({ status: newStatus });
+      const payload = {
+        status: newStatus,
+        title: title,
+      };
+      const res = await statusMutation(payload);
       if (res?.status === 200) {
         setStatus(newStatus);
         toast.success(res?.data?.message || "Category Update Successfully !");
@@ -86,9 +91,13 @@ const EditCategory = () => {
                         <Trash2 className="w-5 h-5 " />
                       </Button>
                       <Switch
-                        defaultChecked={false}
+                        defaultChecked={item?.status}
                         className="data-[state=checked]:bg-[#34C759] "
-                        onCheckedChange={handleStatus}
+                        onCheckedChange={() => {
+                          setId(item?._id);
+                          setTitle(item?.title);
+                          handleStatus();
+                        }}
                       />
                     </div>
                   </div>

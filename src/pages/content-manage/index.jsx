@@ -64,8 +64,6 @@ export default function Users() {
     endpoint: ContentManage.AllReviews,
   });
 
-  console.log("All Revies : ", reviewsData)
-
   const [isActive, setIsActive] = useState("contents");
 
   return (
@@ -167,7 +165,7 @@ export default function Users() {
                 data={reviewsData?.reviews || []}
                 columns={ReviewsColumn({
                   tabKey: isActive,
-                  ReviewRefetch: ReviewRefetch
+                  ReviewRefetch: ReviewRefetch,
                 })}
                 className="rounded-t-lg"
               />
@@ -191,8 +189,6 @@ export default function Users() {
       >
         <AddReviews setOpen={setReviewsOpen} Refetch={ReviewRefetch} />
       </CommonModal>
-
-
     </div>
   );
 }
