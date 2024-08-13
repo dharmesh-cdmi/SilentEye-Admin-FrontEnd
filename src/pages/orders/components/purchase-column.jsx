@@ -59,13 +59,13 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
     {
       accessorKey: "email",
       header: () => (
-        <div className="flex space-x-2 px-2 w-28">
+        <div className="flex space-x-2 px-2 justify-center">
           <EmailIcon size={19} className="text-black" />{" "}
           <p className="text-[17px] text-primary">Email</p>
         </div>
       ),
       cell: ({ row }) => (
-        <div className="w-32 break-normal text-wrap pr-2 ">{row?.original?.orderDetails?.email}</div>
+        <div className="break-normal text-wrap pr-2 justify-center flex  ">{row?.original?.orderDetails?.email}</div>
       ),
       enableSorting: false,
       enableHiding: false,
