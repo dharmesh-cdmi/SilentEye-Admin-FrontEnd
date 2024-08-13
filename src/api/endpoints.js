@@ -25,9 +25,11 @@ const ContactFormAPI = {
 
 const SupportTicketAPI = {
   AllData: "/tickets",
-  DeleteTicket: "/tickets/",
+  DeleteTicket: "/tickets",
   TicketDetails: "/tickets/",
   TicketComment: "/tickets/",
+  CloseTicket: "/tickets/",
+  BanUser: "/users/",
 };
 
 const DiscountAPI = {

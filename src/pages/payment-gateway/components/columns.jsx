@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import useUpdate from "@/hooks/use-update";
 import { Package } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function GatewayColumns(refetchData) {
   return [
@@ -59,10 +60,11 @@ export default function GatewayColumns(refetchData) {
         const handleStatusChange = async (updatedIsLive) => {
           setIsLive((prev) => !prev);
           try {
-            await gatewaytMutateAsync({
+            const { data } = await gatewaytMutateAsync({
               status: updatedIsLive ? "live" : "test",
             });
             setIsLive(updatedIsLive);
+            toast.success(data.message);
           } catch (error) {
             setIsLive(row.original.status === "test" ? false : true);
           }

@@ -19,6 +19,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const statusColor = {
+  Active: "bg-green-500",
   Pending: "bg-orange-400",
   Answered: "bg-blue-600",
   Closed: "bg-gray-500",
