@@ -96,7 +96,11 @@ export const DefaultColumn = ({ UserRefetch }) => {
         </div>
       ),
       cell: ({ row }) => {
-        return <div className="flex justify-center items-center">{row?.original?.userDetails?.country}</div>;
+        return (
+          <div className="flex justify-center items-center">
+            {row?.original?.userDetails?.country}
+          </div>
+        );
       },
     },
     {
@@ -142,7 +146,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
       ),
       cell: ({ row }) => {
         let status = row?.original?.process;
-        
+
         return (
           <div className="flex justify-center items-center">
             {status === "Running" ? (
@@ -299,7 +303,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
             console.log(err);
           }
         };
-        
+
         return (
           <div className="flex justify-center items-center">
             {blockLoading ? (

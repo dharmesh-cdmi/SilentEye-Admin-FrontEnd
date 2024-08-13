@@ -1,20 +1,25 @@
 import { ContentManage, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Loader from "@/components/common/loader";
+import CommonModal from "@/components/common/modals/common-modal";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import { Button } from "@/components/custom/button";
 import { Switch } from "@/components/ui/switch";
 import useGet from "@/hooks/use-get";
 import useUpdate from "@/hooks/use-update";
-import { ImageIcon, Trash2 } from "lucide-react";
+import { ImageIcon, SquarePen, Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import AddCategory from "./AddCategory";
 
 const EditCategory = () => {
   const [open, setDOpen] = useState(false);
   const [id, setId] = useState();
   const [title, setTitle] = useState();
   const [status, setStatus] = useState();
+  const [openModal, setOpenModal] = useState(false);
+  const [data, setData] = useState();
+
   const {
     data: { data: faqsData = {} } = {},
     isLoading: faqsLoading,
@@ -55,7 +60,7 @@ const EditCategory = () => {
             <div key={id} className="">
               <TextField
                 icon={id}
-                className={`border border-b-0 `}
+                className={`border border-b `}
                 className2={"py-0"}
                 className3={"min-w-16 text-center justify-center py-0"}
                 value={
@@ -79,6 +84,17 @@ const EditCategory = () => {
                       </div>
                     </div>
                     <div className="items-center py-2 px-2 justify-center flex space-x-2">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="rounded-lg hover:bg-gray-800 hover:text-white text-black"
+                        onClick={() => {
+                          setOpenModal(true);
+                          setData(item);
+                        }}
+                      >
+                        <SquarePen  className="w-5 h-5"/>
+                      </Button>
                       <Button
                         size="icon"
                         variant="ghost"
@@ -114,6 +130,17 @@ const EditCategory = () => {
         id={id}
         dataRefetch={FaqsRefetch}
       />
+      <CommonModal
+        open={openModal}
+        setOpen={setOpenModal}
+        title={"Update Category "}
+      >
+        <AddCategory
+          setOpen={setOpenModal}
+          Refetch={FaqsRefetch}
+          data={data}
+        />
+      </CommonModal>
     </div>
   );
 };

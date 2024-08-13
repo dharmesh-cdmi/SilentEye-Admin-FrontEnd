@@ -38,16 +38,21 @@ export const ReviewsColumn = ({ ReviewRefetch }) => {
           <Card size={22} /> <p className="text-[17px] text-primary">Name</p>
         </div>
       ),
-      cell: ({ row }) => (
-        <div className="flex justify-start space-x-2">
-          <img
-            src={PROD_IMG_Prefix + row?.original?.profile}
-            alt="profile"
-            className="w-8 h-8 rounded-full"
-          />
-          <p className="text-[16px] ">{row?.original?.name}</p>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const imgpreview = `${PROD_IMG_Prefix}+${row?.original?.profile}`;
+        return (
+          <div className="flex justify-start space-x-2">
+            <img
+              src={imgpreview}
+              alt="profile"
+              width={50}
+              height={50}
+              className="w-8 h-8 rounded-full"
+            />
+            <p className="text-[16px] ">{row?.original?.name}</p>
+          </div>
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },

@@ -19,8 +19,7 @@ import { formatDate } from "@/utils/dateConfig";
 import OrderDetailsSide from "./order-details-side";
 import { Order } from "@/api/endpoints";
 
-export const PurchaseColumns = ({tabKey,orderRefetch}) => {
-
+export const PurchaseColumns = ({ tabKey, orderRefetch }) => {
   const columns = [
     ...(tabKey !== "purchase"
       ? [
@@ -59,13 +58,15 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
     {
       accessorKey: "email",
       header: () => (
-        <div className="flex space-x-2 px-2 justify-center">
+        <div className="flex gap-2">
           <EmailIcon size={19} className="text-black" />{" "}
           <p className="text-[17px] text-primary">Email</p>
         </div>
       ),
       cell: ({ row }) => (
-        <div className="break-normal text-wrap pr-2 justify-center flex  ">{row?.original?.orderDetails?.email}</div>
+        <div className="flex break-normal text-wrap pr-2">
+          {row?.original?.orderDetails?.email}
+        </div>
       ),
       enableSorting: false,
       enableHiding: false,
@@ -73,8 +74,8 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
     {
       accessorKey: "title",
       header: () => (
-        <div className="flex space-x-2 px-2">
-          <WebIcon size={19} />{" "}
+        <div className="flex space-x-2">
+          <WebIcon size={19} className="text-black" />
           <p className="text-[17px] text-primary">Country</p>
         </div>
       ),
@@ -87,9 +88,9 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
           {
             accessorKey: "purchase",
             header: () => (
-              <div className="flex space-x-2 px-2">
-                <PurchasedIcon size={19} />{" "}
-                <p className="text-[17px] text-primary">Purchased</p>
+              <div className="flex gap-2 text-primary">
+                <PurchasedIcon size={19} />
+                <p className="text-[17px]">Purchased</p>
               </div>
             ),
             cell: ({ row }) => (
@@ -280,7 +281,7 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
                 variant="ghost"
                 className="rounded-lg hover:bg-red-500 hover:text-white text-red-500"
                 onClick={() => {
-                  setOpen(true)
+                  setOpen(true);
                   setId(row.original?._id);
                 }}
               >
@@ -288,7 +289,13 @@ export const PurchaseColumns = ({tabKey,orderRefetch}) => {
               </Button>
             </div>
             <RefundModal open={ropen} setOpen={setROpen} />
-            <DeleteModal open={open} setOpen={setOpen} endpoint={Order.Delete_Order} id={id} dataRefetch={orderRefetch}/>
+            <DeleteModal
+              open={open}
+              setOpen={setOpen}
+              endpoint={Order.Delete_Order}
+              id={id}
+              dataRefetch={orderRefetch}
+            />
             <RightDrawer open={dopen} setOpen={setDOpen}>
               <OrderDetailsSide id={id} />
             </RightDrawer>

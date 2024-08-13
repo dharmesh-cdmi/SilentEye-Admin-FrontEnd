@@ -61,7 +61,7 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     formData.append("failCount", values.failCount);
 
     try {
-      const response =  data
+      const response = data
         ? await UpdateFeatureMutation(formData)
         : await FeatureMutation(formData);
       if (response?.status === 200) {
@@ -95,20 +95,20 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
             <Field name="title">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
-                  title="Title"
+                  title="Order"
                   className={` ${
-                    touched.title && errors.title
+                    touched.order && errors.order
                       ? "border-red-500 border rounded-t-lg"
                       : "border border-b rounded-t-lg"
                   }`}
                   value={
-                    <>
+                    <div>
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${touched.title && errors.title ? " h-1/2" : "h-full"}`}
-                        name="title"
-                        placeholder="Enter Your Title"
-                        value={values.title}
+                        ${touched.order && errors.order ? " h-1/2" : "h-full"}`}
+                        name="order"
+                        placeholder="Enter Your Order"
+                        value={values.order}
                         onChange={handleChange}
                         {...field}
                       />
@@ -117,7 +117,7 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                           {meta.error}
                         </p>
                       )}
-                    </>
+                    </div>
                   }
                 />
               )}

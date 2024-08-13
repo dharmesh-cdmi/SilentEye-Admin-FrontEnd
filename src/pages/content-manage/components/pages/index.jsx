@@ -1,19 +1,40 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormik } from "formik";
 import JoditEditor from "jodit-react";
 import * as Yup from "yup";
 import Header from "@/components/common/header";
 import { CloudUpload } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ContentManage } from "@/api/endpoints";
 import useUpdate from "@/hooks/use-update";
 import usePost from "@/hooks/use-post";
 import toast from "react-hot-toast";
 import Spinner from "@/components/common/Spinner";
+import useGet from "@/hooks/use-get";
+import Loader from "@/components/common/loader";
 
 const AddPages = ({ data }) => {
+  const { id } = useParams();
   const editor = useRef(null);
   const navigate = useNavigate();
+  const [enabled,setIsEnabled] = useState(false);
+
+  const {
+    data: { data: pageData = {} } = {},
+    isLoading: pageLoading,
+    refetch: PageRefetch,
+  } = useGet({
+    key: "pageData",
+    enabled: enabled,
+    endpoint: ContentManage.PageById + id,
+  });
+
+  useEffect(()=>{
+    if(id){
+      setIsEnabled(true); 
+      PageRefetch();
+    }
+  },[id, PageRefetch])
 
   const { mutateAsync: AddPageMutation, isLoading: AddPageLoading } = usePost({
     isMultiPart: false,
@@ -23,14 +44,14 @@ const AddPages = ({ data }) => {
   const { mutateAsync: UpdatePageMutation, isLoading: UpdatePageLoading } =
     useUpdate({
       isMultiPart: true,
-      endpoint: ContentManage.UpdatePages + data?._id,
+      endpoint: ContentManage.UpdatePages + id,
     });
 
   const formik = useFormik({
     initialValues: {
-      title: data?.title || "",
-      text: data?.text || "",
-      status: data?.status || true,
+      title: pageData?.page?.title || "",
+      text: pageData?.page?.text || "",
+      status: pageData?.page?.status || true,
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
@@ -144,6 +165,10 @@ const AddPages = ({ data }) => {
     }),
     []
   );
+
+  if(pageLoading){
+    return <Loader />
+  }
 
   return (
     <div>

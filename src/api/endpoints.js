@@ -22,7 +22,8 @@ const Admin = {
 const UserAPI = {
     AllUsers : "users",
     DeleteUser : "users/",
-    UpdateUser : "users/"
+    UpdateUser : "users/", 
+    DownloadUser: "users/download/users-data"
 }
 
 const ContentManage = {
@@ -40,6 +41,7 @@ const ContentManage = {
     AddPages : "content-manage/add-page", 
     UpdatePages : "content-manage/update-page/", 
     DeletePages : "content-manage/delete-page", 
+    PageById: "content-manage/fetch-page-by-id/",
 
     //faqs 
     AllFaqs : "content-manage/fetch-all-faq-categories", 

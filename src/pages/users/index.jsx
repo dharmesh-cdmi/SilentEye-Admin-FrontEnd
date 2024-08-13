@@ -12,80 +12,105 @@ import CustomTabs from "@/components/common/custom-tabs";
 import { DataTable } from "@/components/common/Table/data-table";
 import { DefaultColumn } from "./components/defaultColumn";
 import { UserAPI } from "@/api/endpoints";
-
+import adminAPI from "@/api/adminAPI";
+import toast from "react-hot-toast";
+import { fileDownload } from "@/lib/utils";
 
 export default function Users() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "all",  label: "All" },
-    { value: "demo",  label: "Demo" },
-    { value: "checkout", label: "Checkout" },
-    { value: "paymentinitiat",  label: "Payment Initiated" },
-    { value: "purchased", label: "Purchased" },
-    { value: "loggedin", label: "Logged In" },
-    { value: "refund", label: "Refund Requested" },
-    { value: "blocked", label: "Blocked" },
+    { value: "all", label: "All" },
+    { value: "Demo", label: "Demo" },
+    { value: "Checkout", label: "Checkout" },
+    { value: "Paymentinitiat", label: "Payment Initiated" },
+    { value: "Purchased", label: "Purchased" },
+    { value: "Loggedin", label: "Logged In" },
+    { value: "Refund", label: "Refund Requested" },
+    { value: "Blocked", label: "Blocked" },
   ];
+
+  const [enabled, setIsEnable] = useState(false);
 
   const actionButtons = [
     {
-      label: 'Delete All',
-      className: 'bg-red-400 text-white ',
-      icon: Trash2, 
+      label: "Delete All",
+      className: "bg-red-400 text-white ",
+      icon: Trash2,
 
       onClick: () => {
         // Implement your delete logic here
-        console.log('Delete all selected rows');
+        console.log("Delete all selected rows");
       },
     },
     {
-      label: 'Block All',
-      className: 'btn-warning',
+      label: "Block All",
+      className: "btn-warning",
       icon: UserX,
       onClick: () => {
         // Implement your block logic here
-        console.log('Block all selected rows');
+        console.log("Block all selected rows");
       },
     },
   ];
 
-  const [isActive,setIsActive] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [isActive, setIsActive] = useState("all");
+  const [searchTerm, setSearchTerm] = useState(null);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
-  
-  const filter = useMemo(() => ({
-    userStatus: isActive,
-    searchQuery: searchTerm,
-    country: selectedCountries,
-    fromDate: dateRange.start,
-    toDate: dateRange.end,
-  }), [isActive, searchTerm, selectedCountries, dateRange]);
+
+  const filter = useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (isActive !== "all") {
+      params.append("userStatus", isActive);
+    }
+    if (searchTerm) {
+      params.append("searchQuery", searchTerm);
+    }
+    if (selectedCountries && selectedCountries.length > 0) {
+      params.append("country", selectedCountries.join(","));
+    }
+    if (dateRange?.start) {
+      params.append("fromDate", dateRange.start);
+    }
+    if (dateRange?.end) {
+      params.append("toDate", dateRange.end);
+    }
+
+    return params.toString(); // Converts to a query string
+  }, [isActive, searchTerm, selectedCountries, dateRange]);
 
   const {
     data: { data: { data: usersData } = {} } = {},
     isLoading: usersLoading,
-    refetch: UserRefetch, 
+    refetch: UserRefetch,
   } = useGet({
     key: "usersData",
-    endpoint: `${UserAPI.AllUsers}?${new URLSearchParams(filter)}`
+    endpoint: `${UserAPI.AllUsers}?${filter}`,
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     UserRefetch();
-  },[filter,UserRefetch])
+  }, [filter, UserRefetch]);
 
   const handleDateRangeUpdate = (range) => {
     setDateRange(range);
   };
 
+  const handleDownload = async () => {
+    await fileDownload(UserAPI.DownloadUser);
+  };
+
   return (
     <div>
       <Header title="Users" className=" ">
-        <CommonSearch onSearch={setSearchTerm}/>
-        <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
-        <DateRangePicker onUpdate={handleDateRangeUpdate}/>
-        <CommonButton>
+        <CommonSearch onSearch={setSearchTerm} />
+        <Country
+          selectedCountries={selectedCountries}
+          setSelectedCountries={setSelectedCountries}
+        />
+        <DateRangePicker onUpdate={handleDateRangeUpdate} />
+        <CommonButton onClick={handleDownload}>
           <Download className="w-6 h-6" />
         </CommonButton>
       </Header>
@@ -96,7 +121,7 @@ export default function Users() {
           defaultValue="all"
         >
           {/* This is Common TabsListCompnent  */}
-          <CustomTabs tabs={tabsConfig} setIsActive={setIsActive}/>
+          <CustomTabs tabs={tabsConfig} setIsActive={setIsActive} />
           {tabsConfig?.map((item, id) => (
             <TabsContent value={item?.value} className="" key={id}>
               {usersLoading ? (
@@ -104,7 +129,10 @@ export default function Users() {
               ) : (
                 <DataTable
                   data={usersData?.users || []}
-                  columns={DefaultColumn({tabKey: isActive , UserRefetch: UserRefetch })}
+                  columns={DefaultColumn({
+                    tabKey: isActive,
+                    UserRefetch: UserRefetch,
+                  })}
                   actionButtons={actionButtons}
                 />
               )}

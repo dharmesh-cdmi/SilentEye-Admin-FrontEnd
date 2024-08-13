@@ -16,6 +16,11 @@ import { AddonsColumn } from "./components/addons/addonColumn";
 import { ProductsColumn } from "./components/products/productsColumn";
 import { ShippingColumn } from "./components/shippings/shippingColumn";
 import useFilteredParams from "@/hooks/useFilterParams";
+import CommonModal from "@/components/common/modals/common-modal";
+import AddSubscription from "./components/subscription/AddSubscription";
+import AddUpsell from "./components/upsell/AddUpsell";
+import AddAddon from "./components/addons/AddAddon";
+import AddShipping from "./components/shippings/AddShipping";
 
 export default function Plans() {
   // this is tabsConfig
@@ -62,7 +67,7 @@ export default function Plans() {
     refetch: AddonsRefetch,
   } = useGet({
     key: "addonsData",
-     endpoint: `${Addons.AllAddons}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Addons.AllAddons}?${new URLSearchParams(filterParams)}`,
   });
 
   // Call Product API ..
@@ -72,7 +77,7 @@ export default function Plans() {
     refetch: ProductRefetch,
   } = useGet({
     key: "productsData",
-    endpoint: `${Product.AllProduct}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Product.AllProduct}?${new URLSearchParams(filterParams)}`,
   });
 
   // Call Shipping API ..
@@ -82,8 +87,14 @@ export default function Plans() {
     refetch: ShippingRefetch,
   } = useGet({
     key: "shippingData",
-    endpoint: `${Shipping.AllShipping}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Shipping.AllShipping}?${new URLSearchParams(filterParams)}`,
   });
+
+  const [subModalOpen, setSubModalOpen] = useState(false);
+  const [addonModalOpen, setAddonModalOpen] = useState(false);
+  const [upsellModalOpen, setUpsellModalOpen] = useState(false);
+  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [shippingModalOpen, setShippingModalOpen] = useState(false);
 
   return (
     <div>
@@ -110,10 +121,15 @@ export default function Plans() {
                 className={
                   "cursor-pointer bg-primary text-white flex justify-center items-center h-[50px] px-5  mb-0 rounded-tr-lg hover:bg-gray-700 hover:text-white hover:shadow-lg hover:shadow-bg-black"
                 }
-                onClick={() => setIsOpen(true)}
+                onClick={() => {
+                  if (isActive === "subscription") setSubModalOpen(true);
+                  if (isActive === "upsell") setUpsellModalOpen(true);
+                  if (isActive === "addons") setAddonModalOpen(true);
+                  if (isActive === "shipping") setShippingModalOpen(true);
+                }}
               >
                 <CirclePlus className="w-5 h-5 mr-2" />
-                <p>Add</p>
+                <p className="capitalize">Add {isActive}</p>
               </div>
             </div>
           </div>
@@ -131,6 +147,7 @@ export default function Plans() {
               />
             )}
           </TabsContent>
+
           <TabsContent value="upsell" className="">
             {UpsellLoading ? (
               <Loader />
@@ -144,6 +161,7 @@ export default function Plans() {
               />
             )}
           </TabsContent>
+
           <TabsContent value="addons" className="">
             {AddonsLoading ? (
               <Loader />
@@ -156,6 +174,7 @@ export default function Plans() {
               />
             )}
           </TabsContent>
+
           <TabsContent value="products" className="">
             {ProductsLoading ? (
               <Loader />
@@ -168,6 +187,7 @@ export default function Plans() {
               />
             )}
           </TabsContent>
+
           <TabsContent value="shipping" className="">
             {ShippingLoading ? (
               <Loader />
@@ -182,6 +202,46 @@ export default function Plans() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <CommonModal
+        open={subModalOpen}
+        setOpen={setSubModalOpen}
+        title="Add New Subscription Plan"
+      >
+        <AddSubscription />
+      </CommonModal>
+
+      <CommonModal
+        open={upsellModalOpen}
+        setOpen={setUpsellModalOpen}
+        title="Add New UpSell Plan"
+      >
+        <AddUpsell />
+      </CommonModal>
+
+      <CommonModal
+        open={addonModalOpen}
+        setOpen={setAddonModalOpen}
+        title="Add New Add-Ons"
+      >
+        <AddAddon />
+      </CommonModal>
+
+      <CommonModal
+        open={productModalOpen}
+        setOpen={setProductModalOpen}
+        title="Add New Product"
+      >
+        <AddSubscription />
+      </CommonModal>
+
+      <CommonModal
+        open={shippingModalOpen}
+        setOpen={setShippingModalOpen}
+        title="Add New Product"
+      >
+        <AddShipping />
+      </CommonModal>
     </div>
   );
 }
