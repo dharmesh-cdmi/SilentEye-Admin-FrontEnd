@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Download, Trash2, UserX } from "lucide-react";
 import Loader from "@/components/common/loader";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -11,7 +11,8 @@ import useGet from "@/hooks/use-get";
 import CustomTabs from "@/components/common/custom-tabs";
 import { DataTable } from "@/components/common/Table/data-table";
 import { DefaultColumn } from "./components/defaultColumn";
-import { Order } from "@/api/endpoints";
+import { UserAPI } from "@/api/endpoints";
+
 
 export default function Users() {
   // this is tabsConfig
@@ -25,6 +26,7 @@ export default function Users() {
     { value: "refund", label: "Refund Requested" },
     { value: "blocked", label: "Blocked" },
   ];
+
   const actionButtons = [
     {
       label: 'Delete All',
@@ -48,21 +50,41 @@ export default function Users() {
   ];
 
   const [isActive,setIsActive] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [dateRange, setDateRange] = useState({ start: null, end: null });
+  
+  const filter = useMemo(() => ({
+    userStatus: isActive,
+    searchQuery: searchTerm,
+    country: selectedCountries,
+    fromDate: dateRange.start,
+    toDate: dateRange.end,
+  }), [isActive, searchTerm, selectedCountries, dateRange]);
 
   const {
-    data: { data: { data: ordersData } = {} } = {},
-    isLoading: ordersLoading,
-    refetch: OrderRefetch, 
+    data: { data: { data: usersData } = {} } = {},
+    isLoading: usersLoading,
+    refetch: UserRefetch, 
   } = useGet({
-    key: "ordersData",
-    endpoint: Order.Order_Details,
+    key: "usersData",
+    endpoint: `${UserAPI.AllUsers}?${new URLSearchParams(filter)}`
   });
+
+  useEffect(()=> {
+    UserRefetch();
+  },[filter,UserRefetch])
+
+  const handleDateRangeUpdate = (range) => {
+    setDateRange(range);
+  };
+
   return (
     <div>
       <Header title="Users" className=" ">
-        <CommonSearch />
-        <Country />
-        <DateRangePicker />
+        <CommonSearch onSearch={setSearchTerm}/>
+        <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
+        <DateRangePicker onUpdate={handleDateRangeUpdate}/>
         <CommonButton>
           <Download className="w-6 h-6" />
         </CommonButton>
@@ -77,12 +99,12 @@ export default function Users() {
           <CustomTabs tabs={tabsConfig} setIsActive={setIsActive}/>
           {tabsConfig?.map((item, id) => (
             <TabsContent value={item?.value} className="" key={id}>
-              {ordersLoading ? (
+              {usersLoading ? (
                 <Loader />
               ) : (
                 <DataTable
-                  data={ordersData?.orders || []}
-                  columns={DefaultColumn({tabKey: isActive , orderRefetch: OrderRefetch})}
+                  data={usersData?.users || []}
+                  columns={DefaultColumn({tabKey: isActive , UserRefetch: UserRefetch })}
                   actionButtons={actionButtons}
                 />
               )}

@@ -1,18 +1,18 @@
-import { CircleDollarSign, PlusCircle } from "lucide-react";
 import PaymentGatewayForm from "./components/payment-gateway-form";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { DataTable } from "@/components/common/Table/data-table";
+import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { Button } from "@/components/custom/button";
-import Header from "@/components/common/header";
-import GatewayColumns from "./components/columns";
-import useGet from "@/hooks/use-get";
 import { PaymentGateWayAPI } from "@/api/endpoints";
-import { useMemo, useState } from "react";
+import GatewayColumns from "./components/columns";
+import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
+import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
+import useGet from "@/hooks/use-get";
 
 export default function PaymentGateWay() {
   const tabsConfig = [

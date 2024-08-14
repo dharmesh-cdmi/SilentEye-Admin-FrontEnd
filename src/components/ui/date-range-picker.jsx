@@ -429,7 +429,7 @@ export const DateRangePicker = ({
                         openedRangeCompareRef.current
                       )
                     ) {
-                      onUpdate?.({ range, rangeCompare });
+                      onUpdate?.(range);
                     }
                   }}
                   className="bg-[#7357FF] border rounded-lg"

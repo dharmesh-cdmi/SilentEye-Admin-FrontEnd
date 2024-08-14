@@ -10,8 +10,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import useDelete from "@/hooks/use-delete";
-import { LoaderCircle, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import Spinner from "../Spinner";
 
 const DeleteModal = ({
   endpoint,
@@ -68,7 +69,7 @@ const DeleteModal = ({
             onClick={handleDelete}
           >
             {deleteLoading ? (
-              <LoaderCircle size={22} className="animate-spin" />
+              <Spinner  />
             ) : (
               <Trash2 className="w-6 h-6 text-red-500" />
             )}{" "}

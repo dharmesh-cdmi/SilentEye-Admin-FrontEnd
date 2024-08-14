@@ -138,9 +138,9 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-base text-black font-medium">
+          <div className="flex items-center gap-2 text-base text-black font-medium">
+            <PlanIcon size={22} className="fill-none" />
             {row.getValue("planId")?.name}
-            {/* {row.original?.planId} */}
           </div>
         );
       },
@@ -157,7 +157,7 @@ export default function RefundColumns(refundRefecth) {
         return (
           <div className="flex items-end text-base text-black font-medium">
             <span>$</span>
-            <h3 className="text-xl">{row.getValue("amount")}</h3>
+            <h3 className="text-xl">{Math.round(row.original.amount)}</h3>
             <span>.00</span>
           </div>
         );
@@ -174,8 +174,11 @@ export default function RefundColumns(refundRefecth) {
       cell: ({ row }) => {
         return (
           <div className="flex justify-start text-nowrap text-base text-black font-medium">
-            <Badge className={cn("text-base font-normal bg-gray-500")}>
-              {row.getValue("type")}
+            <Badge
+              variant="outline"
+              className="font-normal text-base shadow-md"
+            >
+              {row.original.type}
             </Badge>
           </div>
         );

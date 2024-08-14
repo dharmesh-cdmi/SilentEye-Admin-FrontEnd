@@ -16,7 +16,7 @@ export default function SettingDialog() {
   return (
     <Dialog>
       <DialogTrigger>
-        <CommonButton>
+        <CommonButton className="h-full">
           <Settings />
         </CommonButton>
       </DialogTrigger>

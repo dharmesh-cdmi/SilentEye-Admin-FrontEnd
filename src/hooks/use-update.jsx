@@ -10,17 +10,23 @@ const useUpdate = ({
 }) => {
   const mutation = useMutation({
     mutationFn: (data) => {
-      return adminAPI.put(endpoint, data, {
-        headers: {
-          "Content-Type": isMultiPart
-            ? "multipart/form-data"
-            : "application/json",
+      return adminAPI.put(
+        endpoint,
+        data,
+        {
+          headers: {
+            "Content-Type": isMultiPart
+              ? "multipart/form-data"
+              : "application/json",
+          },
         },
-      });
+        {
+          onSuccess,
+          onError,
+          onSettled,
+        }
+      );
     },
-    onSuccess,
-    onError,
-    onSettled,
   });
 
   return mutation;

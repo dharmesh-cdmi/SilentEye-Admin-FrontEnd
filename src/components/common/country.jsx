@@ -17,9 +17,8 @@ const countries = [
   { id: "ES", label: "Spain", icon: "ES" },
 ];
 
-export default function Country() {
+export default function Country({selectedCountries,setSelectedCountries}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountries, setSelectedCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleCheckboxChange = (id) => {
@@ -41,10 +40,6 @@ export default function Country() {
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
-
-  //   const handleSubmit = () => {
-  //     alert(`Selected countries: ${JSON.stringify(selectedCountries, null, 2)}`);
-  //   };
 
   const filteredCountries = countries.filter((country) =>
     country.label.toLowerCase().includes(searchQuery.toLowerCase())

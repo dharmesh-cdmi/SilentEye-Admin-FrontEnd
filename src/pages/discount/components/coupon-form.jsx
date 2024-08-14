@@ -57,8 +57,8 @@ const formatTime = (date) => {
     return "";
   }
   const d = new Date(date);
-  const hours = `${d.getUTCHours()}`.padStart(2, "0");
-  const minutes = `${d.getUTCMinutes()}`.padStart(2, "0");
+  const hours = `${d.getHours()}`.padStart(2, "0");
+  const minutes = `${d.getMinutes()}`.padStart(2, "0");
   return `${hours}:${minutes}`;
 };
 
@@ -76,7 +76,9 @@ const CouponForm = ({
       validityDate: formatDate(initialValues.validity),
       validityTime: formatTime(initialValues.validity),
       useLimit: initialValues.useLimit || "",
-      isValidity: initialValues.validity !== "No Limit" ? true : false,
+      isValidity:
+        initialValues.validity !== undefined &&
+        initialValues.validity !== "No Limit",
     },
     validationSchema: validationSchema,
     onSubmit,
