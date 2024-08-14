@@ -13,6 +13,7 @@ import Loader from "@/components/common/loader";
 import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
 import useGet from "@/hooks/use-get";
+import toast from "react-hot-toast";
 
 export default function PaymentGateWay() {
   const tabsConfig = [
@@ -61,10 +62,15 @@ export default function PaymentGateWay() {
       formData.append("icon", values.icon);
     }
 
-    await gatewayMutation(formData);
-    gatewayRefetch();
-    resetForm();
-    setIsFormOpen(false);
+    try {
+      const res = await gatewayMutation(formData);
+      gatewayRefetch();
+      resetForm();
+      setIsFormOpen(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
   };
 
   return (

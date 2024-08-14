@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PROD_IMG_Prefix } from "@/api/endpoints";
 
 const validationSchema = Yup.object({
   status: Yup.string().default("test").required("Order mode is required"),
@@ -49,14 +50,19 @@ const PaymentGatewayForm = ({
     const initializeIcon = async () => {
       if (initialValues.icon && initialValues.icon instanceof File) {
         try {
-          const preview = URL.createObjectURL(initialValues.icon);
+          const preview = URL.createObjectURL(
+            PROD_IMG_Prefix + initialValues.icon
+          );
           setIconPreview(preview);
         } catch (error) {
           setIconPreview(null);
         }
       } else if (typeof initialValues.icon === "string") {
         try {
-          const file = await fetchImageAsFile(initialValues.icon, "icon.png");
+          const file = await fetchImageAsFile(
+            PROD_IMG_Prefix + initialValues.icon,
+            "icon.png"
+          );
           const preview = URL.createObjectURL(file);
           setIconPreview(preview);
         } catch (error) {

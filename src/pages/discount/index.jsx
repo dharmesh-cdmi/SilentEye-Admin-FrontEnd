@@ -12,6 +12,7 @@ import { DiscountAPI } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
 import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
+import toast from "react-hot-toast";
 
 export default function Discount() {
   const tabsConfig = [
@@ -50,17 +51,22 @@ export default function Discount() {
       ? new Date(`${values.validityDate}T${values.validityTime}`).toISOString()
       : "No Limit";
 
-    await addDiscountMutation({
-      coupon: values.coupon,
-      discountPercent: values.discountPercent,
-      useLimit: values.useLimit,
-      status: "test",
-      validity,
-    });
+    try {
+      const res = await addDiscountMutation({
+        coupon: values.coupon,
+        discountPercent: values.discountPercent,
+        useLimit: values.useLimit,
+        status: "test",
+        validity,
+      });
 
-    discountRefetch();
-    resetForm();
-    setIsFormOpen(false);
+      discountRefetch();
+      resetForm();
+      setIsFormOpen(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
   };
 
   return (

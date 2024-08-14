@@ -19,6 +19,7 @@ import CouponForm from "./coupon-form";
 import { useState } from "react";
 import useUpdate from "@/hooks/use-update";
 import { formatDateTime } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 export default function DiscountColumns(discountRefetch) {
   return [
@@ -144,12 +145,14 @@ export default function DiscountColumns(discountRefetch) {
         const handleStatusChange = async (updatedIsLive) => {
           setIsLive((prev) => !prev);
           try {
-            await discountMutateAsync({
+            const res = await discountMutateAsync({
               status: updatedIsLive ? "live" : "test",
             });
             setIsLive(updatedIsLive);
+            toast.success(res.data.message);
           } catch (error) {
             setIsLive(row.original.status === "test" ? false : true);
+            toast.success(error.response?.data?.message || error.message);
           }
         };
 
@@ -192,16 +195,21 @@ export default function DiscountColumns(discountRefetch) {
               ).toISOString()
             : "No Limit";
 
-          await updateDiscountMutation({
-            coupon: values.coupon,
-            discountPercent: values.discountPercent,
-            useLimit: values.useLimit,
-            status: values.status,
-            validity,
-          });
+          try {
+            const res = await updateDiscountMutation({
+              coupon: values.coupon,
+              discountPercent: values.discountPercent,
+              useLimit: values.useLimit,
+              status: values.status,
+              validity,
+            });
 
-          discountRefetch();
-          setIsEditModalOpen(false);
+            toast.success(res.data.message);
+            discountRefetch();
+            setIsEditModalOpen(false);
+          } catch (error) {
+            toast.error(error.response?.data?.message || error.message);
+          }
         };
 
         return (
