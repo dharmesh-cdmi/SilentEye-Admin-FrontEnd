@@ -229,7 +229,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
 
         return (
           <div className="flex justify-start items-center space-x-2 w-[120px]">
-            {row?.original?.device && row?.original?.deviceType === "ios" ? (
+            {row?.original?.device && row?.original?.deviceType === "IOS" ? (
               <IosIcon size={20} />
             ) : row?.original?.deviceType === "android" ? (
               <AndroidIcon size={20} />

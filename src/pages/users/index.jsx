@@ -12,9 +12,8 @@ import CustomTabs from "@/components/common/custom-tabs";
 import { DataTable } from "@/components/common/Table/data-table";
 import { DefaultColumn } from "./components/defaultColumn";
 import { UserAPI } from "@/api/endpoints";
-import adminAPI from "@/api/adminAPI";
-import toast from "react-hot-toast";
 import { fileDownload } from "@/lib/utils";
+import Filter from "./components/filter";
 
 export default function Users() {
   // this is tabsConfig
@@ -23,13 +22,12 @@ export default function Users() {
     { value: "Demo", label: "Demo" },
     { value: "Checkout", label: "Checkout" },
     { value: "Paymentinitiat", label: "Payment Initiated" },
+    { value: "Paid", label: "Paid" },
     { value: "Purchased", label: "Purchased" },
     { value: "Loggedin", label: "Logged In" },
     { value: "Refund", label: "Refund Requested" },
     { value: "Blocked", label: "Blocked" },
   ];
-
-  const [enabled, setIsEnable] = useState(false);
 
   const actionButtons = [
     {
@@ -57,6 +55,8 @@ export default function Users() {
   const [searchTerm, setSearchTerm] = useState(null);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
+  const [statusSelected, setStatusSelected] = useState([]);
+  const [processSelected, setProcessSelected] = useState([]);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
@@ -76,9 +76,16 @@ export default function Users() {
     if (dateRange?.end) {
       params.append("toDate", dateRange.end);
     }
+    if (statusSelected && statusSelected.length > 0) {
+      params.append("userStatus", statusSelected);
+      setStatusSelected([])
+    }
+    if (processSelected && processSelected.length > 0) {
+      params.append("process", processSelected);
+    }
 
     return params.toString(); // Converts to a query string
-  }, [isActive, searchTerm, selectedCountries, dateRange]);
+  }, [isActive, searchTerm, selectedCountries, dateRange,statusSelected,processSelected]);
 
   const {
     data: { data: { data: usersData } = {} } = {},
@@ -86,7 +93,7 @@ export default function Users() {
     refetch: UserRefetch,
   } = useGet({
     key: "usersData",
-    endpoint: `${UserAPI.AllUsers}?${filter}`,
+    endpoint: `${UserAPI.AllUsers}/?${filter}`,
   });
 
   useEffect(() => {
@@ -110,6 +117,12 @@ export default function Users() {
           setSelectedCountries={setSelectedCountries}
         />
         <DateRangePicker onUpdate={handleDateRangeUpdate} />
+        <Filter
+          statusSelected={statusSelected}
+          setStatusSelected={setStatusSelected}
+          processSelected={processSelected}
+          setProcessSelected={setProcessSelected}
+        />
         <CommonButton onClick={handleDownload}>
           <Download className="w-6 h-6" />
         </CommonButton>
