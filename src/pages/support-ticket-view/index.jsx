@@ -138,14 +138,15 @@ export default function SupportTicketView() {
             </button>
           </div>
         </div>
-        <div className="">
+
+        <div className=" ">
           {isLoading ? (
             <Loader />
           ) : (
-            <>
+            <div className="h-[75vh] flex flex-col justify-between">
               <Conversiation comments={ticketData?.comments || []} />
               <CommentInput refetch={ticketRefetch} ticketId={ticketId} />
-            </>
+            </div>
           )}
         </div>
       </div>

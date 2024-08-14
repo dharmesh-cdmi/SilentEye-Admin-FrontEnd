@@ -39,7 +39,7 @@ export function DataTablePagination({ table }) {
         {isSelected && (
           <p>
             Selected {table.getFilteredSelectedRowModel().rows.length} /
-            {pageSize}
+            {totalFilteredRows}
           </p>
         )}
       </div>
