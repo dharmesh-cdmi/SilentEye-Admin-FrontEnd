@@ -1,51 +1,122 @@
-import AddPaymentGatewayForm from "./components/add-payment-gateway-form";
+import PaymentGatewayForm from "./components/payment-gateway-form";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { DataTable } from "@/components/common/Table/data-table";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { CircleDollarSign, Download } from "lucide-react";
 import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
-import CommonButton from "@/components/ui/common-button";
-import CommonSearch from "@/components/ui/search";
+import { Button } from "@/components/custom/button";
+import { PaymentGateWayAPI } from "@/api/endpoints";
+import GatewayColumns from "./components/columns";
 import Header from "@/components/common/header";
-import { columns } from "./components/columns";
-import { data } from "./data";
+import Loader from "@/components/common/loader";
+import { useMemo, useState } from "react";
+import usePost from "@/hooks/use-post";
+import useGet from "@/hooks/use-get";
 
 export default function PaymentGateWay() {
-  // this is tabsConfig
   const tabsConfig = [
-    { value: "all", icon: CircleDollarSign, label: "All" },
-    { value: "active", icon: OrdersIcon, label: "Active" },
-    { value: "disabled", icon: RefundIcons, label: "Disabled" },
+    { value: "All", icon: CircleDollarSign, label: "All" },
+    { value: "live", icon: OrdersIcon, label: "Active" },
+    { value: "test", icon: RefundIcons, label: "Disabled" },
   ];
+
+  const [activeTab, setActiveTab] = useState("All");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const filter = useMemo(() => {
+    const params = new URLSearchParams();
+    params.append("page", page);
+    params.append("limit", limit);
+    if (activeTab !== "All") params.append("filterStatus", activeTab);
+    return params.toString();
+  }, [activeTab, limit, page]);
+
+  const {
+    isLoading,
+    data: { data: { data: gatewayData } = {} } = {},
+    refetch: gatewayRefetch,
+  } = useGet({
+    key: "gatewayData",
+    endpoint: PaymentGateWayAPI.GetAll + filter,
+  });
+
+  const { mutateAsync: gatewayMutation, isLoading: isCreating } = usePost({
+    endpoint: PaymentGateWayAPI.AddGateway,
+    isMultiPart: true,
+  });
+
+  const handleFormSubmit = async (values, { resetForm }) => {
+    const formData = new FormData();
+    formData.append("status", values.status);
+    formData.append("name", values.name);
+    formData.append("key", values.key);
+    formData.append("saltKey", values.saltKey);
+
+    if (values.icon instanceof File) {
+      formData.append("icon", values.icon);
+    } else if (typeof values.icon === "string") {
+      formData.append("icon", values.icon);
+    }
+
+    await gatewayMutation(formData);
+    gatewayRefetch();
+    resetForm();
+    setIsFormOpen(false);
+  };
+
   return (
     <div>
-      <Header title="Payment Gateways">
-        <CommonSearch />
-        <DateRangePicker />
-        <CommonButton>
-          <Download className="w-7 h-7" />
-        </CommonButton>
-      </Header>
+      <Header title="Payment Gateways"></Header>
 
-      <div className="w-full">
-        <Tabs // This is Shadcn Tabs
+      <div className="h-fit w-full relative">
+        <Tabs
           orientation="vertical"
-          defaultValue="all"
+          defaultValue={activeTab}
           className="h-full rounded-none"
         >
-          <CustomTabs tabs={tabsConfig} />
-          <TabsContent value="all" className="">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
-          <TabsContent value="active">
-            {/* <DataTable data={data} columns={columns} /> */}
-            <AddPaymentGatewayForm />
-          </TabsContent>
-          <TabsContent value="disabled">
-            <DataTable data={data} columns={columns} />
-          </TabsContent>
+          <CustomTabs tabs={tabsConfig} setIsActive={setActiveTab} />
+          {tabsConfig.map(({ value }) => (
+            <TabsContent key={value} value={value}>
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <DataTable
+                  data={gatewayData?.docs || []}
+                  columns={GatewayColumns(gatewayRefetch)}
+                />
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
+
+        <PaymentGatewayForm
+          open={isFormOpen}
+          setOpen={setIsFormOpen}
+          trigger={
+            <Button className="h-12 flex items-center gap-1.5 absolute top-0 right-0 bg-transparent text-lg text-black hover:text-white shadow-none border-l rounded-none rounded-tr-xl">
+              <PlusCircle size={20} /> Add
+            </Button>
+          }
+          onSubmit={handleFormSubmit}
+        >
+          <DialogFooter className="flex justify-between gap-2 py-5">
+            <DialogClose asChild>
+              <Button className="h-12 text-lg px-10 bg-white text-black hover:bg-gray-200 border shadow">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              className="h-12 w-full text-lg"
+              disabled={isCreating}
+            >
+              {isCreating ? "Adding..." : "Add & Save Payment Gateway"}
+            </Button>
+          </DialogFooter>
+        </PaymentGatewayForm>
       </div>
     </div>
   );

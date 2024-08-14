@@ -9,12 +9,17 @@ import { useAuthUserContext } from "@/context/AuthUserProvider";
 
 const AuthorizedOutlet = () => {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed();
-    const { userFound } = useAuthUserContext();
-    const { pathname } = useLocation();
+  const { userFound } = useAuthUserContext();
+  const { pathname } = useLocation();
 
-    // if (!userFound) {
-    //   return <Navigate to={"/login"} state={{ authSuccessRedirect: pathname }} />;
-    // }
+  // if (!userFound) {
+  //   return <Navigate to={"/login"} state={{ authSuccessRedirect: pathname }} />;
+  // }
+  console.log("user FOund", userFound);
+
+  if (!userFound) {
+    return <Navigate to={"/login"} state={{ authSuccessRedirect: pathname }} />;
+  }
 
   return (
     <Fragment>

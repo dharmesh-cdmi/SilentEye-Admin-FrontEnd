@@ -20,13 +20,13 @@ import useFilteredParams from "@/hooks/useFilterParams";
 export default function Plans() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "subscription", icon: CircleDollarSign, label: "Subscriptions" },
-    { value: "upsell", icon: OrdersIcon, label: "UpSell" },
-    { value: "addons", icon: AddonsIcon, label: "Add Ons" },
-    { value: "products", icon: ProductsIcon, label: "Products" },
-    { value: "shipping", icon: Plane, label: "Shipping" },
+    { value: "Subscription", icon: CircleDollarSign, label: "Subscriptions" },
+    { value: "Upsell", icon: OrdersIcon, label: "UpSell" },
+    { value: "Addons", icon: AddonsIcon, label: "Add Ons" },
+    { value: "Products", icon: ProductsIcon, label: "Products" },
+    { value: "Shipping", icon: Plane, label: "Shipping" },
   ];
-  const [isActive, setIsActive] = useState("subscription");
+  const [isActive, setIsActive] = useState("Subscription");
   const [searchTerm, setSearchTerm] = useState("");
   const filter = {
     // status: isActive,
@@ -62,7 +62,7 @@ export default function Plans() {
     refetch: AddonsRefetch,
   } = useGet({
     key: "addonsData",
-     endpoint: `${Addons.AllAddons}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Addons.AllAddons}?${new URLSearchParams(filterParams)}`,
   });
 
   // Call Product API ..
@@ -72,7 +72,7 @@ export default function Plans() {
     refetch: ProductRefetch,
   } = useGet({
     key: "productsData",
-    endpoint: `${Product.AllProduct}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Product.AllProduct}?${new URLSearchParams(filterParams)}`,
   });
 
   // Call Shipping API ..
@@ -82,7 +82,7 @@ export default function Plans() {
     refetch: ShippingRefetch,
   } = useGet({
     key: "shippingData",
-    endpoint: `${Shipping.AllShipping}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Shipping.AllShipping}?${new URLSearchParams(filterParams)}`,
   });
 
   return (
@@ -90,7 +90,7 @@ export default function Plans() {
       <Header title="Plans" className=" ">
         <CommonSearch onSearch={setSearchTerm} />
         <CommonButton>
-          <Download className="w-6 h-6" />
+          <SettingIcon className="w-6 h-6" />
         </CommonButton>
       </Header>
 

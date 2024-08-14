@@ -105,7 +105,7 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: "/support-ticket/open",
+            path: "/support-ticket/:ticketId",
             lazy: async () => ({
               Component: (await import("./pages/support-ticket-view")).default,
             }),
