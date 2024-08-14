@@ -5,6 +5,7 @@ import {
   AndroidIcon,
   BagIcon,
   EmailIcon,
+  IosIcon,
   WebIcon,
 } from "@/assets/icons";
 import { Field, FieldTarget } from "@/components/common/common-form";
@@ -28,21 +29,57 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import useUpdate from "@/hooks/use-update";
+import toast from "react-hot-toast";
 
 const UserDetailsAction = ({ id }) => {
   const [open, setOpen] = useState(false);
+
   const {
     data: { data: { data: usersData } = {} } = {},
     isLoading: userLoading,
+    refetch: UserRefetch,
   } = useGet({
     key: "usersData",
     endpoint: UserAPI.AllUsers + `/${id}`,
   });
 
-  console.log({ usersData });
+  const { mutateAsync: StatusMutation } = useUpdate({
+    isMultiPart: false,
+    endpoint: UserAPI.UpdateUser + id,
+  });
+
+  const handleStatus = async (checked) => {
+    try {
+      const newStatus = checked ? "active" : "inActive";
+
+      const res = await StatusMutation({ status: newStatus });
+      if (res?.status === 200) {
+        toast.success("Active Account Status Update Success !");
+      }
+      UserRefetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDashbaordStatus = async (checked) => {
+    try {
+      const newStatus = checked;
+
+      const res = await StatusMutation({ activeDashboard: newStatus });
+      if (res?.status === 200) {
+        toast.success("Active Dashboard Status Update Success !");
+      }
+      UserRefetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="pt-5  pb-10 h-full relative -mt-8 ">
-      {userLoading ? (
+      {userLoading && !usersData ? (
         <Loader />
       ) : (
         <>
@@ -81,9 +118,11 @@ const UserDetailsAction = ({ id }) => {
                       <p className="text-gray-400">Active Account</p>
                     </div>
                     <Switch
-                      defaultChecked={true}
+                      defaultChecked={
+                        usersData?.status === "active" ? true : false
+                      }
                       className="data-[state=checked]:bg-[#34C759] "
-                      onCheckedChange={(val) => console.log(val)}
+                      onCheckedChange={handleStatus}
                     />
                   </div>
                   <div className="flex justify-between items-center py-1 pb-6">
@@ -99,9 +138,9 @@ const UserDetailsAction = ({ id }) => {
                       </p>
                     </div>
                     <Switch
-                      defaultChecked={true}
+                      defaultChecked={usersData?.activeDashboard}
                       className="data-[state=checked]:bg-[#34C759] "
-                      onCheckedChange={() => console.log("hh")}
+                      onCheckedChange={handleDashbaordStatus}
                     />
                   </div>
                 </AccordionContent>
@@ -284,55 +323,39 @@ const UserDetailsAction = ({ id }) => {
                   </h2>
                 </AccordionTrigger>
 
-                <AccordionContent>
-                  <FieldTarget
-                    title={1}
-                    icon={<AndroidIcon size={20} />}
-                    val1="ertyui"
-                    val2="ertyui"
-                    val3="ertyui"
-                    className="border border-b-0 rounded-t-lg"
-                  />
-                  <FieldTarget
-                    title={1}
-                    icon={<AndroidIcon size={20} />}
-                    val1="ertyui"
-                    val2="ertyui"
-                    val3="ertyui"
-                    className="border border-b rounded-b-lg"
-                  />
+                <AccordionContent className="divide-y border rounded-lg">
+                  {usersData?.targetedNumbers?.map((item, index) => (
+                    <div key={index}>
+                      <FieldTarget
+                        title={index + 1}
+                        icon={
+                          item?.deviceType === "Android" ? (
+                            <AndroidIcon size={20} />
+                          ) : (
+                            <IosIcon size={20} />
+                          )
+                        }
+                        val1={item?.name}
+                        val2={item?.contact}
+                        val3={item?.device}
+                        className="border-none px-0"
+                      />
+                    </div>
+                  ))}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            {/* {usersData?.order?.addOns?.map((item) => (
-              <div key={item._id} className="py-3">
-                <Field
-                  title="Name"
-                  value={item?.name}
-                  className={"border rounded-t-lg"}
-                />
-                <Field
-                  title="Amount"
-                  value={"$" + item?.amount}
-                  className={"border border-t-0"}
-                  className2={"text-green-500"}
-                />
-                <Field
-                  title="MRP"
-                  value={item?.mrp}
-                  className={"border border-t-0"}
-                />
-                <Field
-                  title="Descripton"
-                  value={item?.description}
-                  className={"border border-t-0 rounded-b-lg"}
-                />
-              </div>
-            ))} */}
           </div>
         </>
       )}
-      <WalletModal open={open} setOpen={setOpen} />
+      <WalletModal
+        open={open}
+        setOpen={setOpen}
+        id={id}
+        dataRefetch={UserRefetch}
+        endpoint={UserAPI.UpdateUser}
+        wallet={usersData?.walletAmount}
+      />
     </div>
   );
 };

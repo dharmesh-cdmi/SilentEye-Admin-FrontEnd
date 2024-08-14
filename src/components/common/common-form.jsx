@@ -57,7 +57,7 @@ const FieldVerticle = ({ icon, title, value, className }) => (
 const FieldTarget = ({ icon, title, val1, val2, val3, className }) => (
   <InputField>
     <div className={cn("flex items-center divide-x-[1.5px]", className)}>
-      <div className="px-6 items-center text-[16px] text-gray-600 ">
+      <div className="min-w-14 max-w-20 px-6 items-center text-[16px] text-gray-600 ">
         {title}
       </div>
       <div className="flex flex-col items-center justify-start divide-y-[1.5px] w-full">
@@ -74,7 +74,9 @@ const FieldTarget = ({ icon, title, val1, val2, val3, className }) => (
         {val3 && (
           <div className=" w-full py-1 px-3 flex items-center space-x-2 ">
             {icon && <div className="">{icon}</div>}
-            <div className="text-[16px] text-gray-700 font-semibold">{val3}</div>
+            <div className="text-[16px] text-gray-700 font-semibold">
+              {val3}
+            </div>
           </div>
         )}
       </div>

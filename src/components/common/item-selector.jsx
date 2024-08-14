@@ -6,6 +6,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion"; // Make sure these are correctly imported
 import { cn } from "@/lib/utils";
+import { Spline } from "lucide-react";
 
 export default function ItemSelector({
   items,
@@ -29,15 +30,14 @@ export default function ItemSelector({
 
   return (
     <Accordion type="single" collapsible className="w-full">
-      <AccordionItem value="item-1">
-        <AccordionTrigger
-        //   className="cursor-pointer h-[43px] rounded-lg border flex justify-center px-4 items-center space-x-2"
-        >
-          {label}
+      <AccordionItem value="item-1" className="border-none">
+        <AccordionTrigger className="flex justify-between items-center hover:no-underline py-3 px-4 font-semibold">
+          <p className="w-full text-left">{label}</p>
+          <Spline size={20} className="mr-4" />
         </AccordionTrigger>
-        <AccordionContent>
-          <div className="border-b">
-            <div className="px-4 flex justify-start items-center space-x-2 py-2">
+        <AccordionContent className="py-0">
+          <div className="max-h-80 flex flex-col divide-y overflow-y-auto border-t">
+            <div className="flex justify-start items-center gap-2 px-4 py-2.5">
               <Checkbox
                 checked={selectedItems?.length === items.length}
                 onCheckedChange={handleSelectAllChange}
@@ -48,27 +48,38 @@ export default function ItemSelector({
                     : "bg-white border border-gray-300"
                 )}
               />
-              <span className="text-[16px]  font-semibold">All {label}</span>
+              <span
+                onClick={() =>
+                  handleSelectAllChange(selectedItems?.length !== items.length)
+                }
+                className="cursor-pointer text-[16px]  font-medium"
+              >
+                All {label}
+              </span>
             </div>
-          </div>
-          <div className="space-y-2 max-h-80 overflow-y-auto">
             {items?.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center space-x-2 border-b"
+                className="flex items-center justify-start gap-2 px-4 py-2.5"
               >
-                <div className="px-4 py-2 flex items-center justify-start space-x-2">
-                  <Checkbox
-                    checked={selectedItems?.includes(item.id)}
-                    onCheckedChange={() => handleCheckboxChange(item.id)}
-                    className={cn(
-                      "form-checkbox h-5 w-5 rounded-lg",
-                      selectedItems?.includes(item.id)
-                        ? "bg-green-200 text-green-500 border border-green-500"
-                        : "bg-white border border-gray-300"
-                    )}
-                  />
-                  <div className={cn("text-[16px] font-normal ",item?.className)}>{item.label}</div>
+                <Checkbox
+                  checked={selectedItems?.includes(item.id)}
+                  onCheckedChange={() => handleCheckboxChange(item.id)}
+                  className={cn(
+                    "form-checkbox h-5 w-5 rounded-lg",
+                    selectedItems?.includes(item.id)
+                      ? "bg-green-200 text-green-500 border border-green-500"
+                      : "bg-white border border-gray-300"
+                  )}
+                />
+                <div
+                  onClick={() => handleCheckboxChange(item.id)}
+                  className={cn(
+                    "cursor-pointer text-[16px] font-normal ",
+                    item?.className
+                  )}
+                >
+                  {item.label}
                 </div>
               </div>
             ))}

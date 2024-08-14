@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,7 +8,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -17,13 +17,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
-import { DataTablePagination } from './data-table-pagination';
-import { Checkbox } from '@/components/ui/checkbox'; // Assuming you are using this component
-import { cn } from '@/lib/utils';
+import { DataTablePagination } from "./data-table-pagination";
+import { Checkbox } from "@/components/ui/checkbox"; // Assuming you are using this component
+import { cn } from "@/lib/utils";
 
-export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPaginate = true,className}) {
+export function DataTable({
+  columns,
+  data,
+  DataTableToolbar,
+  actionButtons,
+  isPaginate = true,
+  className,
+}) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -72,26 +79,36 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPa
   // };
 
   return (
-    <div className={cn("border rounded-b-lg",className)}>
+    <div className={cn("border rounded-b-lg", className)}>
       <div className="flex justify-between">
         {Object.keys(rowSelection)?.length > 0 ? (
           <div className="flex items-center p-4">
             <Checkbox
-              checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+              checked={
+                table.getIsAllPageRowsSelected() ||
+                (table.getIsSomePageRowsSelected() && "indeterminate")
+              }
+              onCheckedChange={(value) =>
+                table.toggleAllPageRowsSelected(!!value)
+              }
               aria-label="Select all"
               className="translate-y-[2px] mr-4"
             />
-           
+
             {actionButtons.map((button, index) => (
               <button
                 key={index}
-                className={cn("ml-2 font-semibold  flex justify-center items-center w-32 text-[15px] bg-white shadow-md hover:shadow-lg px-2 rounded-full  border ",button.className)}
-                onClick={button.onClick}
+                className={cn(
+                  "ml-2 font-semibold  flex justify-center items-center w-32 text-[15px] bg-white shadow-md hover:shadow-lg px-2 rounded-full  border ",
+                  button.className
+                )}
+                onClick={() => button.onClick(table)}
               >
-                {
-                  button.icon && <button.icon className={cn("w-8 h-8 px-2",button.iconClassName)} />
-                }
+                {button.icon && (
+                  <button.icon
+                    className={cn("w-8 h-8 px-2", button.iconClassName)}
+                  />
+                )}
                 {button.label}
               </button>
             ))}
@@ -100,7 +117,7 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPa
           DataTableToolbar && <DataTableToolbar table={table} />
         )}
       </div>
-      <div className=''>
+      <div className="">
         <Table>
           {Object.keys(rowSelection)?.length === 0 && (
             <TableHeader>
@@ -127,7 +144,7 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPa
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -143,7 +160,7 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPa
               <TableRow>
                 <TableCell
                   colSpan={columns?.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -152,10 +169,7 @@ export function DataTable({ columns, data, DataTableToolbar, actionButtons, isPa
           </TableBody>
         </Table>
       </div>
-      {
-        isPaginate &&  <DataTablePagination table={table} />
-      }
-     
+      {isPaginate && <DataTablePagination table={table} />}
     </div>
   );
 }

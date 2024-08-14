@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CircleDollarSign, CirclePlus, Download, Plane } from "lucide-react";
-import { AddonsIcon, OrdersIcon, ProductsIcon } from "@/assets/icons";
+import { AddonsIcon, OrdersIcon, ProductsIcon, SettingIcon } from "@/assets/icons";
 import Loader from "@/components/common/loader";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import CommonSearch from "@/components/ui/search";
@@ -31,7 +31,7 @@ export default function Plans() {
     { value: "products", icon: ProductsIcon, label: "Products" },
     { value: "shipping", icon: Plane, label: "Shipping" },
   ];
-  const [isActive, setIsActive] = useState("subscription");
+  const [isActive, setIsActive] = useState("Subscription");
   const [searchTerm, setSearchTerm] = useState("");
   const filter = {
     // status: isActive,
@@ -101,7 +101,7 @@ export default function Plans() {
       <Header title="Plans" className=" ">
         <CommonSearch onSearch={setSearchTerm} />
         <CommonButton>
-          <Download className="w-6 h-6" />
+          <SettingIcon className="w-6 h-6" />
         </CommonButton>
       </Header>
 

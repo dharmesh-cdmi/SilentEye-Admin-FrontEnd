@@ -5,10 +5,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SlidersHorizontal } from "lucide-react";
-import { statuses,process } from "./data/staticdata";
+import { statuses, process } from "./data/staticdata";
 import ItemSelector from "@/components/common/item-selector";
 
-const Filter = ({ statusSelected, setStatusSelected,processSelected,setProcessSelected }) => {
+const Filter = ({
+  statusSelected,
+  setStatusSelected,
+  processSelected,
+  setProcessSelected,
+}) => {
   return (
     <div>
       <Popover>
@@ -18,7 +23,7 @@ const Filter = ({ statusSelected, setStatusSelected,processSelected,setProcessSe
             <h2>Filter</h2>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-60">
+        <PopoverContent className="min-w-56 flex flex-col divide-y p-0">
           <ItemSelector
             items={statuses}
             selectedItems={statusSelected}
