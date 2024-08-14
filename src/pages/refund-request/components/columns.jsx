@@ -214,7 +214,10 @@ export default function RefundColumns(refundRefecth) {
         return (
           <>
             <div className="flex justify-center gap-1.5">
-              <EditRefundForm initialValues={row.original}>
+              <EditRefundForm
+                initialValues={row.original}
+                dataRefetch={refundRefecth}
+              >
                 <Button className="h-9 w-9 p-1.5 bg-white text-black hover:bg-blue-600 hover:text-white border rounded-lg shadow-md duration-200">
                   <EditIcon />
                 </Button>

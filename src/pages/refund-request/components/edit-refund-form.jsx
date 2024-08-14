@@ -22,6 +22,14 @@ import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import { cn } from "@/lib/utils";
 import * as Yup from "yup";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const schema = Yup.object({
   status: Yup.string()
@@ -35,12 +43,16 @@ const schema = Yup.object({
 const optionColor = {
   Pending: "bg-yellow-500",
   Approved: "bg-green-500",
-  Rejected: "bg-red-500",
+  Reject: "bg-red-500",
   Refunded: "bg-gray-500",
   "True Refunded": "bg-orange-500",
 };
 
-export default function EditRefundForm({ initialValues, children }) {
+export default function EditRefundForm({
+  dataRefetch,
+  initialValues,
+  children,
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,15 +71,20 @@ export default function EditRefundForm({ initialValues, children }) {
           status: values.status,
           message: values.message,
         });
+        dataRefetch();
         setOpen(false);
         toast.success("Refund request updated successfully");
       } catch (error) {
-        toast.success(error.message || "Failed to update refund request");
+        toast.error(error.message || "Failed to update refund request");
       } finally {
         setLoading(false);
       }
     },
   });
+
+  const handleChange = (value) => {
+    formik.setFieldValue("status", value);
+  };
 
   return (
     <TooltipProvider>
@@ -94,23 +111,57 @@ export default function EditRefundForm({ initialValues, children }) {
                 <div className="min-w-24 flex items-center text-nowrap px-5">
                   Status
                 </div>
-                <div className="w-full">
-                  <select
-                    className={cn(
-                      "h-12 w-full px-5 outline-none text-white",
-                      optionColor[formik.values.status]
-                    )}
-                    name="status"
+                <div className="w-full overflow-hidden">
+                  <Select
                     value={formik.values.status}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    onValueChange={handleChange}
+                    className="w-full"
                   >
-                    <option value="Pending">Pending</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Reject">Reject</option>
-                    <option value="Refunded">Refunded</option>
-                    <option value="True Refunded">True Refunded</option>
-                  </select>
+                    <SelectTrigger
+                      className={`w-full h-12 px-5 outline-none text-white rounded-none ${
+                        optionColor[formik.values.status]
+                      }`}
+                    >
+                      <SelectValue
+                        defaultValue="Pending"
+                        placeholder="Select Status"
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="max-w-56 !p-0 border rounded-xl">
+                      <SelectGroup className="h-full w-full !p-0">
+                        <SelectItem
+                          className="py-3 cursor-pointer bg-yellow-500 hover:bg-yellow-400 text-white rounded-none"
+                          value="Pending"
+                        >
+                          Pending
+                        </SelectItem>
+                        <SelectItem
+                          className="py-3 cursor-pointer bg-green-500 hover:bg-green-400 text-white rounded-none"
+                          value="Approved"
+                        >
+                          Approved
+                        </SelectItem>
+                        <SelectItem
+                          className="py-3 cursor-pointer bg-red-500 hover:bg-red-400 text-white rounded-none"
+                          value="Reject"
+                        >
+                          Reject
+                        </SelectItem>
+                        <SelectItem
+                          className="py-3 cursor-pointer bg-gray-500 hover:bg-gray-400 text-white rounded-none"
+                          value="Refunded"
+                        >
+                          Refunded
+                        </SelectItem>
+                        <SelectItem
+                          className="py-3 cursor-pointer bg-orange-500 hover:bg-orange-400 text-white rounded-none"
+                          value="True Refunded"
+                        >
+                          True Refunded
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="flex divide-x-[1.5px]">
