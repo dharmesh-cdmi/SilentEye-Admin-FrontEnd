@@ -15,6 +15,8 @@ import { Ban, XCircleIcon } from "lucide-react";
 import useUpdate from "@/hooks/use-update";
 import useDelete from "@/hooks/use-delete";
 import useGet from "@/hooks/use-get";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const statusColor = {
   Active: "bg-green-500",
@@ -25,9 +27,11 @@ const statusColor = {
 
 export default function SupportTicketView() {
   const { ticketId } = useParams();
+  const navigate = useNavigate();
 
   const {
     isLoading,
+    isFetched,
     data: { data: { data: ticketData } = {} } = {},
     refetch: ticketRefetch,
   } = useGet({
@@ -35,15 +39,12 @@ export default function SupportTicketView() {
     endpoint: SupportTicketAPI.TicketDetails + ticketId,
   });
 
-  const navigate = useNavigate();
-
-  if (!isLoading && !ticketData) {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/");
+  useEffect(() => {
+    if (isFetched && !ticketData) {
+      toast.error("Support ticket not found");
+      navigate("/support-ticket");
     }
-  }
+  }, [isFetched, navigate, ticketData]);
 
   const { mutateAsync: closeTicket, isLoading: closingTicket } = useUpdate({
     endpoint: SupportTicketAPI.CloseTicket + ticketId,
@@ -60,21 +61,42 @@ export default function SupportTicketView() {
   });
 
   const handleClose = async () => {
-    await closeTicket({
-      status: "Closed",
-    });
-    ticketRefetch();
+    try {
+      const res = await closeTicket({
+        status: "Closed",
+      });
+      ticketRefetch();
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(
+        error.response.data.message || "Failed to update ticket status"
+      );
+    }
   };
 
   const handleBanUser = async () => {
-    await banUser({ blocked: true });
-    ticketRefetch();
+    try {
+      const res = await banUser({ blocked: true });
+      ticketRefetch();
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message || "Failed to ban the user");
+    }
   };
 
   const deleteConversiation = async () => {
-    await deleteTicket(ticketId);
-    ticketRefetch();
+    try {
+      const res = await deleteTicket(ticketId);
+      ticketRefetch();
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(
+        error.response.data.message || "Failed to delete support ticket"
+      );
+    }
   };
+
+  if (!isFetched) return <Loader />;
 
   return (
     <div>
@@ -143,7 +165,7 @@ export default function SupportTicketView() {
           {isLoading ? (
             <Loader />
           ) : (
-            <div className="h-[75vh] flex flex-col justify-between">
+            <div className="h-[65vh] flex flex-col justify-between">
               <Conversiation comments={ticketData?.comments || []} />
               <CommentInput refetch={ticketRefetch} ticketId={ticketId} />
             </div>

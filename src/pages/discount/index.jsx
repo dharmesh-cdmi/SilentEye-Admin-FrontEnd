@@ -64,7 +64,9 @@ export default function Discount() {
       setIsFormOpen(false);
       toast.success(res.data.message);
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error(
+        error.response?.data?.message || "Failed to add new discount"
+      );
     }
   };
 

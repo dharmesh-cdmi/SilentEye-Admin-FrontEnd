@@ -62,13 +62,14 @@ export default function GatewayColumns(refetchData) {
         const handleStatusChange = async (updatedIsLive) => {
           setIsLive((prev) => !prev);
           try {
-            const { data } = await gatewaytMutateAsync({
+            const res = await gatewaytMutateAsync({
               status: updatedIsLive ? "live" : "test",
             });
             setIsLive(updatedIsLive);
-            toast.success(data.message);
+            toast.success(res.data.message);
           } catch (error) {
             setIsLive(row.original.status === "test" ? false : true);
+            toast(error.response.data.message || "Failed to update status");
           }
         };
 
@@ -125,7 +126,10 @@ export default function GatewayColumns(refetchData) {
             setIsEditModalOpen(false);
             toast.success(res.data.message);
           } catch (error) {
-            toast.error(error.response?.data?.message || error.message);
+            toast.error(
+              error.response?.data?.message ||
+                "Failed to update payment gateway"
+            );
           }
         };
 

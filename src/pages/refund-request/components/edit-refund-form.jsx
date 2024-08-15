@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/custom/button";
 import {
   Dialog,
@@ -30,10 +29,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect, useState } from "react";
 
 const schema = Yup.object({
   status: Yup.string()
-    .oneOf(["Pending", "Approved", "Reject", "Refunded", "True Refunded"])
+    .oneOf(["Pending", "Approved", "Rejected", "Refunded", "True Refunded"])
     .required("Status is required"),
   message: Yup.string()
     .required("Message is required")
@@ -43,7 +43,7 @@ const schema = Yup.object({
 const optionColor = {
   Pending: "bg-yellow-500",
   Approved: "bg-green-500",
-  Reject: "bg-red-500",
+  Rejected: "bg-red-500",
   Refunded: "bg-gray-500",
   "True Refunded": "bg-orange-500",
 };
@@ -64,18 +64,21 @@ export default function EditRefundForm({
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: schema,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        await refundMutation({
+        const res = await refundMutation({
           status: values.status,
           message: values.message,
         });
         dataRefetch();
         setOpen(false);
-        toast.success("Refund request updated successfully");
+        toast.success(res.data.message);
       } catch (error) {
-        toast.error(error.message || "Failed to update refund request");
+        toast.error(
+          error.response.data.message || "Failed to update refund request"
+        );
       } finally {
         setLoading(false);
       }
@@ -85,6 +88,12 @@ export default function EditRefundForm({
   const handleChange = (value) => {
     formik.setFieldValue("status", value);
   };
+
+  useEffect(() => {
+    if (open) {
+      formik.resetForm();
+    }
+  }, [open]);
 
   return (
     <TooltipProvider>
@@ -143,9 +152,9 @@ export default function EditRefundForm({
                         </SelectItem>
                         <SelectItem
                           className="py-3 cursor-pointer bg-red-500 hover:bg-red-400 text-white rounded-none"
-                          value="Reject"
+                          value="Rejected"
                         >
-                          Reject
+                          Rejected
                         </SelectItem>
                         <SelectItem
                           className="py-3 cursor-pointer bg-gray-500 hover:bg-gray-400 text-white rounded-none"

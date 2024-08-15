@@ -50,13 +50,15 @@ export default function SupportTicket() {
     const rows = table.getFilteredSelectedRowModel().rows;
     const selected = rows.map((row) => row.original._id);
     try {
-      await adminAPI.delete(SupportTicketAPI.BulkDelete, {
+      const res = await adminAPI.delete(SupportTicketAPI.BulkDelete, {
         data: { ticketIds: selected },
       });
       ticketRefecth();
-      toast.success("Successfully deleted selected tickets");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to delete selected tickets");
+      toast.error(
+        error.response.data.message || "Failed to delete selected tickets"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
@@ -67,14 +69,17 @@ export default function SupportTicket() {
     const selected = rows.map((row) => row.original._id);
 
     try {
-      await bulkUpdate({
+      const res = await bulkUpdate({
         ticketIds: selected,
         status,
       });
       ticketRefecth();
-      toast.success("Successfully updated selected tickets status");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to update selected tickets status");
+      toast.error(
+        error.response.data.message ||
+          "Failed to update selected tickets status"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }

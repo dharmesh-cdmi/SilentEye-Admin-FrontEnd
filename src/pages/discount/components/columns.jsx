@@ -152,7 +152,10 @@ export default function DiscountColumns(discountRefetch) {
             toast.success(res.data.message);
           } catch (error) {
             setIsLive(row.original.status === "test" ? false : true);
-            toast.success(error.response?.data?.message || error.message);
+            toast.success(
+              error.response?.data?.message ||
+                "Failed to change discount status"
+            );
           }
         };
 
@@ -204,11 +207,13 @@ export default function DiscountColumns(discountRefetch) {
               validity,
             });
 
-            toast.success(res.data.message);
             discountRefetch();
             setIsEditModalOpen(false);
+            toast.success(res.data.message);
           } catch (error) {
-            toast.error(error.response?.data?.message || error.message);
+            toast.error(
+              error.response?.data?.message || "Failed to updated discount"
+            );
           }
         };
 

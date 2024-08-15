@@ -55,13 +55,16 @@ export default function RefundRequest() {
     const rows = table.getFilteredSelectedRowModel().rows;
     const selected = rows.map((row) => row.original._id);
     try {
-      await adminAPI.delete(RefundRequestAPI.BulkDelete, {
+      const res = await adminAPI.delete(RefundRequestAPI.BulkDelete, {
         data: { ticketIds: selected },
       });
       ticketRefecth();
-      toast.success("Successfully deleted selected refund requests");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to delete selected refund requests");
+      toast.error(
+        error.response.data.message ||
+          "Failed to delete selected refund requests"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
@@ -72,14 +75,17 @@ export default function RefundRequest() {
     const selected = rows.map((row) => row.original._id);
 
     try {
-      await bulkUpdate({
+      const res = await bulkUpdate({
         ticketIds: selected,
         status,
       });
       ticketRefecth();
-      toast.success("Successfully updated selected refund requests");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to update selected refund requests status");
+      toast.error(
+        error.response.data.message ||
+          "Failed to update selected refund requests status"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
