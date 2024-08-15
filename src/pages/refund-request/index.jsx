@@ -1,14 +1,13 @@
-import { OrdersIcon, RefundIcons, TrashIcon } from "@/assets/icons";
 import { DataTable } from "@/components/common/Table/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import SettingDialog from "./components/setting-dialog";
 import CustomTabs from "@/components/common/custom-tabs";
-import { CircleDollarSign, Plane } from "lucide-react";
 import { RefundRequestAPI } from "@/api/endpoints";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import RefundColumns from "./components/columns";
 import Loader from "@/components/common/loader";
+import { TrashIcon } from "@/assets/icons";
 import { useMemo, useState } from "react";
 import useUpdate from "@/hooks/use-update";
 import useGet from "@/hooks/use-get";
@@ -16,12 +15,12 @@ import toast from "react-hot-toast";
 
 export default function RefundRequest() {
   const tabsConfig = [
-    { value: "All", icon: CircleDollarSign, label: "All" },
-    { value: "Pending", icon: OrdersIcon, label: "Pending" },
-    { value: "Approved", icon: RefundIcons, label: "Approved" },
-    { value: "Rejected", icon: Plane, label: "Rejected" },
-    { value: "Refunded", icon: Plane, label: "Refunded" },
-    { value: "True Refunded", icon: Plane, label: "True Refunded" },
+    { value: "All", label: "All" },
+    { value: "Pending", label: "Pending" },
+    { value: "Approved", label: "Approved" },
+    { value: "Rejected", label: "Rejected" },
+    { value: "Refunded", label: "Refunded" },
+    { value: "True Refunded", label: "True Refunded" },
   ];
 
   const [searchQuery, setSearchQuery] = useState("");

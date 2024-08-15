@@ -1,7 +1,5 @@
 import { DataTable } from "@/components/common/Table/data-table";
-import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { Button } from "@/components/custom/button";
 import DiscountColumns from "./components/columns";
@@ -9,16 +7,17 @@ import CouponForm from "./components/coupon-form";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
 import { DiscountAPI } from "@/api/endpoints";
-import useGet from "@/hooks/use-get";
+import { PlusCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
 import toast from "react-hot-toast";
+import useGet from "@/hooks/use-get";
 
 export default function Discount() {
   const tabsConfig = [
-    { value: "all", icon: CircleDollarSign, label: "All" },
-    { value: "active", icon: OrdersIcon, label: "Active" },
-    { value: "expired", icon: RefundIcons, label: "Expired" },
+    { value: "all", label: "All" },
+    { value: "active", label: "Active" },
+    { value: "expired", label: "Expired" },
   ];
 
   const [activeTab, setActiveTab] = useState("all");

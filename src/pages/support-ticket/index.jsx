@@ -1,13 +1,12 @@
 import { DataTable } from "@/components/common/Table/data-table";
-import { CircleDollarSign, Plane } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { OrdersIcon, RefundIcons, TrashIcon } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { SupportTicketAPI } from "@/api/endpoints";
 import CommonSearch from "@/components/ui/search";
 import TicketColumns from "./components/columns";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
+import { TrashIcon } from "@/assets/icons";
 import { useMemo, useState } from "react";
 import useUpdate from "@/hooks/use-update";
 import adminAPI from "@/api/adminAPI";
@@ -17,10 +16,10 @@ import useGet from "@/hooks/use-get";
 export default function SupportTicket() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "All", icon: CircleDollarSign, label: "All" },
-    { value: "Pending", icon: OrdersIcon, label: "Pending" },
-    { value: "Answered", icon: RefundIcons, label: "Answered" },
-    { value: "Closed", icon: Plane, label: "Closed" },
+    { value: "All", label: "All" },
+    { value: "Pending", label: "Pending" },
+    { value: "Answered", label: "Answered" },
+    { value: "Closed", label: "Closed" },
   ];
 
   const [activeTab, setActiveTab] = useState("All");

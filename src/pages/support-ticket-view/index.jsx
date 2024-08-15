@@ -4,17 +4,17 @@ import {
   PointerIcon,
   TrashIcon,
 } from "@/assets/icons";
+import { useNavigate, useParams } from "react-router-dom";
 import Conversiation from "./components/conversiation";
 import CommentInput from "./components/comment-input";
 import { SupportTicketAPI } from "@/api/endpoints";
+import { cn, formatDateTime } from "@/lib/utils";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
 import { Ban, XCircleIcon } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import useGet from "@/hooks/use-get";
 import useUpdate from "@/hooks/use-update";
 import useDelete from "@/hooks/use-delete";
-import { cn, formatDateTime } from "@/lib/utils";
+import useGet from "@/hooks/use-get";
 
 const statusColor = {
   Active: "bg-green-500",
