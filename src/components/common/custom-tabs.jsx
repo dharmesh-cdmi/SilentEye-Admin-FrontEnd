@@ -2,12 +2,7 @@ import { cn } from "@/lib/utils";
 import { TabsList, TabsTrigger } from "../ui/tabs";
 import { PROD_IMG_Prefix } from "@/api/endpoints";
 
-export default function CustomTabs({
-  tabs,
-  setIsActive,
-  className,
-  setData,
-}) {
+export default function CustomTabs({ tabs, setIsActive, className, setData }) {
   return (
     <div
       className={cn(
@@ -20,7 +15,7 @@ export default function CustomTabs({
           <TabsTrigger
             key={id}
             value={tab.value || tab._id}
-            className="border-r flex justify-center items-center data-[state=active]:h-[48px]"
+            className="border-r flex justify-center items-center data-[state=active]:h-[48px] text-primary hover:bg-primary hover:text-white data-[state=active]:text-white"
             onClick={async () => {
               if (setData) {
                 await setData(null);
