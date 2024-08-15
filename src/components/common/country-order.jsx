@@ -8,7 +8,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CountryAPI } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
 
-export default function Country({selectedCountries,setSelectedCountries}) {
+
+export default function CountryOrder({ selectedCountries, setSelectedCountries }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {
     data: { data: { data: countriesdata } = {} } = {},
   } = useGet({
@@ -16,21 +20,17 @@ export default function Country({selectedCountries,setSelectedCountries}) {
     endpoint: `${CountryAPI.CountryList}`,
   });
 
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (label) => {
     setSelectedCountries((prev) =>
-      prev.includes(id)
-        ? prev.filter((countryId) => countryId !== id)
-        : [...prev, id]
+      prev.includes(label)
+        ? prev.filter((countryLabel) => countryLabel !== label)
+        : [...prev, label]
     );
   };
 
   const handleSelectAllChange = (checked) => {
     if (checked) {
-      setSelectedCountries(countriesdata.map((country) => country.id));
+      setSelectedCountries(countriesdata?.map((country) => country.label));
     } else {
       setSelectedCountries([]);
     }
@@ -55,7 +55,7 @@ export default function Country({selectedCountries,setSelectedCountries}) {
       <PopoverTrigger asChild>
         <div
           className={cn(
-            "cursor-pointer h-[43px]  rounded-lg border flex justify-center px-4 items-center space-x-2"
+            "cursor-pointer h-[43px] rounded-lg border flex justify-center px-4 items-center space-x-2"
           )}
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -105,11 +105,11 @@ export default function Country({selectedCountries,setSelectedCountries}) {
               >
                 <div className="px-4 py-2 flex items-center justify-start ">
                   <Checkbox
-                    checked={selectedCountries?.includes(country.id)}
-                    onCheckedChange={() => handleCheckboxChange(country.id)}
+                    checked={selectedCountries.includes(country.label)}
+                    onCheckedChange={() => handleCheckboxChange(country.label)}
                     className={cn(
                       "form-checkbox h-5 w-5 rounded-lg",
-                      selectedCountries.includes(country.id)
+                      selectedCountries.includes(country.label)
                         ? "bg-green-200 text-green-500 border border-green-500"
                         : "bg-white border border-gray-300"
                     )}

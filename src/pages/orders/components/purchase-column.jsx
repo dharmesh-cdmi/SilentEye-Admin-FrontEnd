@@ -21,7 +21,7 @@ import { Order } from "@/api/endpoints";
 
 export const PurchaseColumns = ({ tabKey, orderRefetch }) => {
   const columns = [
-    ...(tabKey !== "purchase"
+    ...(tabKey !== "Completed"
       ? [
           {
             accessorKey: "_id",
@@ -83,7 +83,7 @@ export const PurchaseColumns = ({ tabKey, orderRefetch }) => {
         return <div className="">{row?.original?.orderDetails?.country}</div>;
       },
     },
-    ...(tabKey === "purchase" || tabKey === "shipping"
+    ...(tabKey === "Completed" || tabKey === "Shipping"
       ? [
           {
             accessorKey: "purchase",
@@ -101,7 +101,7 @@ export const PurchaseColumns = ({ tabKey, orderRefetch }) => {
           },
         ]
       : []),
-    ...(tabKey === "checkout"
+    ...(tabKey === "pending"
       ? [
           {
             accessorKey: "checkout",
@@ -288,7 +288,7 @@ export const PurchaseColumns = ({ tabKey, orderRefetch }) => {
                 <Trash2 className="w-5 h-5 " />
               </Button>
             </div>
-            <RefundModal open={ropen} setOpen={setROpen} />
+            <RefundModal open={ropen} setOpen={setROpen} id={id} dataRefetch={orderRefetch}/>
             <DeleteModal
               open={open}
               setOpen={setOpen}

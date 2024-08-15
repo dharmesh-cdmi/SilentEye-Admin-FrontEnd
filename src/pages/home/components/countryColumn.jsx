@@ -1,25 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
-  AmountIcon,
-  AndroidIcon,
   BagIcon,
-  IosIcon,
   PaymentGateWayIcon,
   PlanIcon,
   RefundIcon,
   UseLimitIcon,
   WebIcon,
 } from "@/assets/icons";
-import { CircleUser, Laptop2Icon, Users } from "lucide-react";
-import { useState } from "react";
-import { UserAPI } from "@/api/endpoints";
-
-import { Switch } from "@/components/ui/switch";
-import useUpdate from "@/hooks/use-update";
-import toast from "react-hot-toast";
-import Spinner from "@/components/common/Spinner";
-
-export const CountryColumn = () => {
+import { CircleUser, UserIcon, Users } from "lucide-react";
+import { PROD_IMG_Prefix } from "@/api/endpoints";
+export const CountryColumn = ({ type }) => {
   const columns = [
     {
       accessorKey: "_id",
@@ -36,50 +26,65 @@ export const CountryColumn = () => {
       enableSorting: false,
       enableHiding: false,
     },
-    {
-      accessorKey: "country",
-      header: () => (
-        <div className="flex justify-center space-x-2 px-2">
-          <WebIcon size={19} />{" "}
-          <p className="text-[17px] text-primary">Country</p>
-        </div>
-      ),
-      cell: ({ row }) => {
-        return (
-          <div className="flex justify-center items-center">
-            {row?.original?.country}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "amountspend",
-      header: () => (
-        <div className="flex space-x-2 px-2 justify-center">
-          <AmountIcon size={36} />{" "}
-          <p className="text-[17px] text-primary">Amound Spend</p>
-        </div>
-      ),
-      cell: ({ row }) => {
-        return (
-          <div className="flex justify-center items-center">
-            {row?.original?.amountSpend}
-          </div>
-        );
-      },
-    },
+    ...(type === "country"
+      ? [
+          {
+            accessorKey: "country",
+            header: () => (
+              <div className="flex justify-start space-x-2 px-2">
+                <WebIcon size={19} />{" "}
+                <p className="text-[17px] text-primary">Country</p>
+              </div>
+            ),
+            cell: ({ row }) => {
+              return (
+                <div className="flex justify-center items-center">
+                  <img
+                    src={PROD_IMG_Prefix + row?.original?.planIcon}
+                    alt="planicon"
+                    className="w-6 h-6 rounded-full object-fill "
+                  />
+                  {row?.original?.country || "N/A"}
+                </div>
+              );
+            },
+          },
+        ]
+      : [
+          {
+            accessorKey: "plan",
+            header: () => (
+              <div className="flex justify-start space-x-2 px-2">
+                <PlanIcon size={19} />{" "}
+                <p className="text-[17px] text-primary ">Plan</p>
+              </div>
+            ),
+            cell: ({ row }) => {
+              return (
+                <div className="flex justify-center items-center">
+                  <img
+                    src={PROD_IMG_Prefix + row?.original?.planIcon}
+                    alt="planicon"
+                    className="w-6 h-6 rounded-full object-fill "
+                  />
+                  {row?.original?.planName || "N/A"}
+                </div>
+              );
+            },
+          },
+        ]),
     {
       accessorKey: "allusers",
       header: () => (
-        <div className="flex space-x-2 px-2 justify-center">
-          <Users size={36} />{" "}
-          <p className="text-[17px] text-primary">All Users</p>
+        <div className="flex justify-start space-x-2 px-2 w-28">
+          <Users size={19} />{" "}
+          <p className="text-[17px] text-primary ">All Users</p>
         </div>
       ),
       cell: ({ row }) => {
         return (
           <div className="flex justify-center items-center">
-            {row?.original?.amountRefund}
+            {row?.original?.allUsers || "N/A"}
           </div>
         );
       },
@@ -90,43 +95,34 @@ export const CountryColumn = () => {
       header: () => (
         <div className="flex space-x-2 px-2 justify-start">
           <BagIcon size={19} />{" "}
-          <p className="text-[17px] text-primary">Sales</p>
+          <p className="text-[17px] text-primary items-start">Sales</p>
         </div>
       ),
-      cell: ({ row }) => {
-        // Example usage
-        // const deviceType = getDeviceType(row?.original?.device);
+      cell: ({ row }) => (
+        <div className="flex flex-col justify-center items-center">
+          <p className="text-[14px] font-normal text-green-500">
+            {"$ " + row?.original?.sales?.totalSalesAmount || 0}{" "}
+          </p>
 
-        return (
-          <div className="flex justify-start items-center space-x-2 w-[120px]">
-            {row?.original?.device && row?.original?.deviceType === "ios" ? (
-              <IosIcon size={20} />
-            ) : row?.original?.deviceType === "android" ? (
-              <AndroidIcon size={20} />
-            ) : row?.original?.deviceType === "laptop" ? (
-              <Laptop2Icon size={20} />
-            ) : (
-              <AndroidIcon size={20} />
-            )}
-            <p>{row?.original?.device || "N/A"}</p>
+          <div className="flex justify-center items-center space-x-1 ">
+            <UserIcon className="text-gray-500 w-4 h-4" />
+            <p className="text-[14px] font-normal text-gray-900">
+              {row?.original?.sales?.totalUsersBought || 0}
+            </p>
           </div>
-        );
-      },
+        </div>
+      ),
     },
     {
       accessorKey: "demo",
       header: () => (
-        <div className="flex space-x-2 px-2 justify-center w-40">
-          <CircleUser size={30} />{" "}
+        <div className="flex space-x-2 px-2 justify-center ">
+          <CircleUser size={19} />{" "}
           <p className="text-[17px] text-primary">Demo</p>
         </div>
       ),
       cell: ({ row }) => {
-        return (
-          <div className="flex justify-center items-center">
-            {row?.original?.ipAddress || "N/A"}
-          </div>
-        );
+        return <div className="flex justify-center items-center">{row?.original?.demo || "N/A"}</div>;
       },
     },
     {
@@ -140,13 +136,13 @@ export const CountryColumn = () => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-center items-center">
-            {row?.original?.assignedBy?.name || "N/A"}
+            {row?.original?.totalPlan || "N/A"}
           </div>
         );
       },
     },
     {
-      accessorKey: "checkout",
+      accessorKey: "plan",
       header: () => (
         <div className="flex space-x-2 px-2 justify-center">
           <UseLimitIcon size={19} />{" "}
@@ -154,42 +150,14 @@ export const CountryColumn = () => {
         </div>
       ),
       cell: ({ row }) => {
-        const [block, setBlock] = useState(row?.original?.blocked);
-
-        const { mutateAsync: blockMutation, isLoading: blockLoading } =
-          useUpdate({
-            isMultiPart: false,
-            endpoint: UserAPI.UpdateUser + row?.original?._id,
-          });
-
-        const handleBlock = async () => {
-          try {
-            const newBlockState = !block;
-            const res = await blockMutation({ blocked: newBlockState });
-            if (res?.status === 200) {
-              setBlock(newBlockState);
-              toast.success(res?.data?.message || "User is Blocked Success !");
-            }
-          } catch (err) {
-            console.log(err);
-          }
-        };
-
         return (
           <div className="flex justify-center items-center">
-            {blockLoading ? (
-              <Spinner />
-            ) : (
-              <Switch
-                defaultChecked={block}
-                className="data-[state=checked]:bg-[#34C759] "
-                onCheckedChange={handleBlock}
-              />
-            )}
+            {row?.original?.totalCheckout || "N/A"}
           </div>
         );
       },
     },
+
     {
       accessorKey: "paymentinitiated",
       header: () => (
@@ -201,13 +169,13 @@ export const CountryColumn = () => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-center items-center">
-            {row?.original?.assignedBy?.name || "N/A"}
+            {row?.original?.totalPaymentInitiated || "N/A"}
           </div>
         );
       },
     },
     {
-      accessorKey: "paymentinitiated",
+      accessorKey: "Refund",
       header: () => (
         <div className="flex space-x-2 px-2 justify-center">
           <RefundIcon size={19} />{" "}
@@ -216,8 +184,17 @@ export const CountryColumn = () => {
       ),
       cell: ({ row }) => {
         return (
-          <div className="flex justify-center items-center">
-            {row?.original?.assignedBy?.name || "N/A"}
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-[14px] font-normal text-red-500">
+              {"$ " + (type === "country" ? row?.original?.refund?.totalRefunds : row?.original?.refund?.totalUsersRefunds ) || 0}
+            </p>
+
+            <div className="flex justify-center items-center space-x-1 ">
+              <UserIcon className="text-gray-500 w-4 h-4" />
+              <p className="text-[14px] font-normal text-gray-900">
+                {row?.original?.refund?.totalRefundedAmount || 0}
+              </p>
+            </div>
           </div>
         );
       },

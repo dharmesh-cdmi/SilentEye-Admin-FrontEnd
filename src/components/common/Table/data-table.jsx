@@ -30,6 +30,7 @@ export function DataTable({
   actionButtons,
   isPaginate = true,
   className,
+  classNameHeader
 }) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -120,7 +121,7 @@ export function DataTable({
       <div className="">
         <Table>
           {Object.keys(rowSelection)?.length === 0 && (
-            <TableHeader>
+            <TableHeader className={cn("",classNameHeader)}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {

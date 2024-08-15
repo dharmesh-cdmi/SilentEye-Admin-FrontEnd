@@ -7,12 +7,14 @@ const Auth = {
 const Dashboard = {
   Table: "admin/users-statistics",
   Analytics: "admin/analytics",
+  DownloadAnalytics: "admin/download-analytics"
 };
 
 const Order = {
   Order_Details: "admin/orders",
   Delete_Order: "admin/orders-delete",
   Download_Order: "admin/download-orders",
+  RefundInitiate: "admin/order/"
 };
 
 const Admin = {
@@ -64,6 +66,10 @@ const UserAPI = {
   BulkUpdate: "/users/bulk/update",
   BulkDelete: "/users/bulk/delete",
 };
+
+const CountryAPI = {
+  CountryList : "users/countries/list", 
+}
 
 const ContentManage = {
   ActiveContentDetails: "content-manage/update-contact-details",
@@ -145,4 +151,5 @@ export {
   SupportTicketAPI,
   DiscountAPI,
   PaymentGateWayAPI,
+  CountryAPI
 };

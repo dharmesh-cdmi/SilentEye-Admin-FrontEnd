@@ -1,3 +1,4 @@
+import { Order } from "@/api/endpoints";
 import { refund } from "@/assets";
 import { RefundIcons } from "@/assets/icons";
 import {
@@ -10,8 +11,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import usePost from "@/hooks/use-post";
+import toast from "react-hot-toast";
 
-const RefundModal = ({ entry = "delete click", open, setOpen }) => {
+const RefundModal = ({ open, setOpen, id, dataRefetch }) => {
+  const { mutateAsync: RefundMutation } = usePost({
+    endpoint: `${Order.RefundInitiate}${id}/refund-initiate`,
+  });
+
+  const handleRefundInitiate = async () => {
+    try {
+      const res = await RefundMutation();
+      toast.success(res?.data?.message);
+      await dataRefetch();
+      setOpen(false);
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
   return (
     <AlertDialog open={open}>
       <AlertDialogContent className="">
@@ -33,17 +50,17 @@ const RefundModal = ({ entry = "delete click", open, setOpen }) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="border-t w-full pt-4">
-          <AlertDialogCancel onClick={() => setOpen(false)} className="w-[79px] h-[40px] text-[20px]">
+          <AlertDialogCancel
+            onClick={() => setOpen(false)}
+            className="w-[79px] h-[40px] text-[20px]"
+          >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-          className="w-[80%] h-[40px] text-[20px] flex justify-center items-center space-x-4"
-            onClick={async () => {
-              // await deleteEntry(entry);
-              console.log("Delete Click ", entry);
-            }}
+            className="w-[80%] h-[40px] text-[20px] flex justify-center items-center space-x-4"
+            onClick={handleRefundInitiate}
           >
-            <RefundIcons size={20}/> <h3 className="">Initiate Refund</h3>
+            <RefundIcons size={20} /> <h3 className="">Initiate Refund</h3>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

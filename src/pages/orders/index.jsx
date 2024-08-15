@@ -7,38 +7,38 @@ import CustomTabs from "@/components/common/custom-tabs";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import CommonButton from "@/components/ui/common-button";
-import Country from "@/components/common/country";
 import { Order } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
 import Loader from "@/components/common/loader";
 import { PurchaseColumns } from "./components/purchase-column";
 import { useMemo, useState } from "react";
 import useFilteredParams from "@/hooks/useFilterParams";
+import { fileDownload } from "@/lib/utils";
+import CountryOrder from "@/components/common/country-order";
 
 export default function Orders() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "purchase", icon: CircleDollarSign, label: "Purchase" },
-    { value: "checkout", icon: OrdersIcon, label: "Checkout" },
-    { value: "refunded", icon: RefundIcons, label: "Refunded" },
-    { value: "shipping", icon: Plane, label: "Shipping" },
+    { value: "Completed", icon: CircleDollarSign, label: "Purchase" },
+    { value: "Pending", icon: OrdersIcon, label: "Checkout" },
+    { value: "Refunded", icon: RefundIcons, label: "Refunded" },
+    { value: "Shipping", icon: Plane, label: "Shipping" },
   ];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [dateRange, setDateRange] = useState({ from: null, to: null });
-  const [isActive, setIsActive] = useState("purchase");
-  const [enabled, setIsEnable] = useState(false);
+  const [isActive, setIsActive] = useState("Completed");
 
   const filter = useMemo(
     () => ({
-      // status: isActive,
+      status: isActive,
       search: searchTerm || null,
       country: selectedCountries || null,
       startDate: dateRange.from || null,
       endDate: dateRange.to || null,
     }),
-    [searchTerm, selectedCountries, dateRange]
+    [isActive,searchTerm, selectedCountries, dateRange]
   );
 
   const filterParams = useFilteredParams(filter);
@@ -56,24 +56,18 @@ export default function Orders() {
     endpoint: `${Order.Order_Details}?${new URLSearchParams(filterParams)}`,
   });
 
-  const { data, refetch: DownlaodRefetch } = useGet({
-    key: "downloadData",
-    enabled: enabled,
-    endpoint: Order.Download_Order,
-  });
-
-  const handleDownload = () => {
-    setIsEnable(true);
-    DownlaodRefetch();
+  const handleDownload = async () => {
+    await fileDownload(Order.Download_Order);
   };
 
   return (
     <div>
       <Header title="Orders" className=" ">
         <CommonSearch onSearch={setSearchTerm} />
-        <Country
+        <CountryOrder
           selectedCountries={selectedCountries}
           setSelectedCountries={setSelectedCountries}
+          
         />
         <DateRangePicker onUpdate={handleDateRangeUpdate} />
         <CommonButton onClick={handleDownload}>
@@ -84,7 +78,7 @@ export default function Orders() {
       <div className="w-full">
         <Tabs // This is Shadcn Tabs
           orientation="vertical"
-          defaultValue="purchase"
+          defaultValue={isActive}
         >
           {/* This is Common TabsListCompnent  */}
           <CustomTabs tabs={tabsConfig} setIsActive={setIsActive} />
