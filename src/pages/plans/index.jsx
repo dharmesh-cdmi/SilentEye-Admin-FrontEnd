@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { CircleDollarSign, CirclePlus, Download, Plane } from "lucide-react";
-import { AddonsIcon, OrdersIcon, ProductsIcon, SettingIcon } from "@/assets/icons";
+import { CircleDollarSign, CirclePlus, Plane } from "lucide-react";
+import {
+  AddonsIcon,
+  OrdersIcon,
+  ProductsIcon,
+  SettingIcon,
+} from "@/assets/icons";
 import Loader from "@/components/common/loader";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import CommonSearch from "@/components/ui/search";
@@ -21,6 +26,7 @@ import AddSubscription from "./components/subscription/AddSubscription";
 import AddUpsell from "./components/upsell/AddUpsell";
 import AddAddon from "./components/addons/AddAddon";
 import AddShipping from "./components/shippings/AddShipping";
+import AddProduct from "./components/products/AddProduct";
 
 export default function Plans() {
   // this is tabsConfig
@@ -95,6 +101,8 @@ export default function Plans() {
   const [upsellModalOpen, setUpsellModalOpen] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [shippingModalOpen, setShippingModalOpen] = useState(false);
+
+  
 
   return (
     <div>
@@ -232,7 +240,7 @@ export default function Plans() {
         setOpen={setProductModalOpen}
         title="Add New Product"
       >
-        <AddSubscription />
+        <AddProduct />
       </CommonModal>
 
       <CommonModal

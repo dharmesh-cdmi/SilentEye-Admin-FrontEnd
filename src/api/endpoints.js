@@ -7,7 +7,8 @@ const Auth = {
 const Dashboard = {
   Table: "admin/users-statistics",
   Analytics: "admin/analytics",
-  DownloadAnalytics: "admin/download-analytics"
+  DownloadAnalytics: "admin/download-analytics",
+  DownloadUserStatistics: "/admin/download-users-statistics"
 };
 
 const Order = {

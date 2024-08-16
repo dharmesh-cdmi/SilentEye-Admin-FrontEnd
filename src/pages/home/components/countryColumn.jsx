@@ -84,7 +84,7 @@ export const CountryColumn = ({ type }) => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-center items-center">
-            {row?.original?.allUsers || "N/A"}
+            {row?.original?.sales?.totalUsersBought + row?.original?.totalDemoUser + row?.original?.totalCheckout  || "N/A"}
           </div>
         );
       },
@@ -122,7 +122,7 @@ export const CountryColumn = ({ type }) => {
         </div>
       ),
       cell: ({ row }) => {
-        return <div className="flex justify-center items-center">{row?.original?.demo || "N/A"}</div>;
+        return <div className="flex justify-center items-center">{row?.original?.totalDemoUser || "N/A"}</div>;
       },
     },
     {
