@@ -32,7 +32,7 @@ export const AddonsColumn = ({ AddonsRefetch }) => {
       ),
     },
     {
-      accessorKey: "name",
+      accessorKey: "title",
       header: () => (
         <div className="flex items-center gap-2 text-base text-black">
           <IdendityIcon /> Title
@@ -43,7 +43,7 @@ export const AddonsColumn = ({ AddonsRefetch }) => {
       ),
     },
     {
-      accessorKey: "name",
+      accessorKey: "description",
       header: () => (
         <div className="flex items-center gap-2 text-base text-black">
           <NotepadText /> Description

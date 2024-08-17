@@ -52,11 +52,11 @@ export const CountryColumn = ({ type }) => {
         ]
       : [
           {
-            accessorKey: "plan",
+            accessorKey: "plans",
             header: () => (
               <div className="flex justify-start space-x-2 px-2">
                 <PlanIcon size={19} />{" "}
-                <p className="text-[17px] text-primary ">Plan</p>
+                <p className="text-[17px] text-primary ">Plans</p>
               </div>
             ),
             cell: ({ row }) => {
@@ -142,7 +142,7 @@ export const CountryColumn = ({ type }) => {
       },
     },
     {
-      accessorKey: "plan",
+      accessorKey: "checkout",
       header: () => (
         <div className="flex space-x-2 px-2 justify-center">
           <UseLimitIcon size={19} />{" "}

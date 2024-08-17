@@ -129,7 +129,7 @@ export const UpsellColumn = ({ UpsellRefetch }) => {
       },
     },
     {
-      accessorKey: "discount",
+      accessorKey: "tag",
       header: () => (
         <div className="flex items-center gap-2 text-base text-black">
           <DiscountIcon /> Tag

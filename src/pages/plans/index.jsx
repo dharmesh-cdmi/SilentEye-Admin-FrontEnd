@@ -27,8 +27,10 @@ import AddUpsell from "./components/upsell/AddUpsell";
 import AddAddon from "./components/addons/AddAddon";
 import AddShipping from "./components/shippings/AddShipping";
 import AddProduct from "./components/products/AddProduct";
+import { useNavigate } from "react-router-dom";
 
 export default function Plans() {
+  const navigate = useNavigate();
   // this is tabsConfig
   const tabsConfig = [
     { value: "subscription", icon: CircleDollarSign, label: "Subscriptions" },
@@ -37,7 +39,7 @@ export default function Plans() {
     { value: "products", icon: ProductsIcon, label: "Products" },
     { value: "shipping", icon: Plane, label: "Shipping" },
   ];
-  const [isActive, setIsActive] = useState("Subscription");
+  const [isActive, setIsActive] = useState("subscription");
   const [searchTerm, setSearchTerm] = useState("");
   const filter = {
     // status: isActive,
@@ -102,8 +104,6 @@ export default function Plans() {
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [shippingModalOpen, setShippingModalOpen] = useState(false);
 
-  
-
   return (
     <div>
       <Header title="Plans" className=" ">
@@ -125,20 +125,35 @@ export default function Plans() {
             </div>
 
             <div className=" flex justify-end items-center w-[43%] lg:w-[20%] ">
-              <div
-                className={
-                  "cursor-pointer bg-primary text-white flex justify-center items-center h-[50px] px-5  mb-0 rounded-tr-lg hover:bg-gray-700 hover:text-white hover:shadow-lg hover:shadow-bg-black"
-                }
-                onClick={() => {
-                  if (isActive === "subscription") setSubModalOpen(true);
-                  if (isActive === "upsell") setUpsellModalOpen(true);
-                  if (isActive === "addons") setAddonModalOpen(true);
-                  if (isActive === "shipping") setShippingModalOpen(true);
-                }}
-              >
-                <CirclePlus className="w-5 h-5 mr-2" />
-                <p className="capitalize">Add {isActive}</p>
-              </div>
+              {isActive === "subscription" ? (
+                <div
+                  className={
+                    "cursor-pointer bg-primary text-white flex justify-center items-center h-[50px] px-5  mb-0 rounded-tr-lg hover:bg-gray-700 hover:text-white hover:shadow-lg hover:shadow-bg-black"
+                  }
+                  onClick={() => {
+                    setSubModalOpen(!subModalOpen);
+                  }}
+                >
+                  <CirclePlus className="w-5 h-5 mr-2" />
+                  <p className="capitalize">Add {isActive}</p>
+                </div>
+              ) : (
+                <div
+                  className={
+                    "cursor-pointer bg-primary text-white flex justify-center items-center h-[50px] px-5  mb-0 rounded-tr-lg hover:bg-gray-700 hover:text-white hover:shadow-lg hover:shadow-bg-black"
+                  }
+                  onClick={() => {
+                    if (isActive === "upsell") setUpsellModalOpen(true);
+                    if (isActive === "addons") setAddonModalOpen(true);
+                    if (isActive === "shipping") setShippingModalOpen(true);
+                    if (isActive === "products")
+                      navigate("/plans/add-products");
+                  }}
+                >
+                  <CirclePlus className="w-5 h-5 mr-2" />
+                  <p className="capitalize">Add {isActive}</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -246,7 +261,7 @@ export default function Plans() {
       <CommonModal
         open={shippingModalOpen}
         setOpen={setShippingModalOpen}
-        title="Add New Product"
+        title="Add New Shipping"
       >
         <AddShipping />
       </CommonModal>

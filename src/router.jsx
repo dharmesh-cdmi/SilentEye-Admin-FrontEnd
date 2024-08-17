@@ -69,6 +69,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: "/plans/add-products",
+            lazy: async () => ({
+              Component: (await import("./pages/plans/components/products/AddProduct")).default,
+            }),
+          },
+          {
+            path: "/plans/update-products/:id",
+            lazy: async () => ({
+              Component: (await import("./pages/plans/components/products/AddProduct")).default,
+            }),
+          },
+          {
             path: "/users",
             lazy: async () => ({
               Component: (await import("./pages/users")).default,

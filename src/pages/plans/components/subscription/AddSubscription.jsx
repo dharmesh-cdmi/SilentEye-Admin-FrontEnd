@@ -1,37 +1,44 @@
-import { ContentManage, PROD_IMG_Prefix } from "@/api/endpoints";
+import { Plan, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Spinner from "@/components/common/Spinner";
-import { Switch } from "@/components/ui/switch";
 import usePost from "@/hooks/use-post";
 import useUpdate from "@/hooks/use-update";
 import { Field, Form, Formik } from "formik";
-import { Image } from "lucide-react";
+import { CircleDollarSign, DollarSign, PackagePlus } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const addCategorySchema = Yup.object({
-  stopHere: Yup.string().required("Status is required"),
-  title: Yup.string().required("Title is required"),
+  name: Yup.string().required("Plan Name is required"),
+  key: Yup.string().required("Unique Key is required"),
+  amount: Yup.number().required("Amount is required"),
+  mrp: Yup.number().required("MRP is required"),
+  duration: Yup.string().required("Duration is required"),
   icon: Yup.mixed().required("Image is required"),
+  product: Yup.mixed().required("Product is required"),
+  tag: Yup.string().required("Tag is required"),
 });
 
 const AddSubscription = ({ data, setOpen, Refetch }) => {
   const [imagePreview, setImagePreview] = useState(
     data?.icon ? PROD_IMG_Prefix + data?.icon : null
   );
+  const [productPreview, setProductPreview] = useState(
+    data?.product ? PROD_IMG_Prefix + data?.product : null
+  );
 
-  const { mutateAsync: FeatureMutation, isLoading: FeatureLoading } = usePost({
+  const { mutateAsync: PlanMutation, isLoading: PlanLoading } = usePost({
     isMultiPart: true,
-    endpoint: ContentManage.AddFeatures,
+    endpoint: Plan.AllPlans,
   });
 
   const {
-    mutateAsync: UpdateFeatureMutation,
+    mutateAsync: UpdatePlanMutation,
     isLoading: FeatureUpdateLoading,
   } = useUpdate({
     isMultiPart: true,
-    endpoint: ContentManage.UpdateFeatures + data?._id,
+    endpoint: Plan.SinglePlan + data?._id,
   });
 
   const handleImageChange = (event, setFieldValue) => {
@@ -42,6 +49,19 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleProductImageChange = (event, setFieldValue) => {
+    const file = event.currentTarget.files[0];
+    setFieldValue("product", file);
+
+    // Create an image preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProductPreview(reader.result);
     };
     if (file) {
       reader.readAsDataURL(file);
@@ -62,8 +82,8 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
 
     try {
       const response = data
-        ? await UpdateFeatureMutation(formData)
-        : await FeatureMutation(formData);
+        ? await UpdatePlanMutation(formData)
+        : await PlanMutation(formData);
       if (response?.status === 200) {
         resetForm();
         setImagePreview(null);
@@ -79,13 +99,14 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
-          status: data?.status || true,
-          title: data?.title || "",
+          name: data?.name || "",
+          key: data?.key || "",
           icon: data?.icon || null,
-          description: data?.description || "",
-          stopHere: data?.stopHere || false,
-          process: data?.process || "",
-          failCount: data?.failCount || "",
+          amount: data?.amount || null,
+          mrp: data?.mrp || null,
+          duration: data?.duration || "",
+          product: data?.product || null,
+          tag: data?.tag || "",
         }}
         validationSchema={addCategorySchema}
         onSubmit={handleSubmit}
@@ -122,12 +143,13 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-            <Field name="description">
+
+            <Field name="name">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
-                  title="Description"
+                  title="Plan Name"
                   className={` ${
-                    touched.description && errors.description
+                    touched.name && errors.name
                       ? "border-red-500 border"
                       : "border border-b "
                   }`}
@@ -135,14 +157,10 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                     <>
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${
-                          touched.description && errors.description
-                            ? " h-1/2"
-                            : "h-full"
-                        }`}
-                        name="description"
-                        placeholder="Enter Your Description"
-                        value={values.description}
+                        ${touched.name && errors.name ? " h-1/2" : "h-full"}`}
+                        name="name"
+                        placeholder="Enter Plan Name Here"
+                        value={values.name}
                         onChange={handleChange}
                         {...field}
                       />
@@ -156,15 +174,48 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
+
+            <Field name="key">
+              {({ field, form: { touched, errors }, meta }) => (
+                <TextField
+                  title="Key"
+                  className={` ${
+                    touched.key && errors.key
+                      ? "border-red-500 border"
+                      : "border border-b "
+                  }`}
+                  value={
+                    <>
+                      <input
+                        className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
+                        ${touched.key && errors.key ? " h-1/2" : "h-full"}`}
+                        name="key"
+                        placeholder="Enter Unique Key"
+                        value={values.key}
+                        onChange={handleChange}
+                        {...field}
+                      />
+                      {meta.touched && meta.error && (
+                        <p className="text-sm px-4 text-red-600 error">
+                          {meta.error}
+                        </p>
+                      )}
+                    </>
+                  }
+                />
+              )}
+            </Field>
+
             <Field name="icon">
               {({ form: { touched, errors }, meta }) => (
                 <TextField
-                  title="Icon"
+                  title="Plan Icon"
                   className={`border border-b border-t-0 ${
                     touched.icon && errors.icon
                       ? "border-red-500 border border-t-0"
                       : "border border-b"
                   }`}
+                  className2={"py-0 pr-0"}
                   value={
                     <>
                       <input
@@ -177,20 +228,21 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                       />
                       <label
                         htmlFor="icon"
-                        className="flex items-center cursor-pointer space-x-2"
+                        className="flex items-center cursor-pointer space-x-2 divide-x-2 justify-between"
                       >
                         {imagePreview ? (
                           <img
                             src={imagePreview}
                             alt="Preview"
-                            width={100}
-                            height={100}
-                            className="mt-2"
+                            width={30}
+                            height={30}
                           />
                         ) : (
-                          <Image className="w-6 h-6" />
+                          <CircleDollarSign className="w-6 h-6" />
                         )}
-                        <span className="text-black">+ Add Icon</span>
+                        <span className="text-black pl-2 bg-gray-100 w-full h-full py-2 ">
+                          + Add Icon
+                        </span>
                       </label>
 
                       {meta.touched && meta.error && (
@@ -203,41 +255,90 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-            <Field name="stopHere">
-              {({ form: { touched, errors }, meta }) => (
+
+            <Field name="amount">
+              {({ field, form: { touched, errors }, meta }) => (
                 <TextField
-                  title="Stop Here"
+                  title="Amount"
                   className={` ${
-                    touched.stopHere && errors.stopHere
+                    touched.amount && errors.amount
                       ? "border-red-500 border "
                       : "border border-b "
                   }`}
+                  className2={"py-0 "}
                   value={
-                    <>
-                      <Switch
-                        defaultChecked={values?.stopHere}
-                        className="data-[state=checked]:bg-[#34C759] "
-                        onCheckedChange={(checked) =>
-                          setFieldValue("stopHere", checked)
-                        }
+                    <div className="flex space-x-2.5 items-center divide-x-2">
+                      <div className="">
+                        <DollarSign size={19} />
+                      </div>
+
+                      <input
+                        className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
+                        ${
+                          touched.amount && errors.amount ? " h-1/2" : "h-full"
+                        }`}
+                        type="number"
+                        name="amount"
+                        placeholder="0.00"
+                        value={values.amount}
+                        onChange={handleChange}
+                        {...field}
                       />
                       {meta.touched && meta.error && (
                         <p className="text-sm px-4 text-red-600 error">
                           {meta.error}
                         </p>
                       )}
-                    </>
+                    </div>
                   }
                 />
               )}
             </Field>
-            <Field name="process">
+
+            <Field name="mrp">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
-                  title="Process"
+                  title="MRP"
                   className={` ${
-                    touched.process && errors.process
+                    touched.mrp && errors.mrp
                       ? "border-red-500 border "
+                      : "border border-b "
+                  }`}
+                  className2={"py-0 "}
+                  value={
+                    <div className="flex space-x-2.5 items-center divide-x-2">
+                      <div className="">
+                        <DollarSign size={19} />
+                      </div>
+
+                      <input
+                        className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
+                        ${touched.mrp && errors.mrp ? " h-1/2" : "h-full"}`}
+                        type="number"
+                        name="mrp"
+                        placeholder="0.00"
+                        value={values.mrp}
+                        onChange={handleChange}
+                        {...field}
+                      />
+                      {meta.touched && meta.error && (
+                        <p className="text-sm px-4 text-red-600 error">
+                          {meta.error}
+                        </p>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+            </Field>
+
+            <Field name="duration">
+              {({ field, form: { touched, errors }, meta }) => (
+                <TextField
+                  title="Duration"
+                  className={` ${
+                    touched.duration && errors.duration
+                      ? "border-red-500 border"
                       : "border border-b "
                   }`}
                   value={
@@ -245,13 +346,13 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
                         ${
-                          touched.process && errors.process
+                          touched.duration && errors.duration
                             ? " h-1/2"
                             : "h-full"
                         }`}
-                        name="process"
+                        name="duration"
                         placeholder="Enter Duration"
-                        value={values.process}
+                        value={values.duration}
                         onChange={handleChange}
                         {...field}
                       />
@@ -265,12 +366,64 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-            <Field name="failCount">
+
+            <Field name="product">
+              {({ form: { touched, errors }, meta }) => (
+                <TextField
+                  title="Products"
+                  className={`border border-b border-t-0 ${
+                    touched.product && errors.product
+                      ? "border-red-500 border border-t-0"
+                      : "border border-b"
+                  }`}
+                  className2={"py-0 pr-0"}
+                  value={
+                    <div>
+                      <input
+                        type="file"
+                        id="product"
+                        className="hidden"
+                        onChange={(event) =>
+                          handleProductImageChange(event, setFieldValue)
+                        }
+                      />
+                      <label
+                        htmlFor="product"
+                        className="flex items-center cursor-pointer space-x-2 divide-x-2 justify-between"
+                      >
+                        {productPreview ? (
+                          <img
+                            src={productPreview}
+                            alt="Preview"
+                            width={30}
+                            height={30}
+                            className=""
+                          />
+                        ) : (
+                          <PackagePlus className="w-6 h-6" />
+                        )}
+                        <span className="text-black pl-2 bg-gray-100 w-full h-full py-2 ">
+                          + Select Products
+                        </span>
+                      </label>
+
+                      {meta.touched && meta.error && (
+                        <p className="text-sm px-4 text-red-600 error">
+                          {meta.error}
+                        </p>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+            </Field>
+
+            <Field name="tag">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
-                  title="Fail Count"
+                  title="Tag"
                   className={` ${
-                    touched.failCount && errors.failCount
+                    touched.tag && errors.tag
                       ? "border-red-500 border rounded-b-lg"
                       : "border border-b rounded-b-lg"
                   }`}
@@ -278,14 +431,10 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                     <>
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${
-                          touched.failCount && errors.failCount
-                            ? " h-1/2"
-                            : "h-full"
-                        }`}
-                        name="failCount"
-                        placeholder="How many time fails"
-                        value={values.failCount}
+                        ${touched.tag && errors.tag ? " h-1/2" : "h-full"}`}
+                        name="tag"
+                        placeholder="Enter Tag"
+                        value={values.tag}
                         onChange={handleChange}
                         {...field}
                       />
@@ -311,16 +460,16 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                 className="w-[80%] py-3 rounded-lg bg-gray-900 hover:bg-blackborder border text-primary text-[20px] flex justify-center items-center space-x-4"
                 type="submit"
                 disabled={
-                  isSubmitting || FeatureLoading || FeatureUpdateLoading
+                  isSubmitting || PlanLoading || FeatureUpdateLoading
                 }
               >
-                {isSubmitting || FeatureLoading || FeatureUpdateLoading ? (
+                {isSubmitting || PlanLoading || FeatureUpdateLoading ? (
                   <Spinner className="text-white" />
                 ) : (
                   ""
                 )}
                 <h3 className="text-white text-[17px] ">
-                  {data ? "Update Features" : "Add & Save Features "}{" "}
+                  {data ? "Update Plan" : "Add & Save Plan "}{" "}
                 </h3>
               </button>
             </div>
