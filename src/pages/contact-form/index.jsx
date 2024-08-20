@@ -50,7 +50,7 @@ export default function ContactForm() {
                   setLimit,
                   currentPage,
                   setCurrentPage,
-                  totalData: contactData?.totalCount,
+                  totalData: contactData?.result?.totalCount,
                 }}
               />
             )}

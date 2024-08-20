@@ -159,7 +159,7 @@ export default function SupportTicket() {
                     setLimit,
                     currentPage,
                     setCurrentPage,
-                    totalData: supportData?.totalDocs,
+                    totalData: supportData?.total,
                   }}
                 />
               )}
