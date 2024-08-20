@@ -26,17 +26,17 @@ export default function RefundRequest() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("All");
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("page", page);
+    params.append("page", currentPage);
     params.append("limit", limit);
     if (searchQuery) params.append("search", searchQuery);
     if (activeTab !== "All") params.append("filterStatus", activeTab);
     return params.toString();
-  }, [activeTab, limit, page, searchQuery]);
+  }, [activeTab, currentPage, limit, searchQuery]);
 
   const {
     isLoading,
@@ -166,6 +166,13 @@ export default function RefundRequest() {
                   data={refundData?.docs || []}
                   columns={RefundColumns(refundRefecth)}
                   actionButtons={actionButtons}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: refundData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>

@@ -23,16 +23,16 @@ export default function PaymentGateWay() {
 
   const [activeTab, setActiveTab] = useState("All");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("page", page);
+    params.append("page", currentPage);
     params.append("limit", limit);
     if (activeTab !== "All") params.append("filterStatus", activeTab);
     return params.toString();
-  }, [activeTab, limit, page]);
+  }, [activeTab, limit, currentPage]);
 
   const {
     isLoading,
@@ -93,6 +93,13 @@ export default function PaymentGateWay() {
                 <DataTable
                   data={gatewayData?.docs || []}
                   columns={GatewayColumns(gatewayRefetch)}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: gatewayData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>

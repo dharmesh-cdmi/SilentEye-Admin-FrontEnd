@@ -13,7 +13,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
-export function DataTablePagination({ table }) {
+export function DataTablePagination({ table, pagination }) {
   const pageSize = table.getState().pagination.pageSize;
   const currentPageIndex = table.getState().pagination.pageIndex;
   const totalPageCount = table.getPageCount();
@@ -27,17 +27,17 @@ export function DataTablePagination({ table }) {
   );
   return (
     <div className="flex items-center justify-between overflow-auto px-4 py-3  border-t ">
-      <div className="hidden flex-1 sm:flex items-center gap-1.5 text-base">
-        <p className="">
-          Showing {rowsDisplayed}/{" "}
+      <div className="min-w-fit flex items-center flex-nowrap gap-1.5 text-base">
+        <p className="inline-flex items-center flex-nowrap gap-1">
+          Showing {rowsDisplayed} /
           <span className="text-muted-foreground">{totalFilteredRows}</span>
         </p>
-        <p>
-          (Page {currentPageIndex} of{" "}
-          <span className="text-muted-foreground">{totalPageCount}</span>).
+        <p className="inline-flex items-center flex-nowrap gap-1">
+          (Page {currentPageIndex} of
+          <span className="text-muted-foreground">{totalPageCount}</span>)
         </p>
         {isSelected && (
-          <p>
+          <p className="inline-flex items-center flex-nowrap">
             Selected {table.getFilteredSelectedRowModel().rows.length} /
             {totalFilteredRows}
           </p>
@@ -45,15 +45,15 @@ export function DataTablePagination({ table }) {
       </div>
       <div className="flex items-center sm:space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="hidden text-sm font-medium sm:block">Rows per page</p>
+          {/* <p className="hidden text-sm font-medium sm:block">Rows per page</p> */}
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${pagination.limit}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value));
+              pagination.setLimit(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            <SelectTrigger className="h-10 w-[70px]">
+              <SelectValue placeholder={pagination.limit} />
             </SelectTrigger>
             <SelectContent side="top">
               {[10, 20, 30, 40, 50].map((pageSize) => (

@@ -10,16 +10,16 @@ import useGet from "@/hooks/use-get";
 
 export default function ContactForm() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("pageIndex", page);
+    params.append("pageIndex", currentPage);
     params.append("limit", limit);
     if (searchQuery) params.append("searchQuery", searchQuery);
     return params.toString();
-  }, [limit, page, searchQuery]);
+  }, [limit, currentPage, searchQuery]);
 
   const {
     isLoading,
@@ -45,6 +45,13 @@ export default function ContactForm() {
               <DataTable
                 data={contactData?.result?.contactsForm || []}
                 columns={ContactColums(contactRefecth)}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: contactData?.totalCount,
+                }}
               />
             )}
           </TabsContent>

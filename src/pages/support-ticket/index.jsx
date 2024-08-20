@@ -24,13 +24,17 @@ export default function SupportTicket() {
 
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
     if (searchQuery) params.append("searchQuery", searchQuery);
     if (activeTab !== "All") params.append("status", activeTab);
+    params.append("pageIndex", currentPage);
+    params.append("limit", limit);
     return params.toString();
-  }, [activeTab, searchQuery]);
+  }, [activeTab, currentPage, limit, searchQuery]);
 
   const {
     isLoading,
@@ -150,6 +154,13 @@ export default function SupportTicket() {
                   data={supportData?.tickets || []}
                   columns={TicketColumns(ticketRefecth)}
                   actionButtons={actionButtons}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: supportData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>

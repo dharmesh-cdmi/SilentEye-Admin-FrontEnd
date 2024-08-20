@@ -22,14 +22,18 @@ export default function Discount() {
 
   const [activeTab, setActiveTab] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
     if (activeTab !== "all") {
       params.append("filterValidity", activeTab);
     }
+    params.append("limit", limit);
+    // params.append('limit', limit);
     return params.toString();
-  }, [activeTab]);
+  }, [activeTab, limit]);
 
   const {
     isLoading,
@@ -90,6 +94,13 @@ export default function Discount() {
                 <DataTable
                   data={discountData?.docs || []}
                   columns={DiscountColumns(discountRefetch)}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: discountData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>

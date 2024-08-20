@@ -30,6 +30,7 @@ export function DataTable({
   actionButtons,
   isPaginate = true,
   className,
+  pagination,
 }) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -169,7 +170,9 @@ export function DataTable({
           </TableBody>
         </Table>
       </div>
-      {isPaginate && <DataTablePagination table={table} />}
+      {isPaginate && (
+        <DataTablePagination pagination={pagination} table={table} />
+      )}
     </div>
   );
 }
