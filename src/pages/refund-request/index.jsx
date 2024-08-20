@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import useUpdate from "@/hooks/use-update";
 import useGet from "@/hooks/use-get";
 import toast from "react-hot-toast";
+import adminAPI from "@/api/adminAPI";
 
 export default function RefundRequest() {
   const tabsConfig = [
@@ -26,7 +27,7 @@ export default function RefundRequest() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("All");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
@@ -56,13 +57,13 @@ export default function RefundRequest() {
     const selected = rows.map((row) => row.original._id);
     try {
       const res = await adminAPI.delete(RefundRequestAPI.BulkDelete, {
-        data: { ticketIds: selected },
+        data: { ids: selected },
       });
-      ticketRefecth();
+      refundRefecth();
       toast.success(res.data.message);
     } catch (error) {
       toast.error(
-        error.response.data.message ||
+        error?.response?.data?.message ||
           "Failed to delete selected refund requests"
       );
     } finally {
@@ -75,13 +76,18 @@ export default function RefundRequest() {
     const selected = rows.map((row) => row.original._id);
 
     try {
+      const data = selected.map(() => ({
+        status: status,
+      }));
+
       const res = await bulkUpdate({
-        ticketIds: selected,
-        status,
+        ids: selected,
+        data,
       });
-      ticketRefecth();
+      refundRefecth();
       toast.success(res.data.message);
     } catch (error) {
+      console.log(error);
       toast.error(
         error.response.data.message ||
           "Failed to update selected refund requests status"
