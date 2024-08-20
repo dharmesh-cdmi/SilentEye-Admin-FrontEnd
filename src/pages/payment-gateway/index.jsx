@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
 import useGet from "@/hooks/use-get";
 import toast from "react-hot-toast";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function PaymentGateWay() {
   const tabsConfig = [
@@ -76,7 +77,9 @@ export default function PaymentGateWay() {
 
   return (
     <div>
-      <Header title="Payment Gateways"></Header>
+      <Header title="Payment Gateways">
+        <LimitSelector limit={limit} setLimit={setLimit} />
+      </Header>
 
       <div className="h-fit w-full relative">
         <Tabs

@@ -7,6 +7,7 @@ import Loader from "@/components/common/loader";
 import { ContactFormAPI } from "@/api/endpoints";
 import { useMemo, useState } from "react";
 import useGet from "@/hooks/use-get";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function ContactForm() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,6 +35,7 @@ export default function ContactForm() {
     <div>
       <Header title="Contact Form">
         <CommonSearch onSearch={setSearchQuery} />
+        <LimitSelector limit={limit} setLimit={setLimit} />
       </Header>
 
       <div className="w-full">

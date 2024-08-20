@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
 import toast from "react-hot-toast";
 import useGet from "@/hooks/use-get";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Discount() {
   const tabsConfig = [
@@ -31,7 +32,6 @@ export default function Discount() {
       params.append("filterValidity", activeTab);
     }
     params.append("limit", limit);
-    // params.append('limit', limit);
     return params.toString();
   }, [activeTab, limit]);
 
@@ -76,7 +76,9 @@ export default function Discount() {
 
   return (
     <div>
-      <Header title="Discount"></Header>
+      <Header title="Discount">
+        <LimitSelector limit={limit} setLimit={setLimit} />
+      </Header>
 
       <div className="h-fit w-full relative">
         <Tabs

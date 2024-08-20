@@ -1,16 +1,8 @@
 import { Button } from "@/components/custom/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function DataTablePagination({ pagination }) {
-  const { limit, setLimit, currentPage, setCurrentPage, totalData } =
-    pagination;
+  const { limit, currentPage, setCurrentPage, totalData } = pagination;
 
   const totalPageCount = Math.ceil(totalData / limit);
   const rowsDisplayed = Math.min(limit * currentPage, totalData);
@@ -30,7 +22,7 @@ export function DataTablePagination({ pagination }) {
         </p>
       </div>
       <div className="flex items-center sm:space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <Select
             value={`${limit}`}
             onValueChange={(value) => {
@@ -49,7 +41,7 @@ export function DataTablePagination({ pagination }) {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
         <div className="flex items-center space-x-2">
           {/* <Button
             variant="outline"

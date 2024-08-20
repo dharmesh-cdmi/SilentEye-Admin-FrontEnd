@@ -13,6 +13,7 @@ import useUpdate from "@/hooks/use-update";
 import useGet from "@/hooks/use-get";
 import toast from "react-hot-toast";
 import adminAPI from "@/api/adminAPI";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function RefundRequest() {
   const tabsConfig = [
@@ -146,6 +147,7 @@ export default function RefundRequest() {
     <div>
       <Header title="Refund Request">
         <CommonSearch onSearch={setSearchQuery} />
+        <LimitSelector limit={limit} setLimit={setLimit} />
         <SettingDialog />
       </Header>
 

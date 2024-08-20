@@ -12,6 +12,7 @@ import useUpdate from "@/hooks/use-update";
 import adminAPI from "@/api/adminAPI";
 import toast from "react-hot-toast";
 import useGet from "@/hooks/use-get";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function SupportTicket() {
   // this is tabsConfig
@@ -132,6 +133,7 @@ export default function SupportTicket() {
     <div>
       <Header title="Support Ticket">
         <CommonSearch onSearch={setSearchQuery} />
+        <LimitSelector limit={limit} setLimit={setLimit} />
       </Header>
 
       <div className="w-full">
