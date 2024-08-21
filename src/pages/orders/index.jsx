@@ -31,16 +31,19 @@ export default function Orders() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [dateRange, setDateRange] = useState({ from: null, to: null });
-  const [isActive,setIsActive] = useState("purchase");
-  const [enabled,setIsEnable] = useState(false);
+  const [isActive, setIsActive] = useState("purchase");
+  const [enabled, setIsEnable] = useState(false);
 
-  const filter = useMemo(() => ({
-    // status: isActive,
-    search: searchTerm || null,
-    country: selectedCountries || null, 
-    startDate: dateRange.from || null,
-    endDate: dateRange.to || null,
-  }), [searchTerm, selectedCountries, dateRange]);
+  const filter = useMemo(
+    () => ({
+      // status: isActive,
+      search: searchTerm || null,
+      country: selectedCountries || null,
+      startDate: dateRange.from || null,
+      endDate: dateRange.to || null,
+    }),
+    [searchTerm, selectedCountries, dateRange]
+  );
 
   const filterParams = useFilteredParams(filter);
 
@@ -51,84 +54,32 @@ export default function Orders() {
   const {
     data: { data: { data: ordersData } = {} } = {},
     isLoading: ordersLoading,
-    refetch: OrderRefetch, 
+    refetch: OrderRefetch,
   } = useGet({
     key: "ordersData",
-    endpoint: `${Order.Order_Details}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Order.Order_Details}?${new URLSearchParams(filterParams)}`,
   });
 
-  const {
-    data,  
-    refetch: DownlaodRefetch,
-  } = useGet({
+  const { data, refetch: DownlaodRefetch } = useGet({
     key: "downloadData",
-    enabled : enabled,
+    enabled: enabled,
     endpoint: Order.Download_Order,
-   
   });
 
-
-  // const handleDownload = () =>{
-  //   setIsEnable(true); 
-  //   DownlaodRefetch();
-  // }
-  
-  const handleDownload = async () => {
-    try {
-      const tokenObject = JSON.parse(localStorage.getItem('__auth_tokens')); // Parse the token object
-      const token = tokenObject?.accessToken; // Extract the access token
-  
-      if (!token) {
-        throw new Error('No access token found');
-      }
-      
-      // Make API call to get the file
-      const response = await fetch(`${ADMIN_BASE_URL}${Order.Download_Order}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        method: 'GET',
-      });
-      
-      if (response.status === 401) {
-        throw new Error('Unauthorized: Please log in.');
-      }
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok: ' + response.statusText);
-      }
-      
-      // Convert response to blob
-      const blob = await response.blob();
-      
-      // Create a URL for the blob and trigger download
-      const url = window.URL.createObjectURL(blob);
-      
-      // Create a link element to trigger download
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'orders.xlsx'; // Specify file name here
-      document.body.appendChild(link);
-      link.click();
-      
-      // Clean up
-      link.remove();
-      window.URL.revokeObjectURL(url);
-      
-    } catch (error) {
-      console.error('Error downloading the file:', error);
-      alert('There was an error downloading the file. Please try again.');
-    }
+  const handleDownload = () => {
+    setIsEnable(true);
+    DownlaodRefetch();
   };
-    
-  
 
   return (
     <div>
       <Header title="Orders" className=" ">
-      <CommonSearch onSearch={setSearchTerm}/>
-      <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
-      <DateRangePicker onUpdate={handleDateRangeUpdate}/>
+        <CommonSearch onSearch={setSearchTerm} />
+        <Country
+          selectedCountries={selectedCountries}
+          setSelectedCountries={setSelectedCountries}
+        />
+        <DateRangePicker onUpdate={handleDateRangeUpdate} />
         <CommonButton onClick={handleDownload}>
           <Download className="w-6 h-6" />
         </CommonButton>
@@ -140,7 +91,7 @@ export default function Orders() {
           defaultValue="purchase"
         >
           {/* This is Common TabsListCompnent  */}
-          <CustomTabs tabs={tabsConfig} setIsActive={setIsActive}/>
+          <CustomTabs tabs={tabsConfig} setIsActive={setIsActive} />
           {tabsConfig?.map((item, id) => (
             <TabsContent value={item?.value} className="" key={id}>
               {ordersLoading ? (
@@ -148,7 +99,10 @@ export default function Orders() {
               ) : (
                 <DataTable
                   data={ordersData?.orders || []}
-                  columns={PurchaseColumns({tabKey: isActive , orderRefetch: OrderRefetch})}
+                  columns={PurchaseColumns({
+                    tabKey: isActive,
+                    orderRefetch: OrderRefetch,
+                  })}
                 />
               )}
             </TabsContent>
