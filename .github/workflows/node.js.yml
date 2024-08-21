@@ -21,9 +21,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         # cache: 'npm'
 
-    - name: Set Environment Variables
-      run: |
-        echo "${{ secrets.VITE_ADMIN_BASE_URL }}" >> .env
+    # - name: Set Environment Variables
+    #   run: |
+    #     echo "${{ secrets.VITE_ADMIN_BASE_URL }}" >> .env
 
     - run: npm ci
     - run: npm run build
