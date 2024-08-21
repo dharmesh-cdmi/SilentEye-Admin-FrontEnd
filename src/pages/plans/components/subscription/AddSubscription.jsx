@@ -99,6 +99,7 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
+          paymentGatewayId: "668bd0744ec648ceb6efab25", 
           name: data?.name || "",
           key: data?.key || "",
           icon: data?.icon || null,

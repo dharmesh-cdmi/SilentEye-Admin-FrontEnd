@@ -1,0 +1,31 @@
+name: SilentEye Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - dev  # Specify the branch from where you want to run when data will be puch to this brach
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        # cache: 'npm'
+
+    # - name: Set Environment Variables
+    #   run: |
+    #     echo "${{ secrets.VITE_ADMIN_BASE_URL }}" >> .env
+
+    - run: npm ci
+    - run: npm run build
+
+        

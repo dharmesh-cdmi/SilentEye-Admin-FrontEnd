@@ -38,7 +38,7 @@ export default function Orders() {
       startDate: dateRange.from || null,
       endDate: dateRange.to || null,
     }),
-    [isActive,searchTerm, selectedCountries, dateRange]
+    [isActive, searchTerm, selectedCountries, dateRange]
   );
 
   const filterParams = useFilteredParams(filter);
@@ -67,7 +67,6 @@ export default function Orders() {
         <CountryOrder
           selectedCountries={selectedCountries}
           setSelectedCountries={setSelectedCountries}
-          
         />
         <DateRangePicker onUpdate={handleDateRangeUpdate} />
         <CommonButton onClick={handleDownload}>
