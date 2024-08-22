@@ -29,8 +29,9 @@ export function DataTable({
   DataTableToolbar,
   actionButtons,
   isPaginate = true,
+  pagination,
   className,
-  classNameHeader
+  classNameHeader,
 }) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -121,7 +122,7 @@ export function DataTable({
       <div className="">
         <Table>
           {Object.keys(rowSelection)?.length === 0 && (
-            <TableHeader className={cn("",classNameHeader)}>
+            <TableHeader className={cn("", classNameHeader)}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -170,7 +171,9 @@ export function DataTable({
           </TableBody>
         </Table>
       </div>
-      {isPaginate && <DataTablePagination table={table} />}
+      {isPaginate && (
+        <DataTablePagination pagination={pagination} table={table} />
+      )}
     </div>
   );
 }
