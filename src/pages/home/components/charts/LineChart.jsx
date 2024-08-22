@@ -23,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = ({ data, categories }) => {
+const LineChart = ({ data =[], categories=[] }) => {
   const [chartsData, setChartData] = useState({});
   const labels = useMemo(() => categories, [categories]);
   const [loading, setLoading] = useState(true);
@@ -57,17 +57,17 @@ const LineChart = ({ data, categories }) => {
   ];
 
   const chartDataConfig = (data) => {
-    const filteredData = data.filter((dataset) =>
-      selectedChartList.includes(dataset.label)
+    const filteredData = data?.filter((dataset) =>
+      selectedChartList?.includes(dataset?.label)
     );
 
-    const datasets = filteredData.map((dataset, index) => ({
-      label: dataset.label,
-      data: dataset.data,
+    const datasets = filteredData?.map((dataset, index) => ({
+      label: dataset?.label,
+      data: dataset?.data,
       fill: true,
       backgroundColor: colors[index],
       borderColor: colors[index],
-      tension: 0.4,
+      tension: 0,
       datalabels: {
         anchor: "end",
         align: "end",
@@ -90,7 +90,7 @@ const LineChart = ({ data, categories }) => {
 
   useEffect(() => {
     if (data?.length > 0) {
-      setSelectedChartList(data.map((dataset) => dataset.label)); // Set all items as selected initially
+      setSelectedChartList(data?.map((dataset) => dataset?.label)); // Set all items as selected initially
       chartDataConfig(data);
       if (data[0]?.data?.length > 0) {
         setLoading(false);
@@ -101,7 +101,7 @@ const LineChart = ({ data, categories }) => {
   useEffect(() => {
     chartDataConfig(data);
   }, [selectedChartList]);
-  
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -158,7 +158,7 @@ const LineChart = ({ data, categories }) => {
   const renderCustomLegend = () => (
     <div className="flex flex-wrap">
       {data
-        .filter((dataset) => selectedChartList.includes(dataset.label))
+        ?.filter((dataset) => selectedChartList?.includes(dataset.label))
         .map((dataset, index) => (
           <div key={dataset.label} className="flex items-center mr-4">
             <div

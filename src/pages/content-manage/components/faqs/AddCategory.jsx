@@ -1,4 +1,4 @@
-import { ContentManage } from "@/api/endpoints";
+import { ContentManage, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Spinner from "@/components/common/Spinner";
 import { Switch } from "@/components/ui/switch";
@@ -15,8 +15,9 @@ const addCategorySchema = Yup.object({
   image: Yup.mixed().required("Image is required"),
 });
 
-const AddCategory = ({ setOpen, Refetch }) => {
-  const [imagePreview, setImagePreview] = useState(null);
+const AddCategory = ({ setOpen, Refetch , data }) => {
+  console.log("data : ", data);
+  const [imagePreview, setImagePreview] = useState( data ? PROD_IMG_Prefix+data?.image : null);
 
   const { mutateAsync: CatMutation, isLoading: catLoading } = usePost({
     isMultiPart: true,
@@ -39,13 +40,10 @@ const AddCategory = ({ setOpen, Refetch }) => {
 
   const handleSubmit = async (values, { resetForm }) => {
     const formData = new FormData();
-    formData.append("status", values?.status ? "enabled" : "disabled");
+    formData.append("status", values?.status);
     formData.append("title", values.title);
     formData.append("image", values.image);
 
-    console.log("Valeus : ", values)
-
-    console.log({ formData });
 
     try {
       const response = await CatMutation(formData);
@@ -64,9 +62,9 @@ const AddCategory = ({ setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
-          status:  true,
-          title: "",
-          image: null,
+          status:  data?.status || true,
+          title: data?.title || "",
+          image: data?.image || null,
         }}
         validationSchema={addCategorySchema}
         onSubmit={handleSubmit}
@@ -158,8 +156,8 @@ const AddCategory = ({ setOpen, Refetch }) => {
                           <img
                             src={imagePreview}
                             alt="Preview"
-                            width={100}
-                            height={100}
+                            width={50}
+                            height={50}
                             className="mt-2"
                           />
                         ) : (

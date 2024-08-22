@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Header({ children, title, className }) {
+export default function Header({ children, title, className, onClickhandle }) {
   const navigate = useNavigate();
   const [isSmallScreen, setIsSmallScreen] = useState(
     typeof window !== "undefined" ? window.innerWidth < 960 : false
@@ -21,23 +21,38 @@ export default function Header({ children, title, className }) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const handleButtonClick = () => {
+    if (onClickhandle) {
+      onClickhandle();
+    } else {
+      navigate(-1);
+    }
+  };
   return (
     <div
       className={cn(
-        isSmallScreen ? "flex flex-col gap-4" : "flex  items-center justify-between py-3 px-2 mb-5",
+        isSmallScreen
+          ? "flex flex-col gap-4"
+          : "flex  items-center justify-between py-3 px-2 mb-5",
         className
       )}
     >
       <div className="flex justify-start items-center">
-        <CommonButton onClick={()=> navigate(-1)}>
+        <CommonButton onClick={handleButtonClick}>
           <MoveLeft />
         </CommonButton>
         <p className="lg:text-[20px] text-[16px] font-semibold px-2">{title}</p>
       </div>
-      <div className={cn(isSmallScreen ? "flex flex-col gap-3 mb-5" : "flex justify-center space-x-2")}>
+      <div
+        className={cn(
+          isSmallScreen
+            ? "flex flex-col gap-3 mb-5"
+            : "flex justify-center space-x-2"
+        )}
+      >
         {children}
       </div>
-      
     </div>
   );
 }

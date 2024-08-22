@@ -105,7 +105,7 @@ export default function Users() {
 
         {isActive === "features" && (
           <CommonButton>
-            <Download className="w-6 h-6" />
+            <Download className="w-6 h-full" />
           </CommonButton>
         )}
       </Header>

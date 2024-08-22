@@ -96,7 +96,11 @@ export const DefaultColumn = ({ UserRefetch }) => {
         </div>
       ),
       cell: ({ row }) => {
-        return <div className="flex justify-center items-center">{row?.original?.userDetails?.country}</div>;
+        return (
+          <div className="flex justify-center items-center">
+            {row?.original?.userDetails?.country}
+          </div>
+        );
       },
     },
     {
@@ -142,7 +146,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
       ),
       cell: ({ row }) => {
         let status = row?.original?.process;
-        
+
         return (
           <div className="flex justify-center items-center">
             {status === "Running" ? (
@@ -225,7 +229,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
 
         return (
           <div className="flex justify-start items-center space-x-2 w-[120px]">
-            {row?.original?.device && row?.original?.deviceType === "ios" ? (
+            {row?.original?.device && row?.original?.deviceType === "IOS" ? (
               <IosIcon size={20} />
             ) : row?.original?.deviceType === "android" ? (
               <AndroidIcon size={20} />
@@ -299,7 +303,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
             console.log(err);
           }
         };
-        
+
         return (
           <div className="flex justify-center items-center">
             {blockLoading ? (

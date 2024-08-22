@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 
 import { DataTablePagination } from "./data-table-pagination";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox"; // Assuming you are using this component
 import { cn } from "@/lib/utils";
 
 export function DataTable({
@@ -30,7 +30,7 @@ export function DataTable({
   actionButtons,
   isPaginate = true,
   className,
-  pagination,
+  classNameHeader
 }) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -121,7 +121,7 @@ export function DataTable({
       <div className="">
         <Table>
           {Object.keys(rowSelection)?.length === 0 && (
-            <TableHeader>
+            <TableHeader className={cn("",classNameHeader)}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -170,9 +170,7 @@ export function DataTable({
           </TableBody>
         </Table>
       </div>
-      {isPaginate && (
-        <DataTablePagination pagination={pagination} table={table} />
-      )}
+      {isPaginate && <DataTablePagination table={table} />}
     </div>
   );
 }

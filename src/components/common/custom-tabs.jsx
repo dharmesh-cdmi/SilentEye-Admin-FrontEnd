@@ -11,9 +11,9 @@ export default function CustomTabs({ tabs, setIsActive, className, setData }) {
       )}
     >
       <TabsList className="rounded-bl-none rounded-r-none data-[state=active]:h-[48px]">
-        {tabs?.map((tab, id) => (
+        {tabs?.map((tab, index) => (
           <TabsTrigger
-            key={id}
+            key={index}
             value={tab.value || tab._id}
             className="border-r flex justify-center items-center data-[state=active]:h-[48px] text-primary hover:bg-primary hover:text-white data-[state=active]:text-white"
             onClick={async () => {

@@ -123,7 +123,7 @@ export const PagesColumn = ({ PageRefetch }) => {
                 variant="ghost"
                 className="rounded-lg hover:bg-black hover:text-white"
                 onClick={() => {
-                  navigate(`/content-manage/${row.original?._id}`)
+                  navigate(`/content-manage/edit-pages/${row.original?._id}`)
                 }}
               >
                 {" "}

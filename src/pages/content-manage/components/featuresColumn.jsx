@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
-import { ContentManage, PROD_ADMIN_BASE_URL } from "@/api/endpoints";
+import { ContentManage, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Switch } from "@/components/ui/switch";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
@@ -48,9 +48,9 @@ export const FeatureColumn = ({ FeatureRefetch }) => {
         <div className="flex justify-start">
           {" "}
           <img
-            src={PROD_ADMIN_BASE_URL + "/" + row?.original?.icon}
-            alt=""
-            className=""
+            src={PROD_IMG_Prefix + row?.original?.icon}
+            alt="icon"
+            className="w-8 h-8"
           />
         </div>
       ),

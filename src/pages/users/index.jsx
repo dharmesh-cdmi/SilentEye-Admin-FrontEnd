@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, Trash2, UserX } from "lucide-react";
+import { Download, UserX } from "lucide-react";
 import Loader from "@/components/common/loader";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -12,106 +12,200 @@ import CustomTabs from "@/components/common/custom-tabs";
 import { DataTable } from "@/components/common/Table/data-table";
 import { DefaultColumn } from "./components/defaultColumn";
 import { UserAPI } from "@/api/endpoints";
-
+import { fileDownload } from "@/lib/utils";
+import Filter from "./components/filter";
+import useUpdate from "@/hooks/use-update";
+import { TrashIcon } from "@/assets/icons";
+import toast from "react-hot-toast";
+import adminAPI from "@/api/adminAPI";
 
 export default function Users() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "all",  label: "All" },
-    { value: "demo",  label: "Demo" },
-    { value: "checkout", label: "Checkout" },
-    { value: "paymentinitiat",  label: "Payment Initiated" },
-    { value: "purchased", label: "Purchased" },
-    { value: "loggedin", label: "Logged In" },
-    { value: "refund", label: "Refund Requested" },
-    { value: "blocked", label: "Blocked" },
+    { value: "all", label: "All" },
+    { value: "Demo", label: "Demo" },
+    { value: "Checkout", label: "Checkout" },
+    { value: "Paymentinitiat", label: "Payment Initiated" },
+    { value: "Paid", label: "Paid" },
+    { value: "Purchased", label: "Purchased" },
+    { value: "Loggedin", label: "Logged In" },
+    { value: "Refund", label: "Refund Requested" },
+    { value: "Blocked", label: "Blocked" },
   ];
 
-  const actionButtons = [
-    {
-      label: 'Delete All',
-      className: 'bg-red-400 text-white ',
-      icon: Trash2, 
-
-      onClick: () => {
-        // Implement your delete logic here
-        console.log('Delete all selected rows');
-      },
-    },
-    {
-      label: 'Block All',
-      className: 'btn-warning',
-      icon: UserX,
-      onClick: () => {
-        // Implement your block logic here
-        console.log('Block all selected rows');
-      },
-    },
-  ];
-
-  const [isActive,setIsActive] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [isActive, setIsActive] = useState("all");
+  const [searchTerm, setSearchTerm] = useState(null);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [dateRange, setDateRange] = useState({ start: null, end: null });
-  
-  const filter = useMemo(() => ({
-    userStatus: isActive,
-    searchQuery: searchTerm,
-    country: selectedCountries,
-    fromDate: dateRange.start,
-    toDate: dateRange.end,
-  }), [isActive, searchTerm, selectedCountries, dateRange]);
+  const [statusSelected, setStatusSelected] = useState([]);
+  const [processSelected, setProcessSelected] = useState([]);
+  const filter = useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (statusSelected && statusSelected.length > 0) {
+      params.append("userStatus", statusSelected);
+    } else if (isActive !== "all") {
+      params.append("userStatus", isActive);
+    }
+    if (searchTerm) {
+      params.append("searchQuery", searchTerm);
+    }
+    if (selectedCountries && selectedCountries.length > 0) {
+      params.append("country", selectedCountries.join(","));
+    }
+    if (dateRange?.start) {
+      params.append("fromDate", dateRange.start);
+    }
+    if (dateRange?.end) {
+      params.append("toDate", dateRange.end);
+    }
+    if (processSelected && processSelected.length > 0) {
+      params.append("process", processSelected);
+    }
+
+    return params.toString(); // Converts to a query string
+  }, [
+    isActive,
+    searchTerm,
+    selectedCountries,
+    dateRange,
+    statusSelected,
+    processSelected,
+  ]);
 
   const {
     data: { data: { data: usersData } = {} } = {},
     isLoading: usersLoading,
-    refetch: UserRefetch, 
+    refetch: UserRefetch,
   } = useGet({
     key: "usersData",
-    endpoint: `${UserAPI.AllUsers}?${new URLSearchParams(filter)}`
+    endpoint: `${UserAPI.AllUsers}/?${filter}`,
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     UserRefetch();
-  },[filter,UserRefetch])
+  }, [filter, UserRefetch]);
 
   const handleDateRangeUpdate = (range) => {
     setDateRange(range);
   };
 
+  const handleDownload = async () => {
+    await fileDownload(UserAPI.DownloadUser);
+  };
+
+  const { mutateAsync: bulkUpdate } = useUpdate({
+    endpoint: UserAPI.BulkUpdate,
+    isMultiPart: false,
+  });
+
+  const handleBulkDelete = async (table) => {
+    const rows = table.getFilteredSelectedRowModel().rows;
+    const selected = rows.map((row) => row.original._id);
+    try {
+      await adminAPI.delete(UserAPI.BulkDelete, {
+        data: { usersIds: selected },
+      });
+      UserRefetch();
+      toast.success("Successfully deleted selected users");
+    } catch (error) {
+      toast.error("Failed to delete selected users");
+    } finally {
+      table.toggleAllRowsSelected(false);
+    }
+  };
+
+  const handleBulkEdit = async (table, status) => {
+    const rows = table.getFilteredSelectedRowModel().rows;
+    const selected = rows.map((row) => row.original._id);
+
+    try {
+      await bulkUpdate({
+        usersIds: selected,
+        status,
+      });
+      UserRefetch();
+      toast.success("Successfully updated selected tickets status");
+    } catch (error) {
+      toast.error("Failed to update selected tickets status");
+    } finally {
+      table.toggleAllRowsSelected(false);
+    }
+  };
+
+  const actionButtons = [
+    {
+      className: "h-9 font-normal shadow text-nowrap",
+      icon: TrashIcon,
+      iconClassName: "text-red-500",
+      label: "Delete All",
+      onClick: handleBulkDelete,
+    },
+    {
+      className:
+        "w-fit h-9 px-4 hover:shadow-none hover:opacity-90 font-normal text-black shadow-none duration-300",
+      icon: UserX,
+      label: "Blocked",
+      onClick: (table) => handleBulkEdit(table, "Closed"),
+    },
+  ];
+  useEffect(() => {
+    if (statusSelected.length > 0) {
+      setIsActive(statusSelected[0]);
+    }
+  }, [statusSelected]);
+
+  console.log(isActive);
   return (
     <div>
-      <Header title="Users" className=" ">
-        <CommonSearch onSearch={setSearchTerm}/>
-        <Country selectedCountries={selectedCountries} setSelectedCountries={setSelectedCountries}/>
-        <DateRangePicker onUpdate={handleDateRangeUpdate}/>
-        <CommonButton>
-          <Download className="w-6 h-6" />
-        </CommonButton>
-      </Header>
+      {usersLoading || !isActive ? (
+        <Loader />
+      ) : (
+        <>
+          <Header title="Users" className=" ">
+            <CommonSearch onSearch={setSearchTerm} />
 
-      <div className="w-full">
-        <Tabs // This is Shadcn Tabs
-          orientation="vertical"
-          defaultValue="all"
-        >
-          {/* This is Common TabsListCompnent  */}
-          <CustomTabs tabs={tabsConfig} setIsActive={setIsActive}/>
-          {tabsConfig?.map((item, id) => (
-            <TabsContent value={item?.value} className="" key={id}>
-              {usersLoading ? (
-                <Loader />
-              ) : (
-                <DataTable
-                  data={usersData?.users || []}
-                  columns={DefaultColumn({tabKey: isActive , UserRefetch: UserRefetch })}
-                  actionButtons={actionButtons}
-                />
-              )}
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
+            <div className="flex gap-3">
+              <Country
+                selectedCountries={selectedCountries}
+                setSelectedCountries={setSelectedCountries}
+              />
+              <DateRangePicker onUpdate={handleDateRangeUpdate} />
+              <Filter
+                statusSelected={statusSelected}
+                setStatusSelected={setStatusSelected}
+                processSelected={processSelected}
+                setProcessSelected={setProcessSelected}
+              />
+              <CommonButton onClick={handleDownload}>
+                <Download className="w-6 h-6" />
+              </CommonButton>
+            </div>
+          </Header>
+
+          <div className="w-full">
+            <Tabs // This is Shadcn Tabs
+              orientation="vertical"
+              defaultValue={isActive}
+            >
+              {/* This is Common TabsListCompnent  */}
+              <CustomTabs tabs={tabsConfig} setIsActive={setIsActive} />
+              {tabsConfig?.map((item, id) => (
+                <TabsContent value={item?.value} className="" key={id}>
+                  <DataTable
+                    data={usersData?.users || []}
+                    columns={DefaultColumn({
+                      tabKey: isActive,
+                      UserRefetch: UserRefetch,
+                    })}
+                    actionButtons={actionButtons}
+                  />
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+        </>
+      )}
     </div>
   );
 }

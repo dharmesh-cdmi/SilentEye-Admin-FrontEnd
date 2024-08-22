@@ -69,6 +69,18 @@ const router = createBrowserRouter([
             }),
           },
           {
+            path: "/plans/add-products",
+            lazy: async () => ({
+              Component: (await import("./pages/plans/components/products/AddProduct")).default,
+            }),
+          },
+          {
+            path: "/plans/update-products/:id",
+            lazy: async () => ({
+              Component: (await import("./pages/plans/components/products/AddProduct")).default,
+            }),
+          },
+          {
             path: "/users",
             lazy: async () => ({
               Component: (await import("./pages/users")).default,
@@ -81,13 +93,19 @@ const router = createBrowserRouter([
             }),
           },
           {
-            path: "/content-manage/:id",
+            path: "/content-manage",
             lazy: async () => ({
               Component: (await import("./pages/content-manage")).default,
             }),
           },
           {
             path: "/content-manage/add-pages",
+            lazy: async () => ({
+              Component: (await import("./pages/content-manage/components/pages")).default,
+            }),
+          },
+          {
+            path: "/content-manage/edit-pages/:id",
             lazy: async () => ({
               Component: (await import("./pages/content-manage/components/pages")).default,
             }),

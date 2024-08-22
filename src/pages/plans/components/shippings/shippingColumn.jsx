@@ -12,7 +12,6 @@ import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import { Shipping } from "@/api/endpoints";
 import { Switch } from "@/components/ui/switch";
-import Spinner from "@/components/common/Spinner";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
 

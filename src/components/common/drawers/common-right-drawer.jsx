@@ -14,7 +14,7 @@ export function RightDrawer({
   title = "Order Detail",
 }) {
   return (
-    <Sheet open={open}>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent className="min-w-full md:min-w-md sm:min-w-[540px]">
         <SheetHeader>
           <SheetTitle className="">

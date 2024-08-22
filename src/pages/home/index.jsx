@@ -1,4 +1,3 @@
-import { Button } from "@/components/custom/button";
 import { Download } from "lucide-react";
 import LineChart from "./components/charts/LineChart";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -6,125 +5,273 @@ import HomeCard from "./components/HomeCard";
 import useGet from "@/hooks/use-get";
 import { Dashboard } from "@/api/endpoints";
 import useFilteredParams from "@/hooks/useFilterParams";
+import Loader from "@/components/common/loader";
+import { DataTable } from "@/components/common/Table/data-table";
+import { CountryColumn } from "./components/countryColumn";
+import { fileDownload, fileDownloadPost } from "@/lib/utils";
+import CommonButton from "@/components/ui/common-button";
+import { useState } from "react";
+import Header from "@/components/common/header";
 
 const Home = () => {
-  const testData = [
-    {
-      label: "Checkout Page Visitor",
-      data: [30, 40, 45, 50, 49, 60, 70, 60,20,10,8],
-    },
-    {
-      label: "Plan Page Visitor",
-      data: [20, 30, 25, 35, 44, 55, 65, 60,20,10,9],
-    },
-    {
-      label: "Demo Viewer",
-      data: [25, 35, 30, 40, 38, 50, 60, 60,20,10,11],
-    },
-    {
-      label: "Total Order",
-      data: [15, 25, 20, 30, 28, 40, 50, 60,20,10,20],
-    },
-    {
-      label: "Logged in Users",
-      data: [20, 19, 17, 23, 29, 39, 49, 60,20,10,5],
-    },
-    {
-      label: "True Refunds",
-      data: [10, 20, 15, 25, 23, 35, 45, 60,20,10,17],
-    },
-  ];
+  const [dateRange, setDateRange] = useState({ from: null, to: null });
+  const [showAll, setShowAll] = useState(false);
 
-  const testCategories = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct"];
+  const handleDateRangeUpdate = (range) => {
+    setDateRange(range);
+  };
 
-  const filter = {
-    groupBy : "country"
-  }
-  const filterCheck = useFilteredParams(filter);
   const analyticsFilter = {
-    // startDate : "", 
-    // endDate : "", 
-    // page : "",
-    // action : "",
-  }
+    startDate: dateRange.from || null,
+    endDate: dateRange.to || null,
+  };
   const filterParams = useFilteredParams(analyticsFilter);
 
   const {
     data: { data: { data: tableData } = {} } = {},
     isLoading: TableLoading,
-    refetch: TableRefetch, 
   } = useGet({
     key: "tableData",
-    endpoint: `${Dashboard.Table}?${new URLSearchParams(filterCheck)}`
+    endpoint: `${Dashboard.Table}?groupBy=country`,
+  });
+
+  const {
+    data: { data: { data: planData } = {} } = {},
+    isLoading: planDataLoading,
+  } = useGet({
+    key: "planData",
+    endpoint: `${Dashboard.Table}?groupBy=plan`,
   });
 
   const {
     data: { data: { data: analyticsData } = {} } = {},
     isLoading: analyticsLoading,
-    refetch: AnalyticsRefetch, 
   } = useGet({
     key: "analyticsData",
-    endpoint: `${Dashboard.Analytics}?${new URLSearchParams(filterParams)}`
+    endpoint: `${Dashboard.Analytics}?${new URLSearchParams(filterParams)}`,
   });
 
-  console.log("analyticsData ", analyticsData)
+  const handleDownload = async () => {
+    await fileDownload(Dashboard.DownloadAnalytics, "Analytics");
+  };
+
+  const handleDownloadUserStatistics = async () => {
+    await fileDownloadPost(
+      `${Dashboard.DownloadUserStatistics}?groupBy=country`,
+      "UserStatistics"
+    );
+  };
+
+  console.log("planData", planData);
+
   return (
-    <div>
-      <div className="flex items-center justify-start space-y-2">
-        <div>
-          <DateRangePicker showCompare={false}/>
-        </div>
-        <div className="flex justify-center items-center space-x-2 ml-5 mb-2">
-          <Button variant="ghost" className="h-11 rounded-md px-3 mb-1">
-            <Download className="w-7 h-7 p-1 text-primary" />
-          </Button>
-        </div>
-      </div>
-      <div className="w-full bg-white border rounded-xl min-h-[340px] p-5 shadow-md mt-[30px]">
-        <LineChart data={testData} categories={testCategories} />
-      </div>
+    <>
+      {showAll ? (
+        <>
+          <Header title="User Statistics by Country" className=" " onClickhandle={()=> setShowAll(false)}>
+            <DateRangePicker onUpdate={handleDateRangeUpdate} />
+            <CommonButton
+              variant="ghost"
+              className="h-11 rounded-md px-3 mb-1"
+              onClick={handleDownloadUserStatistics}
+            >
+              <Download className="w-7 h-7 p-1 text-primary" />
+            </CommonButton>
+          </Header>
 
-      <div className="mt-[30px] grid lg:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
-        <HomeCard title="Visitor" value="645.21k" />
-        <HomeCard title="Demo Viewer" value="645.21k" />
-        <HomeCard title="Plan Page Visitor" value="645.21k" />
-        <HomeCard title="Checkout Page Visitor" value="645.21k" />
-        <HomeCard title="Add Ons Sales" value="645.21k" isImage={false} amount="$32,000.00" />
-      </div>
-      <div className="mt-[30px] grid lg:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
-        <HomeCard title="Payment Initiated" value="645.21k" isImage={false} amount="$32,000.00"/>
-        <HomeCard title="Total Order" value="645.21k" isImage={false} amount="$42,000.00"/>
-        <HomeCard title="Total Purchased User" value="645.21k" isImage={false} amount="$52,000.00"/>
-        <HomeCard title="Conversion" value="645.21k" />
-        <HomeCard title="Logged In Users" value="645.21k" />
-      </div>
-      <div className="mt-[30px] grid lg:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
-        <HomeCard title="Support Tickets" value="645.21k" />
-        <HomeCard title="Refund Request" value="645.21k" isImage={false} amount="$82,000.00000"/>
-        <HomeCard title="Total Refunds" value="645.21k" isImage={false} amount="$22,000.0000"/>
-        <HomeCard title="True Refunds" value="645.21k" isImage={false} amount="$62,000.009000"/>
-        <HomeCard title="Contact Us" value="645.21k" />
-      </div>
-      <div className="py-5">
-        <h2 className="text-[20px] font-semibold">User Statistics By Country</h2>
+          <DataTable
+            data={tableData?.userStatistics?.data || []}
+            columns={CountryColumn({ type: "country" })}
+            className={"rounded-t-lg"}
+            classNameHeader={"bg-gray-100 py-2 rounded-t-lg"}
+          />
+        </>
+      ) : (
+        <>
+          {(analyticsLoading || TableLoading || planDataLoading) &&
+          !analyticsData?.graphData?.result < 0 &&
+          !analyticsData?.graphData?.Months < 0 ? (
+            <Loader />
+          ) : (
+            <div>
+              <div className="flex items-center justify-start space-y-2">
+                <div>
+                  <DateRangePicker onUpdate={handleDateRangeUpdate} />
+                </div>
+                <div className="flex justify-center items-center space-x-2 ml-5 mb-2">
+                  <CommonButton
+                    variant="ghost"
+                    className="h-11 rounded-md px-3 mb-1"
+                    onClick={handleDownload}
+                  >
+                    <Download className="w-7 h-7 p-1 text-primary" />
+                  </CommonButton>
+                </div>
+              </div>
+              <div className="w-full bg-white border rounded-xl min-h-[340px] p-5 shadow-md mt-[30px]">
+                {analyticsData?.graphData?.result?.length < 0 ||
+                analyticsData?.graphData?.Months?.length < 0 ? (
+                  <Loader />
+                ) : (
+                  <LineChart
+                    data={
+                      analyticsData?.graphData?.result?.length > 0
+                        ? analyticsData?.graphData?.result
+                        : []
+                    }
+                    categories={
+                      analyticsData?.graphData?.Months?.length > 0
+                        ? analyticsData?.graphData?.Months
+                        : []
+                    }
+                  />
+                )}
+              </div>
 
-      </div>
-      <div className="py-5">
-        <h2 className="text-[20px] font-semibold">User Statistics By Plans & Add Ons</h2>
+              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
+                <HomeCard
+                  title="Visitor"
+                  value={analyticsData?.visitorDetails?.totalVisitorsCount}
+                />
+                {analyticsData?.visitorDetails?.pageData?.map((item, index) => (
+                  <HomeCard
+                    key={index}
+                    title={item?.label + `( ${item?.action} )`}
+                    value={item?.totalCount}
+                  />
+                ))}
 
-      </div>
-      <div className="py-5 grid lg:grid-cols-2 grid-cols-1 ">
-        <div>
-        <h2 className="text-[20px] font-semibold">User Statistics By Product & Shipping</h2>
-        </div>
-        <div>
-        <h2 className="text-[20px] font-semibold">User Statistics By Product & Shipping</h2>
-        </div>
-        
+                {/* <HomeCard
+              title="Add Ons Sales"
+              value="645.21k"
+              isImage={false}
+              amount="$32,000.00"
+            />  */}
+              </div>
+              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
+                <HomeCard
+                  title="Payment Initiated"
+                  value={analyticsData?.orders?.paymentInitiated?.count}
+                  isImage={false}
+                  amount={"$" + analyticsData?.orders?.paymentInitiated?.amount}
+                />
+                <HomeCard
+                  title="Total Order"
+                  value={analyticsData?.orders?.totalOrder?.count}
+                  isImage={false}
+                  amount={"$" + analyticsData?.orders?.totalOrder?.amount}
+                />
+                <HomeCard
+                  title="Total Purchased User"
+                  value={analyticsData?.orders?.totalPurchaseUsers?.count}
+                  isImage={false}
+                  amount={
+                    "$" + analyticsData?.orders?.totalPurchaseUsers?.amount
+                  }
+                />
+                <HomeCard
+                  title="Conversion"
+                  value={analyticsData?.orders?.conversionRate}
+                />
+                <HomeCard
+                  title="Logged In Users"
+                  value={analyticsData?.totalLoggedInUser}
+                />
+              </div>
+              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
+                <HomeCard
+                  title="Support Tickets"
+                  value={analyticsData?.totalSupportTicket}
+                />
+                <HomeCard
+                  title="Refund Request"
+                  value={
+                    analyticsData?.orders?.refundData?.refundRequests?.count
+                  }
+                  isImage={false}
+                  amount={
+                    "$" +
+                    analyticsData?.orders?.refundData?.refundRequests?.amount
+                  }
+                />
+                <HomeCard
+                  title="Total Refunds"
+                  value={
+                    analyticsData?.orders?.refundData?.totalRefundRequests
+                      ?.count
+                  }
+                  isImage={false}
+                  amount={
+                    "$" +
+                    analyticsData?.orders?.refundData?.totalRefundRequests
+                      ?.amount
+                  }
+                />
+                <HomeCard
+                  title="True Refunds"
+                  value={analyticsData?.orders?.refundData?.trueRefunds?.count}
+                  isImage={false}
+                  amount={
+                    "$" + analyticsData?.orders?.refundData?.trueRefunds?.amount
+                  }
+                />
+                <HomeCard
+                  title="Contact Us"
+                  value={analyticsData?.totalContactFormSubmited}
+                />
+              </div>
+              <div className="py-5">
+                <div className="flex justify-between ">
+                  <h2 className="text-[20px] font-semibold pb-5">
+                    User Statistics By Country
+                  </h2>
+                  <h2
+                    className="text-[16px] text-gray-500 font-semibold cursor-pointer hover:text-gray-700"
+                    onClick={() => setShowAll(true)}
+                  >
+                    See All
+                  </h2>
+                </div>
 
-      </div>
-      
-    </div>
+                <DataTable
+                  data={tableData?.userStatistics?.data || []}
+                  columns={CountryColumn({ type: "country" })}
+                  isPaginate={false}
+                  className={"rounded-t-lg"}
+                  classNameHeader={"bg-gray-100 py-2 rounded-t-lg"}
+                />
+              </div>
+              <div className="py-5">
+                <h2 className="text-[20px] font-semibold pb-5">
+                  User Statistics By Plans & Add Ons
+                </h2>
+                <DataTable
+                  data={
+                    planData?.userStatistics?.data?.userStatistics?.data || []
+                  }
+                  columns={CountryColumn({ type: "plan" })}
+                  isPaginate={false}
+                  className={"rounded-t-lg"}
+                  classNameHeader={"bg-gray-100 py-2 rounded-t-lg"}
+                />
+              </div>
+              {/* <div className="py-5 grid lg:grid-cols-2 grid-cols-1 ">
+            <div>
+              <h2 className="text-[20px] font-semibold">
+                User Statistics By Product & Shipping
+              </h2>
+            </div>
+            <div>
+              <h2 className="text-[20px] font-semibold">
+                User Statistics By Product & Shipping
+              </h2>
+            </div>
+          </div> */}
+            </div>
+          )}
+        </>
+      )}
+    </>
   );
 };
 export default Home;
