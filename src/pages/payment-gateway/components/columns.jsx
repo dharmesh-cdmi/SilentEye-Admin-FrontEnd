@@ -9,11 +9,10 @@ import {
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import PaymentGatewayForm from "./payment-gateway-form";
-import { PaymentGateWayAPI } from "@/api/endpoints";
+import { PaymentGateWayAPI, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import useUpdate from "@/hooks/use-update";
-import { Package } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -23,14 +22,17 @@ export default function GatewayColumns(refetchData) {
       accessorKey: "name",
       header: () => (
         <div className="min-w-fit w-full flex flex-nowrap text-nowrap items-center gap-2 text-base text-black font-medium">
-          <PaymentGateWayIcon />
+          <PaymentGateWayIcon className="fill-none" />
           Payment Gateways
         </div>
       ),
       cell: ({ row }) => {
         return (
           <div className="flex items-center gap-2.5 text-nowrap text-base text-black font-medium">
-            <Package />
+            <img
+              className="h-9 w-auto"
+              src={PROD_IMG_Prefix + row.original.icon}
+            />
             <span>{row.getValue("name")}</span>
           </div>
         );
@@ -60,13 +62,14 @@ export default function GatewayColumns(refetchData) {
         const handleStatusChange = async (updatedIsLive) => {
           setIsLive((prev) => !prev);
           try {
-            const { data } = await gatewaytMutateAsync({
+            const res = await gatewaytMutateAsync({
               status: updatedIsLive ? "live" : "test",
             });
             setIsLive(updatedIsLive);
-            toast.success(data.message);
+            toast.success(res.data.message);
           } catch (error) {
             setIsLive(row.original.status === "test" ? false : true);
+            toast(error.response.data.message || "Failed to update status");
           }
         };
 
@@ -117,9 +120,17 @@ export default function GatewayColumns(refetchData) {
             formData.append("icon", values.icon);
           }
 
-          await gatewayMutation(formData);
-          refetchData();
-          setIsEditModalOpen(false);
+          try {
+            const res = await gatewayMutation(formData);
+            refetchData();
+            setIsEditModalOpen(false);
+            toast.success(res.data.message);
+          } catch (error) {
+            toast.error(
+              error.response?.data?.message ||
+                "Failed to update payment gateway"
+            );
+          }
         };
 
         return (

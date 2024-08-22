@@ -1,7 +1,5 @@
 import { DataTable } from "@/components/common/Table/data-table";
-import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { Button } from "@/components/custom/button";
 import DiscountColumns from "./components/columns";
@@ -9,27 +7,33 @@ import CouponForm from "./components/coupon-form";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
 import { DiscountAPI } from "@/api/endpoints";
-import useGet from "@/hooks/use-get";
+import { PlusCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
+import toast from "react-hot-toast";
+import useGet from "@/hooks/use-get";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Discount() {
   const tabsConfig = [
-    { value: "all", icon: CircleDollarSign, label: "All" },
-    { value: "active", icon: OrdersIcon, label: "Active" },
-    { value: "expired", icon: RefundIcons, label: "Expired" },
+    { value: "all", label: "All" },
+    { value: "active", label: "Active" },
+    { value: "expired", label: "Expired" },
   ];
 
   const [activeTab, setActiveTab] = useState("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
     if (activeTab !== "all") {
       params.append("filterValidity", activeTab);
     }
+    params.append("limit", limit);
     return params.toString();
-  }, [activeTab]);
+  }, [activeTab, limit]);
 
   const {
     isLoading,
@@ -50,22 +54,31 @@ export default function Discount() {
       ? new Date(`${values.validityDate}T${values.validityTime}`).toISOString()
       : "No Limit";
 
-    await addDiscountMutation({
-      coupon: values.coupon,
-      discountPercent: values.discountPercent,
-      useLimit: values.useLimit,
-      status: "test",
-      validity,
-    });
+    try {
+      const res = await addDiscountMutation({
+        coupon: values.coupon,
+        discountPercent: values.discountPercent,
+        useLimit: values.useLimit,
+        status: "test",
+        validity,
+      });
 
-    discountRefetch();
-    resetForm();
-    setIsFormOpen(false);
+      discountRefetch();
+      resetForm();
+      setIsFormOpen(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to add new discount"
+      );
+    }
   };
 
   return (
     <div>
-      <Header title="Discount"></Header>
+      <Header title="Discount">
+        <LimitSelector limit={limit} setLimit={setLimit} />
+      </Header>
 
       <div className="h-fit w-full relative">
         <Tabs
@@ -83,6 +96,13 @@ export default function Discount() {
                 <DataTable
                   data={discountData?.docs || []}
                   columns={DiscountColumns(discountRefetch)}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: discountData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>

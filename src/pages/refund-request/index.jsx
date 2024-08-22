@@ -1,42 +1,43 @@
-import { OrdersIcon, RefundIcons, TrashIcon } from "@/assets/icons";
 import { DataTable } from "@/components/common/Table/data-table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import SettingDialog from "./components/setting-dialog";
 import CustomTabs from "@/components/common/custom-tabs";
-import { CircleDollarSign, Plane } from "lucide-react";
 import { RefundRequestAPI } from "@/api/endpoints";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
 import RefundColumns from "./components/columns";
 import Loader from "@/components/common/loader";
+import { TrashIcon } from "@/assets/icons";
 import { useMemo, useState } from "react";
 import useUpdate from "@/hooks/use-update";
 import useGet from "@/hooks/use-get";
 import toast from "react-hot-toast";
+import adminAPI from "@/api/adminAPI";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function RefundRequest() {
   const tabsConfig = [
-    { value: "All", icon: CircleDollarSign, label: "All" },
-    { value: "Pending", icon: OrdersIcon, label: "Pending" },
-    { value: "Approved", icon: RefundIcons, label: "Approved" },
-    { value: "Rejected", icon: Plane, label: "Rejected" },
-    { value: "Refunded", icon: Plane, label: "Refunded" },
-    { value: "True Refunded", icon: Plane, label: "True Refunded" },
+    { value: "All", label: "All" },
+    { value: "Pending", label: "Pending" },
+    { value: "Approved", label: "Approved" },
+    { value: "Rejected", label: "Rejected" },
+    { value: "Refunded", label: "Refunded" },
+    { value: "True Refunded", label: "True Refunded" },
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("All");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("page", page);
+    params.append("page", currentPage);
     params.append("limit", limit);
     if (searchQuery) params.append("search", searchQuery);
     if (activeTab !== "All") params.append("filterStatus", activeTab);
     return params.toString();
-  }, [activeTab, limit, page, searchQuery]);
+  }, [activeTab, currentPage, limit, searchQuery]);
 
   const {
     isLoading,
@@ -56,13 +57,16 @@ export default function RefundRequest() {
     const rows = table.getFilteredSelectedRowModel().rows;
     const selected = rows.map((row) => row.original._id);
     try {
-      await adminAPI.delete(RefundRequestAPI.BulkDelete, {
-        data: { ticketIds: selected },
+      const res = await adminAPI.delete(RefundRequestAPI.BulkDelete, {
+        data: { ids: selected },
       });
-      ticketRefecth();
-      toast.success("Successfully deleted selected refund requests");
+      refundRefecth();
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to delete selected refund requests");
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to delete selected refund requests"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
@@ -73,14 +77,22 @@ export default function RefundRequest() {
     const selected = rows.map((row) => row.original._id);
 
     try {
-      await bulkUpdate({
-        ticketIds: selected,
-        status,
+      const data = selected.map(() => ({
+        status: status,
+      }));
+
+      const res = await bulkUpdate({
+        ids: selected,
+        data,
       });
-      ticketRefecth();
-      toast.success("Successfully updated selected refund requests");
+      refundRefecth();
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to update selected refund requests status");
+      console.log(error);
+      toast.error(
+        error.response.data.message ||
+          "Failed to update selected refund requests status"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
@@ -135,6 +147,7 @@ export default function RefundRequest() {
     <div>
       <Header title="Refund Request">
         <CommonSearch onSearch={setSearchQuery} />
+        <LimitSelector limit={limit} setLimit={setLimit} />
         <SettingDialog />
       </Header>
 
@@ -155,6 +168,13 @@ export default function RefundRequest() {
                   data={refundData?.docs || []}
                   columns={RefundColumns(refundRefecth)}
                   actionButtons={actionButtons}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: refundData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>

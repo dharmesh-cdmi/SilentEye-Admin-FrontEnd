@@ -1,37 +1,41 @@
 import { DataTable } from "@/components/common/Table/data-table";
-import { CircleDollarSign, Plane } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { OrdersIcon, RefundIcons, TrashIcon } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { SupportTicketAPI } from "@/api/endpoints";
 import CommonSearch from "@/components/ui/search";
 import TicketColumns from "./components/columns";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
+import { TrashIcon } from "@/assets/icons";
 import { useMemo, useState } from "react";
 import useUpdate from "@/hooks/use-update";
 import adminAPI from "@/api/adminAPI";
 import toast from "react-hot-toast";
 import useGet from "@/hooks/use-get";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function SupportTicket() {
   // this is tabsConfig
   const tabsConfig = [
-    { value: "All", icon: CircleDollarSign, label: "All" },
-    { value: "Pending", icon: OrdersIcon, label: "Pending" },
-    { value: "Answered", icon: RefundIcons, label: "Answered" },
-    { value: "Closed", icon: Plane, label: "Closed" },
+    { value: "All", label: "All" },
+    { value: "Pending", label: "Pending" },
+    { value: "Answered", label: "Answered" },
+    { value: "Closed", label: "Closed" },
   ];
 
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
     if (searchQuery) params.append("searchQuery", searchQuery);
     if (activeTab !== "All") params.append("status", activeTab);
+    params.append("pageIndex", currentPage);
+    params.append("limit", limit);
     return params.toString();
-  }, [activeTab, searchQuery]);
+  }, [activeTab, currentPage, limit, searchQuery]);
 
   const {
     isLoading,
@@ -51,13 +55,15 @@ export default function SupportTicket() {
     const rows = table.getFilteredSelectedRowModel().rows;
     const selected = rows.map((row) => row.original._id);
     try {
-      await adminAPI.delete(SupportTicketAPI.BulkDelete, {
+      const res = await adminAPI.delete(SupportTicketAPI.BulkDelete, {
         data: { ticketIds: selected },
       });
       ticketRefecth();
-      toast.success("Successfully deleted selected tickets");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to delete selected tickets");
+      toast.error(
+        error.response.data.message || "Failed to delete selected tickets"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
@@ -68,14 +74,17 @@ export default function SupportTicket() {
     const selected = rows.map((row) => row.original._id);
 
     try {
-      await bulkUpdate({
+      const res = await bulkUpdate({
         ticketIds: selected,
         status,
       });
       ticketRefecth();
-      toast.success("Successfully updated selected tickets status");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error("Failed to update selected tickets status");
+      toast.error(
+        error.response.data.message ||
+          "Failed to update selected tickets status"
+      );
     } finally {
       table.toggleAllRowsSelected(false);
     }
@@ -124,6 +133,7 @@ export default function SupportTicket() {
     <div>
       <Header title="Support Ticket">
         <CommonSearch onSearch={setSearchQuery} />
+        <LimitSelector limit={limit} setLimit={setLimit} />
       </Header>
 
       <div className="w-full">
@@ -146,6 +156,13 @@ export default function SupportTicket() {
                   data={supportData?.tickets || []}
                   columns={TicketColumns(ticketRefecth)}
                   actionButtons={actionButtons}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: supportData?.total,
+                  }}
                 />
               )}
             </TabsContent>

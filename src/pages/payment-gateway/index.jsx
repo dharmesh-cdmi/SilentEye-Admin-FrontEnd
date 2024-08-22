@@ -1,38 +1,39 @@
 import PaymentGatewayForm from "./components/payment-gateway-form";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { DataTable } from "@/components/common/Table/data-table";
-import { CircleDollarSign, PlusCircle } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { OrdersIcon, RefundIcons } from "@/assets/icons";
 import CustomTabs from "@/components/common/custom-tabs";
 import { Button } from "@/components/custom/button";
 import { PaymentGateWayAPI } from "@/api/endpoints";
 import GatewayColumns from "./components/columns";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
+import { PlusCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import usePost from "@/hooks/use-post";
 import useGet from "@/hooks/use-get";
+import toast from "react-hot-toast";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function PaymentGateWay() {
   const tabsConfig = [
-    { value: "All", icon: CircleDollarSign, label: "All" },
-    { value: "live", icon: OrdersIcon, label: "Active" },
-    { value: "test", icon: RefundIcons, label: "Disabled" },
+    { value: "All", label: "All" },
+    { value: "live", label: "Active" },
+    { value: "test", label: "Disabled" },
   ];
 
   const [activeTab, setActiveTab] = useState("All");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
   const filter = useMemo(() => {
     const params = new URLSearchParams();
-    params.append("page", page);
+    params.append("page", currentPage);
     params.append("limit", limit);
     if (activeTab !== "All") params.append("filterStatus", activeTab);
     return params.toString();
-  }, [activeTab, limit, page]);
+  }, [activeTab, limit, currentPage]);
 
   const {
     isLoading,
@@ -61,15 +62,24 @@ export default function PaymentGateWay() {
       formData.append("icon", values.icon);
     }
 
-    await gatewayMutation(formData);
-    gatewayRefetch();
-    resetForm();
-    setIsFormOpen(false);
+    try {
+      const res = await gatewayMutation(formData);
+      gatewayRefetch();
+      resetForm();
+      setIsFormOpen(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to add new payment gateway"
+      );
+    }
   };
 
   return (
     <div>
-      <Header title="Payment Gateways"></Header>
+      <Header title="Payment Gateways">
+        <LimitSelector limit={limit} setLimit={setLimit} />
+      </Header>
 
       <div className="h-fit w-full relative">
         <Tabs
@@ -86,6 +96,13 @@ export default function PaymentGateWay() {
                 <DataTable
                   data={gatewayData?.docs || []}
                   columns={GatewayColumns(gatewayRefetch)}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: gatewayData?.totalDocs,
+                  }}
                 />
               )}
             </TabsContent>
