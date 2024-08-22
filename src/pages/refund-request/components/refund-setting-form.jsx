@@ -1,13 +1,9 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const RefundSettingForm = ({ children }) => {
+const RefundSettingForm = ({ children, initialValues, onSubmit }) => {
   const formik = useFormik({
-    initialValues: {
-      underProcessing: "",
-      initiated: undefined,
-      refunded: "",
-    },
+    initialValues: initialValues,
     validationSchema: Yup.object({
       underProcessing: Yup.number()
         .required("Under processing duration is required")
@@ -22,9 +18,7 @@ const RefundSettingForm = ({ children }) => {
         .positive("Must be a positive number")
         .integer("Must be an integer"),
     }),
-    onSubmit: (values) => {
-      console.log("Form values:", values);
-    },
+    onSubmit,
   });
 
   return (

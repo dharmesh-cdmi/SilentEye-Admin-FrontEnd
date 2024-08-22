@@ -23,8 +23,9 @@ const RefundRequestAPI = {
   AllRefundRequest: "/refund-request",
   Update: "/refund-request/",
   DeleteRefund: "/refund-request/",
-  BulkDelete: "/refund-request/",
-  BulkUpdate: "/refund-request/",
+  BulkDelete: "/refund-request/bulk-delete",
+  BulkUpdate: "/refund-request/bulk-update",
+  GetUpdateSeeting: "/setting",
 };
 
 const ContactFormAPI = {

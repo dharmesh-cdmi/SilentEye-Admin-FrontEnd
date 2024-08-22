@@ -1,4 +1,8 @@
-import { CheckedIcon, ValidityCalendarIcon } from "@/assets/icons";
+import {
+  CheckedIcon,
+  DiscountSqaureIcon,
+  ValidityCalendarIcon,
+} from "@/assets/icons";
 import { Button } from "@/components/custom/button";
 import {
   Dialog,
@@ -16,7 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArrowLeft, Info, Package, Percent } from "lucide-react";
+import { ArrowLeft, Info, Percent } from "lucide-react";
 import { cn, isEmptyObject } from "@/lib/utils";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -91,16 +95,16 @@ const CouponForm = ({
           <span onClick={() => setOpen(true)}>{children}</span>
         </DialogTrigger>
         <DialogContent className="max-w-xl p-0">
-          <DialogHeader className="flex flex-row gap-5 p-4 border-b">
+          <DialogHeader className="flex flex-row items-center gap-5 p-4 border-b">
             <DialogClose asChild>
-              <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-200 border shadow">
+              <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-50 border shadow-sm">
                 <ArrowLeft />
               </Button>
             </DialogClose>
 
-            <div>
-              <DialogTitle className="flex items-center gap-3">
-                <Package />{" "}
+            <div className="h-full">
+              <DialogTitle className="flex items-center gap-2 font-normal text-2xl">
+                <DiscountSqaureIcon size={32} />
                 {isEmptyObject(initialValues)
                   ? "Add New Coupon"
                   : "Edit Coupon"}
@@ -288,10 +292,6 @@ const CouponForm = ({
                           "border border-red-500"
                       )}
                     >
-                      <div className="h-full w-14 flex items-center justify-center border-r-[1.5px]">
-                        <Percent size={20} />
-                      </div>
-
                       <div className="w-full flex flex-col">
                         <input
                           className="h-full w-full px-5 outline-none"
