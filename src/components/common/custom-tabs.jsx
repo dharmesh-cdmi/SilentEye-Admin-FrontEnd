@@ -6,7 +6,7 @@ export default function CustomTabs({ tabs, setIsActive, className, setData }) {
   return (
     <div
       className={cn(
-        "w-full overflow-x-auto custom-scrollbar border rounded-t-lg ",
+        "w-full overflow-x-auto custom-scrollbar border border-b-0 rounded-t-lg ",
         className
       )}
     >

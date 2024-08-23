@@ -15,6 +15,7 @@ import { useMemo, useState } from "react";
 import useFilteredParams from "@/hooks/useFilterParams";
 import { fileDownload } from "@/lib/utils";
 import CountryOrder from "@/components/common/country-order";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Orders() {
   // this is tabsConfig
@@ -29,6 +30,8 @@ export default function Orders() {
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [isActive, setIsActive] = useState("Completed");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const filter = useMemo(
     () => ({
@@ -37,8 +40,18 @@ export default function Orders() {
       country: selectedCountries || null,
       startDate: dateRange.from || null,
       endDate: dateRange.to || null,
+      page: currentPage,
+      limit: limit,
     }),
-    [isActive, searchTerm, selectedCountries, dateRange]
+    [
+      isActive,
+      searchTerm,
+      selectedCountries,
+      dateRange.from,
+      dateRange.to,
+      currentPage,
+      limit,
+    ]
   );
 
   const filterParams = useFilteredParams(filter);
@@ -69,6 +82,7 @@ export default function Orders() {
           setSelectedCountries={setSelectedCountries}
         />
         <DateRangePicker onUpdate={handleDateRangeUpdate} />
+        <LimitSelector limit={limit} setLimit={setLimit} />
         <CommonButton onClick={handleDownload}>
           <Download className="w-6 h-6" />
         </CommonButton>
@@ -92,6 +106,13 @@ export default function Orders() {
                     tabKey: isActive,
                     orderRefetch: OrderRefetch,
                   })}
+                  pagination={{
+                    limit,
+                    setLimit,
+                    currentPage,
+                    setCurrentPage,
+                    totalData: ordersData?.totalOrders,
+                  }}
                 />
               )}
             </TabsContent>

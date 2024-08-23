@@ -28,6 +28,7 @@ import AddAddon from "./components/addons/AddAddon";
 import AddShipping from "./components/shippings/AddShipping";
 import AddProduct from "./components/products/AddProduct";
 import { useNavigate } from "react-router-dom";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Plans() {
   const navigate = useNavigate();
@@ -41,6 +42,9 @@ export default function Plans() {
   ];
   const [isActive, setIsActive] = useState("subscription");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
   const filter = {
     // status: isActive,
     search: searchTerm || null,
@@ -111,6 +115,7 @@ export default function Plans() {
         <CommonButton>
           <SettingIcon className="w-6 h-6" />
         </CommonButton>
+        <LimitSelector limit={limit} setLimit={setLimit} />
       </Header>
 
       <div className="w-full">
@@ -167,6 +172,13 @@ export default function Plans() {
                   tabKey: isActive,
                   PlanRefetch: PlanRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: plansData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -181,6 +193,13 @@ export default function Plans() {
                   tabKey: isActive,
                   UpsellRefetch: UpsellRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: upSelldata?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -194,6 +213,13 @@ export default function Plans() {
                 columns={AddonsColumn({
                   AddonsRefetch: AddonsRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: addonsData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -207,6 +233,13 @@ export default function Plans() {
                 columns={ProductsColumn({
                   ProductsRefetch: ProductRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: productsData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -220,6 +253,13 @@ export default function Plans() {
                 columns={ShippingColumn({
                   ShippingRefetch: ShippingRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: shippingData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>

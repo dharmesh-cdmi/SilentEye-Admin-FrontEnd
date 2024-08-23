@@ -6,13 +6,13 @@ const Counter = ({ count = 0, onChange }) => {
 
   return (
     <div className="min-w-20 w-fit inline-flex items-center justify-between">
-      <button className="w-fit h-fit outline-none border-none">
+      <button type="button" className="w-fit h-fit outline-none border-none">
         <MinusCircle size={20} className="text-gray-500" onClick={decrement} />
       </button>
 
       <p className="w-full font-semibold text-lg text-center">{count}</p>
 
-      <button className="w-fit h-fit outline-none border-none">
+      <button type="button" className="w-fit h-fit outline-none border-none">
         <PlusCircle size={20} className="text-gray-500" onClick={increment} />
       </button>
     </div>
