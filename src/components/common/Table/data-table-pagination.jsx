@@ -1,13 +1,18 @@
 import { Button } from "@/components/custom/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
 
-export function DataTablePagination({ pagination }) {
+export function DataTablePagination({ pagination, table }) {
   const { limit, currentPage, setCurrentPage, totalData } = pagination;
 
   const totalPageCount = Math.ceil(totalData / limit);
   const rowsDisplayed = Math.min(limit * currentPage, totalData);
   const isPreviousPageAvailable = currentPage > 1;
   const isNextPageAvailable = currentPage < totalPageCount;
+
+  useEffect(() => {
+    table.setPageSize(limit);
+  }, [limit, table]);
 
   return (
     <div className="flex items-center justify-between overflow-auto px-4 py-3  border-t ">

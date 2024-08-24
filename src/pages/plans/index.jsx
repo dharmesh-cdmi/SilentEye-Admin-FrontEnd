@@ -112,15 +112,12 @@ export default function Plans() {
     <div>
       <Header title="Plans" className=" ">
         <CommonSearch onSearch={setSearchTerm} />
-        <CommonButton>
-          <SettingIcon className="w-6 h-6" />
-        </CommonButton>
         <LimitSelector limit={limit} setLimit={setLimit} />
       </Header>
 
       <div className="w-full">
         <Tabs orientation="vertical" defaultValue="subscription">
-          <div className="flex justify-between items-center w-full border rounded-t-lg  overflow-y-hidden ">
+          <div className="flex justify-between items-center w-full border border-b-0 rounded-t-lg  overflow-y-hidden ">
             <div className="w-[57%] lg:w-[80%]">
               <CustomTabs
                 tabs={tabsConfig}

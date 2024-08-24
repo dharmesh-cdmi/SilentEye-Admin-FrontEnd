@@ -8,14 +8,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CountryAPI } from "@/api/endpoints";
 import useGet from "@/hooks/use-get";
 
-export default function Country({selectedCountries,setSelectedCountries}) {
-  const {
-    data: { data: { data: countriesdata } = {} } = {},
-  } = useGet({
+export default function Country({ selectedCountries, setSelectedCountries }) {
+  const { data: { data: { data: countriesdata } = {} } = {} } = useGet({
     key: "countriesdata",
     endpoint: `${CountryAPI.CountryList}`,
   });
-
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,13 +42,15 @@ export default function Country({selectedCountries,setSelectedCountries}) {
   );
 
   return (
-    <Popover open={isOpen}
-    onOpenChange={(open) => {
-      if (!open) {
-        // resetValues();
-      }
-      setIsOpen(open);
-    }}>
+    <Popover
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          // resetValues();
+        }
+        setIsOpen(open);
+      }}
+    >
       <PopoverTrigger asChild>
         <div
           className={cn(
@@ -68,9 +67,9 @@ export default function Country({selectedCountries,setSelectedCountries}) {
           )}
         </div>
       </PopoverTrigger>
-      <PopoverContent className="max-w-[320px]">
+      <PopoverContent className="max-w-[320px] px-0 py-0">
         <div className=" ">
-          <div className="w-full border-b mb-2 ">
+          <div className="w-full border-b mb-1">
             <div className="flex justify-center items-center px-4 w-full">
               <Search className="w-6 h-6 text-gray-400" />
               <input
@@ -82,40 +81,47 @@ export default function Country({selectedCountries,setSelectedCountries}) {
               />
             </div>
           </div>
-          <div className="border-b">
-            <div className="px-4 flex justify-start items-center space-x-2 py-2 ">
-              <Checkbox
-                checked={selectedCountries.length === countriesdata?.length}
-                onCheckedChange={handleSelectAllChange}
-                className={cn(
-                  "form-checkbox h-5 w-5 rounded-lg",
-                  selectedCountries.length === countriesdata?.length
-                    ? "bg-green-200 text-green-500 border border-green-500"
-                    : "bg-white border border-gray-300"
-                )}
-              />
-              <span className="text-sm font-normal">All countriesdata</span>
-            </div>
+
+          <div className="px-4 flex items-center gap-2.5 py-2.5 border-b">
+            <Checkbox
+              checked={selectedCountries.length === countriesdata?.length}
+              onCheckedChange={handleSelectAllChange}
+              className={cn(
+                "form-checkbox h-5 w-5 rounded-md",
+                selectedCountries.length === countriesdata?.length
+                  ? "bg-green-200 text-green-500 border border-green-500"
+                  : "bg-white border border-gray-300"
+              )}
+            />
+            <span className="text-sm font-normal">All Countries</span>
           </div>
-          <div className="space-y-2 max-h-80 overflow-y-auto">
+
+          <div
+            className="max-h-80 overflow-y-scroll "
+            style={{
+              overflow: "auto",
+              msOverflowStyle: "none", // Internet Explorer 10+
+              scrollbarWidth: "none", // Firefox
+            }}
+          >
             {filteredCountries?.map((country) => (
-              <div
-                key={country.id}
-                className="flex items-center space-x-2 border-b "
-              >
-                <div className="px-4 py-2 flex items-center justify-start ">
+              <div key={country.id} className="flex items-center border-b">
+                <div className="w-full px-4 py-2 flex items-center justify-start ">
                   <Checkbox
                     checked={selectedCountries?.includes(country.id)}
                     onCheckedChange={() => handleCheckboxChange(country.id)}
                     className={cn(
-                      "form-checkbox h-5 w-5 rounded-lg",
+                      "form-checkbox h-5 w-5 rounded-md",
                       selectedCountries.includes(country.id)
                         ? "bg-green-200 text-green-500 border border-green-500"
                         : "bg-white border border-gray-300"
                     )}
                   />
-                  <div className="mx-2 ">
-                    <div className="flex items-center justify-center">
+                  <div
+                    className="flex items-center gap-2 px-2.5 cursor-pointer"
+                    onClick={() => handleCheckboxChange(country.id)}
+                  >
+                    <div className="flex items-center justify-center ">
                       <ReactCountryFlag
                         countryCode={country.icon}
                         style={{
@@ -125,9 +131,8 @@ export default function Country({selectedCountries,setSelectedCountries}) {
                         svg
                       />
                     </div>
+                    <span className="text-sm font-normal">{country.label}</span>
                   </div>
-
-                  <span className="text-sm font-normal">{country.label}</span>
                 </div>
               </div>
             ))}

@@ -171,7 +171,7 @@ export function DataTable({
           </TableBody>
         </Table>
       </div>
-      {isPaginate && (
+      {isPaginate && pagination && (
         <DataTablePagination pagination={pagination} table={table} />
       )}
     </div>

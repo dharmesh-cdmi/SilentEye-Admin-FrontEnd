@@ -215,7 +215,7 @@ export default function Users() {
                       setLimit,
                       currentPage,
                       setCurrentPage,
-                      totalData: usersData?.totalDocs,
+                      totalData: usersData?.totalUsers,
                     }}
                   />
                 </TabsContent>

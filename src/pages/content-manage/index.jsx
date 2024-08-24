@@ -19,6 +19,7 @@ import AddFeatures from "./components/features/AddFeatures";
 import { useNavigate } from "react-router-dom";
 import ContentDetails from "./components/contents";
 import AddReviews from "./components/reviews/AddReviews";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Users() {
   // this is tabsConfig
@@ -34,6 +35,8 @@ export default function Users() {
 
   const [featureOpen, setFeatureOpen] = useState(false);
   const [reviewsOpen, setReviewsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   // Features API Call
   const {
@@ -103,6 +106,8 @@ export default function Users() {
           ""
         )}
 
+        <LimitSelector limit={limit} setLimit={setLimit} />
+
         {isActive === "features" && (
           <CommonButton>
             <Download className="w-6 h-full" />
@@ -119,7 +124,7 @@ export default function Users() {
           <CustomTabs
             tabs={tabsConfig}
             setIsActive={setIsActive}
-            className={"mb-12 rounded-b-lg "}
+            className={"mb-12 border-b rounded-b-lg"}
           />
 
           <TabsContent value={"contents"} className="">
@@ -130,12 +135,19 @@ export default function Users() {
               <Loader />
             ) : (
               <DataTable
+                className={"rounded-t-lg"}
                 data={featuresData?.features || []}
                 columns={FeatureColumn({
                   tabKey: isActive,
                   FeatureRefetch: FeatureRefetch,
                 })}
-                className={"rounded-t-lg"}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: featuresData?.features?.length,
+                }}
               />
             )}
           </TabsContent>
@@ -144,12 +156,19 @@ export default function Users() {
               <Loader />
             ) : (
               <DataTable
+                className="rounded-t-lg"
                 data={pagesData?.pages || []}
                 columns={PagesColumn({
                   tabKey: isActive,
                   PageRefetch: PageRefetch,
                 })}
-                className="rounded-t-lg"
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: pagesData?.pages?.length,
+                }}
               />
             )}
           </TabsContent>
@@ -162,12 +181,19 @@ export default function Users() {
               <Loader />
             ) : (
               <DataTable
+                className="rounded-t-lg"
                 data={reviewsData?.reviews || []}
                 columns={ReviewsColumn({
                   tabKey: isActive,
                   ReviewRefetch: ReviewRefetch,
                 })}
-                className="rounded-t-lg"
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: reviewsData?.reviews?.length,
+                }}
               />
             )}
           </TabsContent>

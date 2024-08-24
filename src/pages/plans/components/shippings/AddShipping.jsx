@@ -1,7 +1,7 @@
 import { ContentManage } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
+import Counter from "@/components/common/counter";
 import Spinner from "@/components/common/Spinner";
-import { Switch } from "@/components/ui/switch";
 import usePost from "@/hooks/use-post";
 import useUpdate from "@/hooks/use-update";
 import { Field, Form, Formik } from "formik";
@@ -10,8 +10,19 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const addCategorySchema = Yup.object({
-  stopHere: Yup.string().required("Status is required"),
+  order: Yup.number()
+    .min(1, "Order must grather than zero")
+    .required("Order is required"),
   name: Yup.string().required("Name is required"),
+  dateMin: Yup.number()
+    .min(1, "Minimum date must grater than zero")
+    .required("Minimum date is required"),
+  dateMax: Yup.number()
+    .min(1, "Maximum date must less than 100")
+    .required("Maximum date is required"),
+  mrp: Yup.number()
+    .min(1, "MRP must be grater than zero")
+    .required("MRP is required"),
 });
 
 const AddShipping = ({ data, setOpen, Refetch }) => {
@@ -29,14 +40,6 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
   });
 
   const handleSubmit = async (values, { resetForm }) => {
-    const formData = new FormData();
-    formData.append("status", values?.status);
-    formData.append("stopHere", values?.stopHere);
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("process", values.process);
-    formData.append("failCount", values.failCount);
-
     try {
       const response = data
         ? await UpdateFeatureMutation(formData)
@@ -56,27 +59,51 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
-          status: data?.status || true,
+          order: data?.order || 1,
           name: data?.name || "",
-          icon: data?.icon || null,
-          description: data?.description || "",
-          stopHere: data?.stopHere || false,
-          process: data?.process || "",
-          failCount: data?.failCount || "",
+          dayMin: data?.dayMax || null,
+          dayMax: data?.dayMax || null,
+          mrp: data?.mrp || 0,
         }}
         validationSchema={addCategorySchema}
         onSubmit={handleSubmit}
       >
         {({ values, handleChange, isSubmitting, setFieldValue }) => (
           <Form className="py-5">
+            <Field name="order">
+              {({ field, form: { touched, errors }, meta }) => (
+                <TextField
+                  title="Order"
+                  className={` ${
+                    touched.order && errors.order
+                      ? "border-red-500 border rounded-t-lg"
+                      : "border border-b rounded-t-lg"
+                  }`}
+                  value={
+                    <>
+                      <Counter
+                        count={values.order}
+                        onChange={(order) => setFieldValue("order", order)}
+                      />
+
+                      {meta.touched && meta.error && (
+                        <p className="text-sm px-4 text-red-600 error">
+                          {meta.error}
+                        </p>
+                      )}
+                    </>
+                  }
+                />
+              )}
+            </Field>
             <Field name="name">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
                   title="Name"
                   className={` ${
                     touched.name && errors.name
-                      ? "border-red-500 border rounded-t-lg"
-                      : "border border-b rounded-t-lg"
+                      ? "border-red-500 border"
+                      : "border"
                   }`}
                   value={
                     <>
@@ -105,7 +132,7 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                 <TextField
                   title="Days"
                   className={` ${
-                    touched.amount && errors.amount
+                    touched.dayMin && errors.dayMin
                       ? "border-red-500 border "
                       : "border border-b "
                   }`}
@@ -119,12 +146,12 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                         <input
                           className={`border-0  w-full  py-2 text-black text-[16px] focus:border-0 focus:outline-none 
                         ${
-                          touched.amount && errors.amount ? " h-1/2" : "h-full"
+                          touched.dayMin && errors.dayMin ? " h-1/2" : "h-full"
                         }`}
                           type="number"
-                          name="amount"
+                          name="dayMin"
                           placeholder="Day Here"
-                          value={values.amount}
+                          value={values.dayMin}
                           onChange={handleChange}
                           {...field}
                         />
@@ -137,12 +164,12 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                         <input
                           className={`border-0 pl-1 w-full py-2 text-black text-[16px] focus:border-0 focus:outline-none 
                         ${
-                          touched.amount && errors.amount ? " h-1/2" : "h-full"
+                          touched.dayMax && errors.dayMax ? " h-1/2" : "h-full"
                         }`}
                           type="number"
-                          name="amount"
+                          name="dayMax"
                           placeholder="Day Here"
-                          value={values.amount}
+                          value={values.dayMax}
                           onChange={handleChange}
                           {...field}
                         />
