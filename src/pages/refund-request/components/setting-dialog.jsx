@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Package, Settings } from "lucide-react";
+import { ArrowLeft, Settings } from "lucide-react";
 import CommonButton from "@/components/ui/common-button";
 import RefundSettingForm from "./refund-setting-form";
 import { Button } from "@/components/custom/button";
@@ -17,6 +17,7 @@ import usePost from "@/hooks/use-post";
 import useGet from "@/hooks/use-get";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { RefundIcons } from "@/assets/icons";
 
 export default function SettingDialog() {
   const [open, setOpen] = useState(false);
@@ -65,8 +66,8 @@ export default function SettingDialog() {
           </DialogClose>
 
           <div>
-            <DialogTitle className="flex items-center gap-3">
-              <Package /> Edit Refund Request Durations
+            <DialogTitle className="flex items-center gap-3 font-normal text-xl">
+              <RefundIcons size={30} /> Edit Refund Request Durations
             </DialogTitle>
           </div>
         </DialogHeader>
