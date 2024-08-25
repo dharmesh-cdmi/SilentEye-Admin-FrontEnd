@@ -31,8 +31,18 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
   });
 
   const handleSubmit = async (values, { resetForm }) => {
+    const payload = {
+      paymentGatewayId: values?.paymentGatewayId, 
+      title: values?.title, 
+      description: values?.description, 
+      amount : values?.amount, 
+      mrp: values?.mrp, 
+      status: values?.status, 
+      checked: values?.checked
+
+    }
     try {
-      const res = data ? await updateAddon(values) : await createAddon(values);
+      const res = data ? await updateAddon(payload) : await createAddon(payload);
       resetForm();
       Refetch();
       setOpen(false);
@@ -47,11 +57,13 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
+          paymentGatewayId: data?.paymentGatewayId || "66b9c15a878a11234a5a1146",
           order: data?.order || 1,
           title: data?.title || "",
           description: data?.description || "",
           amount: data?.amount || undefined,
           mrp: data?.mrp || undefined,
+          status: data?.status || "live",
           checked: data?.checked || false,
         }}
         validationSchema={addonSchema}
@@ -60,7 +72,7 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
         {({ values, handleChange, isSubmitting, setFieldValue }) => (
           <Form className="py-5">
             <Field name="order">
-              {({ field, form: { touched, errors }, meta }) => (
+              {({  form: { touched, errors }, meta }) => (
                 <TextField
                   title="Order"
                   className={` ${
@@ -224,22 +236,22 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-            <Field name="stopHere">
+            <Field name="checked">
               {({ form: { touched, errors }, meta }) => (
                 <TextField
                   title="Stop Here"
                   className={`rounded-b-lg ${
-                    touched.stopHere && errors.stopHere
+                    touched.checked && errors.checked
                       ? "border-red-500 border "
                       : "border border-b"
                   }`}
                   value={
                     <>
                       <Switch
-                        defaultChecked={values?.stopHere}
+                        defaultChecked={values?.checked}
                         className="data-[state=checked]:bg-[#34C759] "
                         onCheckedChange={(checked) =>
-                          setFieldValue("stopHere", checked)
+                          setFieldValue("checked", checked)
                         }
                       />
                       {meta.touched && meta.error && (

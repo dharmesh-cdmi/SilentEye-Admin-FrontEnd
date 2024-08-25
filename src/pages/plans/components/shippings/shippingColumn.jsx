@@ -4,9 +4,8 @@ import {
   AmountIcon,
   EyeIcon,
   IdendityIcon,
-  RefundIcons,
 } from "@/assets/icons";
-import { NotepadText, Trash2 } from "lucide-react";
+import { Edit, NotepadText, Plane, Trash2 } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
@@ -14,6 +13,8 @@ import { Shipping } from "@/api/endpoints";
 import { Switch } from "@/components/ui/switch";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
+import CommonModal from "@/components/common/modals/common-modal";
+import AddShipping from "./AddShipping";
 
 export const ShippingColumn = ({ ShippingRefetch }) => {
   return [
@@ -79,15 +80,13 @@ export const ShippingColumn = ({ ShippingRefetch }) => {
       cell: ({ row }) => {
         const [status, setStatus] = useState(row?.original?.status === "live");
 
-        const { mutateAsync: statusMutation } =
-          useUpdate({
-            isMultiPart: false,
-            endpoint: Shipping.UpdateShipping + row?.original?._id,
-          });
+        const { mutateAsync: statusMutation } = useUpdate({
+          isMultiPart: false,
+          endpoint: Shipping.UpdateShipping + row?.original?._id,
+        });
 
         const handleStatus = async (checked) => {
           try {
-           
             const newStatus = checked ? "live" : "test";
             const payload = {
               ...row?.original,
@@ -107,13 +106,11 @@ export const ShippingColumn = ({ ShippingRefetch }) => {
         };
         return (
           <div className="flex justify-center items-center">
-           
-              <Switch
-                defaultChecked={status}
-                className="data-[state=checked]:bg-[#34C759] "
-                onCheckedChange={handleStatus}
-              />
-            
+            <Switch
+              defaultChecked={status}
+              className="data-[state=checked]:bg-[#34C759] "
+              onCheckedChange={handleStatus}
+            />
           </div>
         );
       },
@@ -141,7 +138,7 @@ export const ShippingColumn = ({ ShippingRefetch }) => {
                 className="rounded-lg hover:bg-blue-500 hover:text-white"
                 onClick={() => setROpen(true)}
               >
-                <RefundIcons size={24} className="" />
+                <Edit size={19} className="" />
               </Button>
 
               <Button
@@ -156,7 +153,22 @@ export const ShippingColumn = ({ ShippingRefetch }) => {
                 <Trash2 className="w-5 h-5 " />
               </Button>
             </div>
-           
+            <CommonModal
+              open={ropen}
+              setOpen={setROpen}
+              title={
+                <div className="flex space-x-3 items-center">
+                  <Plane /> <h2>Add New Shipping</h2>
+                </div>
+              }
+            >
+              <AddShipping
+                setOpen={setROpen}
+                Refetch={ShippingRefetch}
+                data={row?.original}
+              />
+            </CommonModal>
+
             <DeleteModal
               open={open}
               setOpen={setOpen}

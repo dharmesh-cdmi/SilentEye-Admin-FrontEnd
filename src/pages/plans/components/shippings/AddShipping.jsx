@@ -1,4 +1,4 @@
-import { ContentManage } from "@/api/endpoints";
+import { Shipping } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Counter from "@/components/common/counter";
 import Spinner from "@/components/common/Spinner";
@@ -10,46 +10,59 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const addCategorySchema = Yup.object({
-  order: Yup.number()
-    .min(1, "Order must grather than zero")
-    .required("Order is required"),
-  name: Yup.string().required("Name is required"),
+  title: Yup.string().required("Shipping Name is required"),
   dateMin: Yup.number()
     .min(1, "Minimum date must grater than zero")
     .required("Minimum date is required"),
   dateMax: Yup.number()
     .min(1, "Maximum date must less than 100")
     .required("Maximum date is required"),
-  mrp: Yup.number()
+  price: Yup.number()
     .min(1, "MRP must be grater than zero")
     .required("MRP is required"),
 });
 
 const AddShipping = ({ data, setOpen, Refetch }) => {
   const { mutateAsync: FeatureMutation, isLoading: FeatureLoading } = usePost({
-    isMultiPart: true,
-    endpoint: ContentManage.AddFeatures,
+    isMultiPart: false,
+    endpoint: Shipping.AllShipping,
   });
+  const str = data && data?.daysRange;
+  const [min, max] = data && str.split("-").map((part) => part.trim());
+  const maxDays = max.split(" ")[0];
 
   const {
     mutateAsync: UpdateFeatureMutation,
     isLoading: FeatureUpdateLoading,
   } = useUpdate({
-    isMultiPart: true,
-    endpoint: ContentManage.UpdateFeatures + data?._id,
+    isMultiPart: false,
+    endpoint: Shipping.UpdateShipping + data?._id,
   });
 
   const handleSubmit = async (values, { resetForm }) => {
+    const payload = {
+      title: values?.title,
+      daysRange: values?.dateMin + "-" + values?.dateMax + " days",
+      price: values?.price,
+      status: values?.status,
+      // isActive: values?.isActive,
+    };
     try {
       const response = data
-        ? await UpdateFeatureMutation(formData)
-        : await FeatureMutation(formData);
-      if (response?.status === 200) {
+        ? await UpdateFeatureMutation(payload)
+        : await FeatureMutation(payload);
+
+      if (response?.status === 201) {
         resetForm();
-        setImagePreview(null);
         Refetch();
         setOpen(false);
-        toast.success(response?.data);
+        toast.success(response?.data?.message);
+      }
+      if (response?.status === 200) {
+        resetForm();
+        Refetch();
+        setOpen(false);
+        toast.success(response?.data?.message);
       }
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -60,10 +73,12 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
       <Formik
         initialValues={{
           order: data?.order || 1,
-          name: data?.name || "",
-          dayMin: data?.dayMax || null,
-          dayMax: data?.dayMax || null,
-          mrp: data?.mrp || 0,
+          title: data?.title || "",
+          dateMin: data ? min : null,
+          dateMax: data ? maxDays : null,
+          price: data?.mrp || undefined,
+          status: data?.status || "live",
+          isActive: data?.isActive || true,
         }}
         validationSchema={addCategorySchema}
         onSubmit={handleSubmit}
@@ -71,7 +86,7 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
         {({ values, handleChange, isSubmitting, setFieldValue }) => (
           <Form className="py-5">
             <Field name="order">
-              {({ field, form: { touched, errors }, meta }) => (
+              {({ form: { touched, errors }, meta }) => (
                 <TextField
                   title="Order"
                   className={` ${
@@ -96,12 +111,12 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-            <Field name="name">
+            <Field name="title">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
                   title="Name"
                   className={` ${
-                    touched.name && errors.name
+                    touched.title && errors.title
                       ? "border-red-500 border"
                       : "border"
                   }`}
@@ -109,10 +124,10 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                     <>
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${touched.name && errors.name ? " h-1/2" : "h-full"}`}
-                        name="name"
-                        placeholder="Enter Your Name"
-                        value={values.name}
+                        ${touched.title && errors.title ? " h-1/2" : "h-full"}`}
+                        name="title"
+                        placeholder="Enter Shipping Name"
+                        value={values.title}
                         onChange={handleChange}
                         {...field}
                       />
@@ -127,18 +142,16 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
               )}
             </Field>
 
-            <Field name="days">
-              {({ field, form: { touched, errors }, meta }) => (
-                <TextField
-                  title="Days"
-                  className={` ${
-                    touched.dayMin && errors.dayMin
-                      ? "border-red-500 border "
-                      : "border border-b "
-                  }`}
-                  className2={"py-0 "}
-                  value={
-                    <div className="flex items-center divide-x-2">
+            {/* Days Fields */}
+
+            <TextField
+              title="Days"
+              className={`border border-b`}
+              className2={"py-0 "}
+              value={
+                <div className="flex items-center divide-x-2">
+                  <Field name="dateMin">
+                    {({ field, form: { touched, errors }, meta }) => (
                       <div className="flex space-x-2 divide-x-1 -ml-3">
                         <div className="bg-gray-100 px-2 flex justify-center items-center border-r-2">
                           Min
@@ -146,16 +159,27 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                         <input
                           className={`border-0  w-full  py-2 text-black text-[16px] focus:border-0 focus:outline-none 
                         ${
-                          touched.dayMin && errors.dayMin ? " h-1/2" : "h-full"
+                          touched.dateMin && errors.dateMin
+                            ? " h-1/2"
+                            : "h-full"
                         }`}
                           type="number"
-                          name="dayMin"
+                          name="dateMin"
                           placeholder="Day Here"
-                          value={values.dayMin}
+                          value={values.dateMin}
                           onChange={handleChange}
                           {...field}
                         />
+                        {meta.touched && meta.error && (
+                          <p className="text-sm px-4 text-red-600 error">
+                            {meta.error}
+                          </p>
+                        )}
                       </div>
+                    )}
+                  </Field>
+                  <Field name="dateMax">
+                    {({ field, form: { touched, errors }, meta }) => (
                       <div className="flex divide-x-1">
                         <div className="bg-gray-100 px-2 flex justify-center items-center border-r-2">
                           Max
@@ -164,33 +188,35 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
                         <input
                           className={`border-0 pl-1 w-full py-2 text-black text-[16px] focus:border-0 focus:outline-none 
                         ${
-                          touched.dayMax && errors.dayMax ? " h-1/2" : "h-full"
+                          touched.dateMax && errors.dateMax
+                            ? " h-1/2"
+                            : "h-full"
                         }`}
                           type="number"
-                          name="dayMax"
+                          name="dateMax"
                           placeholder="Day Here"
-                          value={values.dayMax}
+                          value={values.dateMax}
                           onChange={handleChange}
                           {...field}
                         />
+                        {meta.touched && meta.error && (
+                          <p className="text-sm px-4 text-red-600 error">
+                            {meta.error}
+                          </p>
+                        )}
                       </div>
-                      {meta.touched && meta.error && (
-                        <p className="text-sm px-4 text-red-600 error">
-                          {meta.error}
-                        </p>
-                      )}
-                    </div>
-                  }
-                />
-              )}
-            </Field>
+                    )}
+                  </Field>
+                </div>
+              }
+            />
 
-            <Field name="mrp">
+            <Field name="price">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
                   title="MRP"
                   className={` ${
-                    touched.mrp && errors.mrp
+                    touched.price && errors.price
                       ? "border-red-500 border rounded-b-lg"
                       : "border border-b rounded-b-lg "
                   }`}
@@ -203,11 +229,11 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
 
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${touched.mrp && errors.mrp ? " h-1/2" : "h-full"}`}
+                        ${touched.price && errors.price ? " h-1/2" : "h-full"}`}
                         type="number"
-                        name="mrp"
+                        name="price"
                         placeholder="0.00"
-                        value={values.mrp}
+                        value={values.price}
                         onChange={handleChange}
                         {...field}
                       />

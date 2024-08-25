@@ -2,6 +2,7 @@ import { Plan, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Counter from "@/components/common/counter";
 import Spinner from "@/components/common/Spinner";
+import useGet from "@/hooks/use-get";
 import usePost from "@/hooks/use-post";
 import useUpdate from "@/hooks/use-update";
 import { Field, Form, Formik } from "formik";
@@ -11,7 +12,8 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const addCategorySchema = Yup.object({
-  name: Yup.string().required("Plan Name is required"),
+  plan: Yup.string().required("Plan Name is required"),
+  name: Yup.string().required("Upsell Name is required"),
   key: Yup.string().required("Unique Key is required"),
   amount: Yup.number().required("Amount is required"),
   mrp: Yup.number().required("MRP is required"),
@@ -28,6 +30,13 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
   const [productPreview, setProductPreview] = useState(
     data?.product ? PROD_IMG_Prefix + data?.product : null
   );
+  // Call Plan API ..
+  const {
+    data: { data: { data: plansData } = {} } = {},
+  } = useGet({
+    key: "plansData",
+    endpoint: `${Plan.AllPlans}?page=1&limit=1000`,
+  });
 
   const { mutateAsync: PlanMutation, isLoading: PlanLoading } = usePost({
     isMultiPart: true,
@@ -98,6 +107,8 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
+          order: data?.order || "", 
+          plan: data?.plan || "", 
           name: data?.name || "",
           key: data?.key || "",
           icon: data?.icon || null,
@@ -134,9 +145,11 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
                         onBlur={field.onBlur}
                       >
                         <option value="" label="Select a plan" />
-                        <option value="basic" label="Basic Plan" />
-                        <option value="premium" label="Premium Plan" />
-                        <option value="enterprise" label="Enterprise Plan" />
+                        {
+                          plansData?.docs?.map((item,index)=>(
+                            <option value={item?._id} label={item?.name} key={index} />
+                          ))
+                        }
                       </select>
                       {meta.touched && meta.error && (
                         <p className="text-sm px-4 text-red-600 error">

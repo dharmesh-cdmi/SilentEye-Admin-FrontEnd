@@ -1,24 +1,25 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   ActionIcon,
+  AddonsIcon,
   AmountIcon,
   CreatedIcon,
   DiscountIcon,
   EyeIcon,
   IdendityIcon,
-  RefundIcons,
 } from "@/assets/icons";
-import { CircleCheck, NotepadText, Trash2 } from "lucide-react";
+import { CircleCheck, Edit, NotepadText, Trash2 } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
-import RefundModal from "@/components/common/modals/refund-modal";
 import { formatDate } from "@/utils/dateConfig";
-import { Addons, Plan } from "@/api/endpoints";
+import { Addons } from "@/api/endpoints";
 import { Switch } from "@/components/ui/switch";
 import Spinner from "@/components/common/Spinner";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
+import CommonModal from "@/components/common/modals/common-modal";
+import AddAddon from "./AddAddon";
 
 export const AddonsColumn = ({ AddonsRefetch }) => {
   return [
@@ -227,10 +228,10 @@ export const AddonsColumn = ({ AddonsRefetch }) => {
               <Button
                 size="icon"
                 variant="ghost"
-                className="rounded-lg hover:bg-blue-500 hover:text-white"
+                className="rounded-lg hover:bg-black hover:text-white"
                 onClick={() => setROpen(true)}
               >
-                <RefundIcons size={24} className="" />
+                <Edit size={19} className="" />
               </Button>
 
               <Button
@@ -245,11 +246,25 @@ export const AddonsColumn = ({ AddonsRefetch }) => {
                 <Trash2 className="w-5 h-5 " />
               </Button>
             </div>
-            <RefundModal open={ropen} setOpen={setROpen} />
+            <CommonModal
+              open={ropen}
+              setOpen={setROpen}
+              title={
+                <div className="flex space-x-3 items-center">
+                  <AddonsIcon /> <h2>Add New Add-Ons</h2>
+                </div>
+              }
+            >
+              <AddAddon
+                setOpen={setROpen}
+                Refetch={AddonsRefetch}
+                data={row?.original}
+              />
+            </CommonModal>
             <DeleteModal
               open={open}
               setOpen={setOpen}
-              endpoint={Plan.AllPlans}
+              endpoint={Addons.AllAddons}
               id={id}
               dataRefetch={AddonsRefetch}
             />

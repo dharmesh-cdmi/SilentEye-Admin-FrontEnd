@@ -6,13 +6,11 @@ import {
   DiscountIcon,
   EyeIcon,
   IdendityIcon,
-  RefundIcons,
 } from "@/assets/icons";
-import { Trash2 } from "lucide-react";
+import { CircleDollarSign, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
-import RefundModal from "@/components/common/modals/refund-modal";
 import { formatDate } from "@/utils/dateConfig";
 import { Plan } from "@/api/endpoints";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +18,8 @@ import { Switch } from "@/components/ui/switch";
 import Spinner from "@/components/common/Spinner";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
+import AddSubscription from "./AddSubscription";
+import CommonModal from "@/components/common/modals/common-modal";
 
 export const SubscriptionColumn = ({ PlanRefetch }) => {
   return [
@@ -147,10 +147,10 @@ export const SubscriptionColumn = ({ PlanRefetch }) => {
 
         const handleStatus = async (checked) => {
           try {
-            setStatus(checked)
+            setStatus(checked);
             const newStatus = checked ? "live" : "test";
-            
-            const res = await statusMutation({ status: newStatus});
+
+            const res = await statusMutation({ status: newStatus });
             if (res?.status === 200) {
               toast.success(
                 res?.data?.message || "Subscription Status Update Success !"
@@ -196,10 +196,10 @@ export const SubscriptionColumn = ({ PlanRefetch }) => {
               <Button
                 size="icon"
                 variant="ghost"
-                className="rounded-lg hover:bg-blue-500 hover:text-white"
+                className="rounded-lg hover:bg-black hover:text-white"
                 onClick={() => setROpen(true)}
               >
-                <RefundIcons size={24} className="" />
+                <Edit size={19} className="" />
               </Button>
 
               <Button
@@ -214,7 +214,17 @@ export const SubscriptionColumn = ({ PlanRefetch }) => {
                 <Trash2 className="w-5 h-5 " />
               </Button>
             </div>
-            <RefundModal open={ropen} setOpen={setROpen} />
+            <CommonModal
+              open={ropen}
+              setOpen={setROpen}
+              title={
+                <div className="flex space-x-3 items-center">
+                  <CircleDollarSign /> <h2>Add New Subscription Plan </h2>
+                </div>
+              }
+            >
+              <AddSubscription setOpen={setROpen} data={row?.original}/>
+            </CommonModal>
             <DeleteModal
               open={open}
               setOpen={setOpen}
