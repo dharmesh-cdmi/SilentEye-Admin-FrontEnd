@@ -8,14 +8,14 @@ const Dashboard = {
   Table: "admin/users-statistics",
   Analytics: "admin/analytics",
   DownloadAnalytics: "admin/download-analytics",
-  DownloadUserStatistics: "/admin/download-users-statistics"
+  DownloadUserStatistics: "/admin/download-users-statistics",
 };
 
 const Order = {
   Order_Details: "admin/orders",
   Delete_Order: "admin/orders-delete",
   Download_Order: "admin/download-orders",
-  RefundInitiate: "admin/order/"
+  RefundInitiate: "admin/order/",
 };
 
 const Admin = {
@@ -70,8 +70,8 @@ const UserAPI = {
 };
 
 const CountryAPI = {
-  CountryList : "users/countries/list", 
-}
+  CountryList: "users/countries/list",
+};
 
 const ContentManage = {
   ActiveContentDetails: "content-manage/update-contact-details",
@@ -153,5 +153,5 @@ export {
   SupportTicketAPI,
   DiscountAPI,
   PaymentGateWayAPI,
-  CountryAPI
+  CountryAPI,
 };

@@ -18,6 +18,7 @@ import useUpdate from "@/hooks/use-update";
 import { TrashIcon } from "@/assets/icons";
 import toast from "react-hot-toast";
 import adminAPI from "@/api/adminAPI";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Users() {
   // this is tabsConfig
@@ -39,6 +40,9 @@ export default function Users() {
   const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [statusSelected, setStatusSelected] = useState([]);
   const [processSelected, setProcessSelected] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
   const filter = useMemo(() => {
     const params = new URLSearchParams();
 
@@ -63,14 +67,20 @@ export default function Users() {
       params.append("process", processSelected);
     }
 
+    params.append("limit", limit);
+    params.append("pageIndex", currentPage);
+
     return params.toString(); // Converts to a query string
   }, [
+    statusSelected,
     isActive,
     searchTerm,
     selectedCountries,
-    dateRange,
-    statusSelected,
+    dateRange.start,
+    dateRange.end,
     processSelected,
+    limit,
+    currentPage,
   ]);
 
   const {
@@ -177,6 +187,7 @@ export default function Users() {
                 processSelected={processSelected}
                 setProcessSelected={setProcessSelected}
               />
+              <LimitSelector limit={limit} setLimit={setLimit} />
               <CommonButton onClick={handleDownload}>
                 <Download className="w-6 h-6" />
               </CommonButton>
@@ -199,6 +210,13 @@ export default function Users() {
                       UserRefetch: UserRefetch,
                     })}
                     actionButtons={actionButtons}
+                    pagination={{
+                      limit,
+                      setLimit,
+                      currentPage,
+                      setCurrentPage,
+                      totalData: usersData?.totalUsers,
+                    }}
                   />
                 </TabsContent>
               ))}

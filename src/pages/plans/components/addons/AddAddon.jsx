@@ -1,5 +1,6 @@
-import { ContentManage } from "@/api/endpoints";
+import { Addons } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
+import Counter from "@/components/common/counter";
 import Spinner from "@/components/common/Spinner";
 import { Switch } from "@/components/ui/switch";
 import usePost from "@/hooks/use-post";
@@ -9,69 +10,94 @@ import { DollarSign } from "lucide-react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
-const addCategorySchema = Yup.object({
-  stopHere: Yup.string().required("Status is required"),
-  name: Yup.string().required("Name is required")
+const addonSchema = Yup.object({
+  order: Yup.number().required("Order is required"),
+  title: Yup.string().required("Name is required"),
+  mrp: Yup.string().required("MRP is required"),
+  amount: Yup.string().required("Amount is required"),
+  description: Yup.string().required("Description is required"),
+  checked: Yup.boolean().default(false),
 });
 
 const AddAddon = ({ data, setOpen, Refetch }) => {
-
-  const { mutateAsync: FeatureMutation, isLoading: FeatureLoading } = usePost({
-    isMultiPart: true,
-    endpoint: ContentManage.AddFeatures,
+  const { mutateAsync: createAddon, isLoading: isCreating } = usePost({
+    isMultiPart: false,
+    endpoint: Addons.AllAddons,
   });
 
-  const {
-    mutateAsync: UpdateFeatureMutation,
-    isLoading: FeatureUpdateLoading,
-  } = useUpdate({
-    isMultiPart: true,
-    endpoint: ContentManage.UpdateFeatures + data?._id,
+  const { mutateAsync: updateAddon, isLoading: isUpdating } = useUpdate({
+    isMultiPart: false,
+    endpoint: Addons.UpdateAddons + data?._id,
   });
-
 
   const handleSubmit = async (values, { resetForm }) => {
-    const formData = new FormData();
-    formData.append("status", values?.status);
-    formData.append("stopHere", values?.stopHere);
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("process", values.process);
-    formData.append("failCount", values.failCount);
+    const payload = {
+      paymentGatewayId: values?.paymentGatewayId, 
+      title: values?.title, 
+      description: values?.description, 
+      amount : values?.amount, 
+      mrp: values?.mrp, 
+      status: values?.status, 
+      checked: values?.checked
 
+    }
     try {
-      const response = data
-        ? await UpdateFeatureMutation(formData)
-        : await FeatureMutation(formData);
-      if (response?.status === 200) {
-        resetForm();
-        setImagePreview(null);
-        Refetch();
-        setOpen(false);
-        toast.success(response?.data);
-      }
+      const res = data ? await updateAddon(payload) : await createAddon(payload);
+      resetForm();
+      Refetch();
+      setOpen(false);
+      toast.success(res.data.message);
     } catch (error) {
       console.error("Error submitting data:", error);
+      toast.success(error?.response?.data?.message || error.message);
     }
   };
+
   return (
     <div>
       <Formik
         initialValues={{
-          status: data?.status || true,
-          name: data?.name || "",
-          icon: data?.icon || null,
+          paymentGatewayId: data?.paymentGatewayId || "66b9c15a878a11234a5a1146",
+          order: data?.order || 1,
+          title: data?.title || "",
           description: data?.description || "",
-          stopHere: data?.stopHere || false,
-          process: data?.process || "",
-          failCount: data?.failCount || "",
+          amount: data?.amount || undefined,
+          mrp: data?.mrp || undefined,
+          status: data?.status || "live",
+          checked: data?.checked || false,
         }}
-        validationSchema={addCategorySchema}
+        validationSchema={addonSchema}
         onSubmit={handleSubmit}
       >
         {({ values, handleChange, isSubmitting, setFieldValue }) => (
           <Form className="py-5">
-            <Field name="name">
+            <Field name="order">
+              {({  form: { touched, errors }, meta }) => (
+                <TextField
+                  title="Order"
+                  className={` ${
+                    touched.order && errors.order
+                      ? "border-red-500 border rounded-t-lg"
+                      : "border border-b rounded-t-lg"
+                  }`}
+                  value={
+                    <>
+                      <Counter
+                        count={values.order}
+                        onChange={(order) => setFieldValue("order", order)}
+                      />
+
+                      {meta.touched && meta.error && (
+                        <p className="text-sm px-4 text-red-600 error">
+                          {meta.error}
+                        </p>
+                      )}
+                    </>
+                  }
+                />
+              )}
+            </Field>
+            <Field name="title">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
                   title="Name"
@@ -84,10 +110,10 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
                     <>
                       <input
                         className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${touched.name && errors.name ? " h-1/2" : "h-full"}`}
-                        name="name"
-                        placeholder="Enter Your Name"
-                        value={values.name}
+                        ${touched.title && errors.title ? " h-1/2" : "h-full"}`}
+                        name="title"
+                        placeholder="Enter Title Here"
+                        value={values.title}
                         onChange={handleChange}
                         {...field}
                       />
@@ -210,22 +236,22 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-            <Field name="stopHere">
+            <Field name="checked">
               {({ form: { touched, errors }, meta }) => (
                 <TextField
                   title="Stop Here"
                   className={`rounded-b-lg ${
-                    touched.stopHere && errors.stopHere
+                    touched.checked && errors.checked
                       ? "border-red-500 border "
                       : "border border-b"
                   }`}
                   value={
                     <>
                       <Switch
-                        defaultChecked={values?.stopHere}
+                        defaultChecked={values?.checked}
                         className="data-[state=checked]:bg-[#34C759] "
                         onCheckedChange={(checked) =>
-                          setFieldValue("stopHere", checked)
+                          setFieldValue("checked", checked)
                         }
                       />
                       {meta.touched && meta.error && (
@@ -238,7 +264,6 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
                 />
               )}
             </Field>
-           
 
             <div className="border-t w-full pt-4 flex justify-between items-center">
               <button
@@ -250,11 +275,9 @@ const AddAddon = ({ data, setOpen, Refetch }) => {
               <button
                 className="w-[80%] py-3 rounded-lg bg-gray-900 hover:bg-blackborder border text-primary text-[20px] flex justify-center items-center space-x-4"
                 type="submit"
-                disabled={
-                  isSubmitting || FeatureLoading || FeatureUpdateLoading
-                }
+                disabled={isSubmitting || isCreating || isUpdating}
               >
-                {isSubmitting || FeatureLoading || FeatureUpdateLoading ? (
+                {isSubmitting || isCreating || isUpdating ? (
                   <Spinner className="text-white" />
                 ) : (
                   ""

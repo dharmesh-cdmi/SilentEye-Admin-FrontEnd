@@ -16,6 +16,8 @@ import Header from "@/components/common/header";
 const Home = () => {
   const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [showAll, setShowAll] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const handleDateRangeUpdate = (range) => {
     setDateRange(range);
@@ -68,7 +70,11 @@ const Home = () => {
     <>
       {showAll ? (
         <>
-          <Header title="User Statistics by Country" className=" " onClickhandle={()=> setShowAll(false)}>
+          <Header
+            title="User Statistics by Country"
+            className=" "
+            onClickhandle={() => setShowAll(false)}
+          >
             <DateRangePicker onUpdate={handleDateRangeUpdate} />
             <CommonButton
               variant="ghost"
@@ -84,6 +90,13 @@ const Home = () => {
             columns={CountryColumn({ type: "country" })}
             className={"rounded-t-lg"}
             classNameHeader={"bg-gray-100 py-2 rounded-t-lg"}
+            pagination={{
+              limit,
+              setLimit,
+              currentPage,
+              setCurrentPage,
+              totalData: tableData?.userStatistics?.data?.totalData,
+            }}
           />
         </>
       ) : (

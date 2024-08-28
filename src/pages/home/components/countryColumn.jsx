@@ -84,7 +84,9 @@ export const CountryColumn = ({ type }) => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-center items-center">
-            {row?.original?.sales?.totalUsersBought + row?.original?.totalDemoUser + row?.original?.totalCheckout  || "N/A"}
+            {row?.original?.sales?.totalUsersBought +
+              row?.original?.totalDemoUser +
+              row?.original?.totalCheckout || "N/A"}
           </div>
         );
       },
@@ -122,7 +124,11 @@ export const CountryColumn = ({ type }) => {
         </div>
       ),
       cell: ({ row }) => {
-        return <div className="flex justify-center items-center">{row?.original?.totalDemoUser || "N/A"}</div>;
+        return (
+          <div className="flex justify-center items-center">
+            {row?.original?.totalDemoUser || "N/A"}
+          </div>
+        );
       },
     },
     {
@@ -161,7 +167,7 @@ export const CountryColumn = ({ type }) => {
     {
       accessorKey: "paymentinitiated",
       header: () => (
-        <div className="flex space-x-2 px-2 justify-center">
+        <div className="flex space-x-2 px-2 justify-center text-nowrap">
           <PaymentGateWayIcon size={19} />{" "}
           <p className="text-[17px] text-primary">Payment Initiated</p>
         </div>
@@ -186,7 +192,10 @@ export const CountryColumn = ({ type }) => {
         return (
           <div className="flex flex-col justify-center items-center">
             <p className="text-[14px] font-normal text-red-500">
-              {"$ " + (type === "country" ? row?.original?.refund?.totalRefunds : row?.original?.refund?.totalUsersRefunds ) || 0}
+              {"$ " +
+                (type === "country"
+                  ? row?.original?.refund?.totalRefunds
+                  : row?.original?.refund?.totalUsersRefunds) || 0}
             </p>
 
             <div className="flex justify-center items-center space-x-1 ">

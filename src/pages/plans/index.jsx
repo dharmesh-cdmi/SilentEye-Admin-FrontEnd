@@ -10,7 +10,6 @@ import Loader from "@/components/common/loader";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import CommonSearch from "@/components/ui/search";
 import Header from "@/components/common/header";
-import CommonButton from "@/components/ui/common-button";
 import useGet from "@/hooks/use-get";
 import CustomTabs from "@/components/common/custom-tabs";
 import { DataTable } from "@/components/common/Table/data-table";
@@ -28,6 +27,7 @@ import AddAddon from "./components/addons/AddAddon";
 import AddShipping from "./components/shippings/AddShipping";
 import AddProduct from "./components/products/AddProduct";
 import { useNavigate } from "react-router-dom";
+import LimitSelector from "@/components/common/limit-selector";
 
 export default function Plans() {
   const navigate = useNavigate();
@@ -41,6 +41,9 @@ export default function Plans() {
   ];
   const [isActive, setIsActive] = useState("subscription");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
   const filter = {
     // status: isActive,
     search: searchTerm || null,
@@ -108,14 +111,12 @@ export default function Plans() {
     <div>
       <Header title="Plans" className=" ">
         <CommonSearch onSearch={setSearchTerm} />
-        <CommonButton>
-          <SettingIcon className="w-6 h-6" />
-        </CommonButton>
+        <LimitSelector limit={limit} setLimit={setLimit} />
       </Header>
 
       <div className="w-full">
         <Tabs orientation="vertical" defaultValue="subscription">
-          <div className="flex justify-between items-center w-full border rounded-t-lg  overflow-y-hidden ">
+          <div className="flex justify-between items-center w-full border border-b-0 rounded-t-lg  overflow-y-hidden ">
             <div className="w-[57%] lg:w-[80%]">
               <CustomTabs
                 tabs={tabsConfig}
@@ -167,6 +168,13 @@ export default function Plans() {
                   tabKey: isActive,
                   PlanRefetch: PlanRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: plansData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -181,6 +189,13 @@ export default function Plans() {
                   tabKey: isActive,
                   UpsellRefetch: UpsellRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: upSelldata?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -194,6 +209,13 @@ export default function Plans() {
                 columns={AddonsColumn({
                   AddonsRefetch: AddonsRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: addonsData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -207,6 +229,13 @@ export default function Plans() {
                 columns={ProductsColumn({
                   ProductsRefetch: ProductRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: productsData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -220,6 +249,13 @@ export default function Plans() {
                 columns={ShippingColumn({
                   ShippingRefetch: ShippingRefetch,
                 })}
+                pagination={{
+                  limit,
+                  setLimit,
+                  currentPage,
+                  setCurrentPage,
+                  totalData: shippingData?.totalDocs,
+                }}
               />
             )}
           </TabsContent>
@@ -229,25 +265,25 @@ export default function Plans() {
       <CommonModal
         open={subModalOpen}
         setOpen={setSubModalOpen}
-        title="Add New Subscription Plan"
+        title={<div className="flex space-x-3 items-center"><CircleDollarSign /> <h2>Add New Subscription Plan </h2></div>}
       >
-        <AddSubscription />
+        <AddSubscription setOpen={setSubModalOpen}/>
       </CommonModal>
 
       <CommonModal
         open={upsellModalOpen}
         setOpen={setUpsellModalOpen}
-        title="Add New UpSell Plan"
+        title={<div className="flex space-x-3 items-center"><OrdersIcon /> <h2>Add New UpSell Plan </h2></div>}
       >
-        <AddUpsell />
+        <AddUpsell  setOpen={setUpsellModalOpen}/>
       </CommonModal>
 
       <CommonModal
         open={addonModalOpen}
         setOpen={setAddonModalOpen}
-        title="Add New Add-Ons"
+        title={<div className="flex space-x-3 items-center"><AddonsIcon /> <h2>Add New Add-Ons</h2></div>}
       >
-        <AddAddon />
+        <AddAddon   setOpen={setAddonModalOpen} Refetch={AddonsRefetch}/>
       </CommonModal>
 
       <CommonModal
@@ -255,15 +291,15 @@ export default function Plans() {
         setOpen={setProductModalOpen}
         title="Add New Product"
       >
-        <AddProduct />
+        <AddProduct setOpen={setProductModalOpen} />
       </CommonModal>
 
       <CommonModal
         open={shippingModalOpen}
         setOpen={setShippingModalOpen}
-        title="Add New Shipping"
+        title={<div className="flex space-x-3 items-center"><Plane /> <h2>Add New Shipping</h2></div>}
       >
-        <AddShipping />
+        <AddShipping  setOpen={setShippingModalOpen} Refetch={ShippingRefetch} />
       </CommonModal>
     </div>
   );
