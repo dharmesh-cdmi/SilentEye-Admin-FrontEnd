@@ -3,20 +3,21 @@ import {
   ActionIcon,
   DiscountIcon,
   EyeIcon,
-  IdendityIcon,
-  RefundIcons,
+  IdendityIcon
 } from "@/assets/icons";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
-import RefundModal from "@/components/common/modals/refund-modal";
-import { Plan } from "@/api/endpoints";
+import {  PROD_IMG_Prefix, Product } from "@/api/endpoints";
 import { Switch } from "@/components/ui/switch";
 import Spinner from "@/components/common/Spinner";
 import useUpdate from "@/hooks/use-update";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const ProductsColumn = ({ ProductsRefetch }) => {
+  const navigate = useNavigate();
   return [
     {
       accessorKey: "_id",
@@ -30,13 +31,31 @@ export const ProductsColumn = ({ ProductsRefetch }) => {
     {
       accessorKey: "name",
       header: () => (
-        <div className="flex lg:w-[700px] w-[100px] items-center gap-2 text-base text-black">
+        <div className="flex justify-start lg:w-[700px] w-[200px] items-center gap-2 text-base text-black">
           <IdendityIcon /> Title
         </div>
       ),
-      cell: ({ row }) => (
-        <div className="lg:w-[700px] w-[100px] font-semibold text-[15px]">{row?.original?.title}</div>
-      ),
+      cell: ({ row }) => {
+        const mainImage = row?.original?.mainImage ? PROD_IMG_Prefix + row?.original?.mainImage : "/Logo.svg";
+        const subImage = row?.original?.image2 ? PROD_IMG_Prefix + row?.original?.image2 : "/Logo.svg";
+        return (
+          <div className="lg:w-[700px] w-[200px] font-semibold text-[15px] flex justify-start items-center space-x-2">
+            <div className="flex ">
+              <img
+                src={mainImage}
+                alt="product"
+                className="w-5 h-5 rounded-full "
+              />
+              <img
+                src={subImage}
+                alt="product"
+                className="w-5 h-5 rounded-full "
+              />
+            </div>
+            <p className="text-[15px] font-semibold ">{row?.original?.title}</p>
+          </div>
+        );
+      },
     },
 
     {
@@ -66,31 +85,31 @@ export const ProductsColumn = ({ ProductsRefetch }) => {
         </div>
       ),
       cell: ({ row }) => {
-        const [status, setStatus] = useState(row?.original?.status === "live");
+        const [status,setStatus] = useState(row?.original?.status === "live");
 
         const { mutateAsync: statusMutation, isLoading: statusLoading } =
           useUpdate({
             isMultiPart: false,
-            endpoint: Plan.SinglePlan + row?.original?._id,
+            endpoint: Product.UpdateProduct + row?.original?._id,
           });
 
         const handleStatus = async (checked) => {
           try {
-            setStatus(checked);
+            // 
             const newStatus = checked ? "live" : "test";
             const payload = {
-              ...row?.original,
               status: newStatus,
             };
             const res = await statusMutation(payload);
             if (res?.status === 200) {
-              UpsellRefetch();
+              await ProductsRefetch();
+              setStatus(checked);
               toast.success(
-                res?.data?.message || "Subscription Status Update Success !"
+                res?.data?.message || "Product Status Update Success !"
               );
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
         return (
@@ -119,7 +138,7 @@ export const ProductsColumn = ({ ProductsRefetch }) => {
       ),
       cell: ({ row }) => {
         const [open, setOpen] = useState(false);
-        const [ropen, setROpen] = useState(false);
+        
         const [id, setId] = useState("");
 
         return (
@@ -129,9 +148,9 @@ export const ProductsColumn = ({ ProductsRefetch }) => {
                 size="icon"
                 variant="ghost"
                 className="rounded-lg hover:bg-blue-500 hover:text-white"
-                onClick={() => setROpen(true)}
+                onClick={() => navigate(`/plans/update-products/${row?.original?._id}`)}
               >
-                <RefundIcons size={24} className="" />
+                <Edit size={19} className="" />
               </Button>
 
               <Button
@@ -146,11 +165,10 @@ export const ProductsColumn = ({ ProductsRefetch }) => {
                 <Trash2 className="w-5 h-5 " />
               </Button>
             </div>
-            <RefundModal open={ropen} setOpen={setROpen} />
             <DeleteModal
               open={open}
               setOpen={setOpen}
-              endpoint={Plan.AllPlans}
+              endpoint={Product.AllProduct}
               id={id}
               dataRefetch={ProductsRefetch}
             />

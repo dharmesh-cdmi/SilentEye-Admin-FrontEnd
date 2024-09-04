@@ -91,6 +91,8 @@ export default function Plans() {
     endpoint: `${Product.AllProduct}?${new URLSearchParams(filterParams)}`,
   });
 
+  console.log("products data : ", productsData);
+
   // Call Shipping API ..
   const {
     data: { data: { data: shippingData } = {} } = {},
@@ -225,7 +227,7 @@ export default function Plans() {
               <Loader />
             ) : (
               <DataTable
-                data={productsData?.docs || []}
+                data={productsData?.data?.docs || []}
                 columns={ProductsColumn({
                   ProductsRefetch: ProductRefetch,
                 })}

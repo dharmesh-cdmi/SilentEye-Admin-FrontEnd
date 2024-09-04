@@ -46,8 +46,6 @@ const productsData = [
 
 const AddSubscription = ({ data, setOpen, Refetch }) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
-  console.log("data=>", data)
-
   const [imagePreview, setImagePreview] = useState(
     data?.icon ? PROD_IMG_Prefix + data?.icon : null
   );
@@ -114,7 +112,7 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
-          paymentGatewayId: data?.paymentGatewayId || "668bd0744ec648ceb6efab25",
+          paymentGatewayId: data?.paymentGatewayId || "66b9c15a878a11234a5a1146",
           order: data?.order || 0,
           name: data?.name || "",
           key: data?.key || "",
