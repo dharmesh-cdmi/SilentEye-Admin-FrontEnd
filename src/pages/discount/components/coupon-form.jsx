@@ -152,12 +152,15 @@ const CouponForm = ({
                           </TooltipContent>
                         </Tooltip>
                       ) : (
-                        <CheckedIcon
-                          className={cn(
-                            "mx-4 text-green-500",
-                            formik.errors.coupon && "text-gray-400"
-                          )}
-                        />
+                        <div className="absolute top-3 right-0">
+                          <CheckedIcon
+                            size={20}
+                            className={cn(
+                              "mx-3 text-green-500",
+                              formik.errors.coupon && "text-gray-400"
+                            )}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
