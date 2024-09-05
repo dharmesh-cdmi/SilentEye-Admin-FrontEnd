@@ -115,7 +115,7 @@ const SettingTracking = () => {
       <DeleteModal
         open={openSubDelete}
         setOpen={setOpenSubDelete}
-        endpoint={TrackingSetting.AddTopic + `${id}`}
+        endpoint={TrackingSetting.AddTopic + `/${id}`}
         id={"subtopics"}
         dataRefetch={TrackingRefetch}
       />
