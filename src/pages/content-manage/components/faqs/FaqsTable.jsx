@@ -6,7 +6,6 @@ import  { useState } from "react";
 
 const FaqsTable = ({ data, id,Refetch,count,setData}) => {
   const [dopen, setDOpen] = useState(false);
-  console.log("Data => ", data)
   return (
     <div className="flex justify-between h-24 bg-gray-50 border">
       <div className="h-full w-[80px] items-center flex flex-col justify-center px-2">

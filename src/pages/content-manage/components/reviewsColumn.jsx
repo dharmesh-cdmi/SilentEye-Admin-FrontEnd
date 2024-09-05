@@ -128,7 +128,7 @@ export const ReviewsColumn = ({ ReviewRefetch }) => {
               );
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
         return (

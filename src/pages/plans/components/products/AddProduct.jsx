@@ -1,41 +1,111 @@
 import Counter from "@/components/common/counter";
 import Header from "@/components/common/header";
-import CommonButton from "@/components/ui/common-button";
 import { Field, Form, Formik } from "formik";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Field as TextField } from "@/components/common/common-form";
 import * as Yup from "yup";
 import JoditEditor from "jodit-react";
 import { ImagePlus } from "lucide-react";
+import { PROD_IMG_Prefix, Product } from "@/api/endpoints";
+import Spinner from "@/components/common/Spinner";
+import usePost from "@/hooks/use-post";
+import useUpdate from "@/hooks/use-update";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import useGet from "@/hooks/use-get";
+import Loader from "@/components/common/loader";
 
-const addCategorySchema = Yup.object({
+const ProductSchema = Yup.object({
   order: Yup.number().min(1).required("Product order is required"),
-  name: Yup.string().required("Product name is required"),
+  title: Yup.string().required("Name is required"),
+  mainImage: Yup.mixed().required("Main Image is required"),
+  image2: Yup.mixed().required("Image is required"),
   mrp: Yup.mixed().required("Product MRP is required"),
-  description: Yup.string().required("Product description is required"), // Add validation for text
+  // description: Yup.string().required("Product description is required"), // Add validation for text
 });
 
-export default function AddProduct({ data }) {
+export default function AddProduct() {
+  const { id } = useParams();
   const editor = useRef(null);
-  const [imagePreview, setImagePreview] = useState(
-    data?.icon ? PROD_IMG_Prefix + data?.icon : null
+  const navigate = useNavigate();
+
+  const {
+    data: { data: { data: data } = {} } = {},
+    isLoading: productGetLoading,
+  } = useGet({
+    key: "productData",
+    endpoint: `${Product.UpdateProduct+id}`,
+  });
+
+  
+  const [mainImagePreview, setMainImage] = useState(
+    data?.mainImage ? PROD_IMG_Prefix + data?.mainImage : null
   );
   const [productPreview, setProductPreview] = useState(
-    data?.product ? PROD_IMG_Prefix + data?.product : null
+    data?.image2 ? PROD_IMG_Prefix + data?.image2 : null
   );
 
+
+
+  const { mutateAsync: ProductMutation, isLoading: ProductLoading } = usePost({
+    isMultiPart: true,
+    endpoint: Product.AllProduct,
+  });
+
+  const {
+    mutateAsync: UpdateProductMutation,
+    isLoading: UpdateProductLoading,
+  } = useUpdate({
+    isMultiPart: true,
+    endpoint: Product.UpdateProduct + data?._id,
+  });
+
   const handleSubmit = async (values, { resetForm }) => {
-    console.log(values);
-    resetForm();
+    try {
+      const formData = new FormData();
+      formData.append("paymentGatewayId", values?.paymentGatewayId);
+      formData.append("order", values?.order);
+      formData.append("title", values?.title);
+      if (!data?.mainImage) {
+        formData.append("mainImage", values?.mainImage);
+      }
+      if (!data?.image2) {
+        formData.append("image2", values?.image2);
+      }
+      formData.append("mrp", Number(values?.mrp));
+      formData.append("status", values?.status);
+      formData.append("description", values?.description);
+
+      const response = data ? await UpdateProductMutation(formData) : await ProductMutation(formData);
+      
+      if (response?.status === 201 || response?.status === 200) {
+        resetForm();
+        setProductPreview(null);
+        setMainImage(null);
+        toast.success(data ? "Update Product Successfully ": "Add Product Successfully ");
+        navigate("/plans")
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
   };
-  const handleProductImageChange = (event, setFieldValue) => {
+
+  const handleProductImageChange = (event, setFieldValue, type) => {
     const file = event.currentTarget.files[0];
-    setFieldValue("product", file);
+    if (type === "mainimage") {
+      setFieldValue("mainImage", file);
+    } else {
+      setFieldValue("image2", file);
+    }
 
     // Create an image preview
     const reader = new FileReader();
     reader.onloadend = () => {
-      setProductPreview(reader.result);
+      if (type === "mainimage") {
+        setMainImage(reader.result);
+      } else {
+        setProductPreview(reader.result);
+      }
     };
     if (file) {
       reader.readAsDataURL(file);
@@ -126,27 +196,48 @@ export default function AddProduct({ data }) {
     []
   );
 
+  if(productGetLoading){
+    return <Loader />
+  }
+
   return (
     <section className="flex flex-col gap-8">
       <div>
         <Formik
-          initialValues={{ order: 0, name: "", mrp: 0, description: "" }}
-          validationSchema={addCategorySchema}
+          initialValues={{
+            paymentGatewayId:
+              data?.paymentGatewayId || "66b9c15a878a11234a5a1146",
+            order: data?.order || 0,
+            title: data?.title || "",
+            mrp: data?.mrp || 0,
+            description: data?.description || "",
+            mainImage: data?.mainImage || null,
+            image2: data?.image2 || null,
+            status: data?.status || "live",
+          }}
+          validationSchema={ProductSchema}
           onSubmit={handleSubmit}
         >
           {({ values, isSubmitting, setFieldValue }) => (
             <Form className="py-5">
               <Header title="Add New Product">
-                <CommonButton
-                  className="bg-primary hover:bg-primary hover:text-white text-white"
-                  disabled={isSubmitting}
+                <button
+                  className="px-3 py-2 rounded-lg bg-gray-900 hover:bg-blackborder border text-primary text-[20px] flex justify-center items-center space-x-4"
                   type="submit"
+                  // disabled={isSubmitting}
                 >
-                  Add & Save Product
-                </CommonButton>
+                  {isSubmitting || UpdateProductLoading || ProductLoading ? (
+                    <Spinner />
+                  ) : (
+                    ""
+                  )}
+                  <h3 className="text-white text-[17px] ">
+                    {data ? "Update & Save Product" : "Add & Save Product"}{" "}
+                  </h3>
+                </button>
               </Header>
               <Field name="order">
-                {({ field, meta }) => (
+                {({ meta }) => (
                   <TextField
                     title="Order"
                     className={`${
@@ -173,7 +264,7 @@ export default function AddProduct({ data }) {
                 )}
               </Field>
 
-              <Field name="name">
+              <Field name="title">
                 {({ field, meta }) => (
                   <TextField
                     title="Name"
@@ -186,7 +277,7 @@ export default function AddProduct({ data }) {
                       <>
                         <input
                           className="border-0 w-full px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none"
-                          placeholder="Enter Product Name"
+                          placeholder="Enter Title Here"
                           {...field}
                         />
                         {meta.touched && meta.error && (
@@ -231,25 +322,29 @@ export default function AddProduct({ data }) {
                   <p className="pl-5 text-[18px]">Images</p>
                 </div>
                 <div className="flex px-5 space-x-4">
-                  <Field name="product">
-                    {({ form: { touched, errors }, meta }) => (
+                  <Field name="mainImage">
+                    {({ meta }) => (
                       <div className="bg-gray-200 my-3 rounded-lg border border-r-2 h-[250px] w-[250px] items-center flex flex-col justify-center">
                         <input
                           type="file"
-                          id="product"
+                          id="mainImage"
                           className="hidden"
                           onChange={(event) =>
-                            handleProductImageChange(event, setFieldValue)
+                            handleProductImageChange(
+                              event,
+                              setFieldValue,
+                              "mainimage"
+                            )
                           }
                         />
                         <label
-                          htmlFor="product"
+                          htmlFor="mainImage"
                           className="cursor-pointer flex flex-col justify-center items-center space-y-1"
                         >
                           <span className="h-6">+ Add</span>
-                          {productPreview ? (
+                          {mainImagePreview ? (
                             <img
-                              src={productPreview}
+                              src={mainImagePreview}
                               alt="Preview"
                               width={150}
                               height={180}
@@ -271,20 +366,20 @@ export default function AddProduct({ data }) {
                       </div>
                     )}
                   </Field>
-                  <div className="border-[1px] "/>
-                  <Field name="product">
-                    {({ form: { touched, errors }, meta }) => (
+                  <div className="border-[1px] " />
+                  <Field name="image2">
+                    {({ meta }) => (
                       <div className="bg-gray-200 rounded-lg my-3 h-[150px] w-[150px] items-center  flex flex-col justify-center ">
                         <input
                           type="file"
-                          id="product"
+                          id="image2"
                           className="hidden"
                           onChange={(event) =>
                             handleProductImageChange(event, setFieldValue)
                           }
                         />
                         <label
-                          htmlFor="product"
+                          htmlFor="image2"
                           className="cursor-pointer flex flex-col justify-center items-center space-y-1"
                         >
                           <span className="">+ Add</span>
@@ -313,87 +408,6 @@ export default function AddProduct({ data }) {
                     )}
                   </Field>
                 </div>
-
-                {/* <div className="min-w-full flex px-5">
-                  <Field name="product">
-                    {({ form: { touched, errors }, meta }) => (
-                      <div className="bg-gray-300 h-full w-[300px]">
-                        <input
-                          type="file"
-                          id="product"
-                          className="hidden"
-                          onChange={(event) =>
-                            handleProductImageChange(event, setFieldValue)
-                          }
-                        />
-                        <label
-                          htmlFor="product"
-                          className="flex flex-col py-5 h-full justify-center w-full items-center cursor-pointer "
-                        >
-                          <span className="text-black pl-2 w-full h-full py-2 ">
-                            + Select Products
-                          </span>
-                          {productPreview ? (
-                            <img
-                              src={productPreview}
-                              alt="Preview"
-                              width={200}
-                              height={200}
-                              className=""
-                            />
-                          ) : (
-                            <ImagePlus className="w-16 h-16" />
-                          )}
-                        </label>
-
-                        {meta.touched && meta.error && (
-                          <p className="text-sm px-4 text-red-600 error">
-                            {meta.error}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </Field>
-                  <Field name="product">
-                    {({ form: { touched, errors }, meta }) => (
-                      <div>
-                        <input
-                          type="file"
-                          id="product"
-                          className="hidden"
-                          onChange={(event) =>
-                            handleProductImageChange(event, setFieldValue)
-                          }
-                        />
-                        <label
-                          htmlFor="product"
-                          className="flex items-center cursor-pointer space-x-2 divide-x-2 justify-between"
-                        >
-                          {productPreview ? (
-                            <img
-                              src={productPreview}
-                              alt="Preview"
-                              width={30}
-                              height={30}
-                              className=""
-                            />
-                          ) : (
-                            <ImagePlus className="w-6 h-6" />
-                          )}
-                          <span className="text-black pl-2 bg-gray-100 w-full h-full py-2 ">
-                            + Select Products
-                          </span>
-                        </label>
-
-                        {meta.touched && meta.error && (
-                          <p className="text-sm px-4 text-red-600 error">
-                            {meta.error}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </Field>
-                </div> */}
               </div>
 
               <Field name="description">

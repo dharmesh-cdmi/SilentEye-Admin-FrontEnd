@@ -25,7 +25,6 @@ const AddFAQForm = ({ id, Refetch, data, setData }) => {
       answer: values?.answer,
       question: values?.question,
     };
-    console.log(payload);
     try {
       if (data) {
         const response = await FaqUpdateMutation(payload);

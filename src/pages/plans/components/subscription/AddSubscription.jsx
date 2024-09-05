@@ -1,8 +1,9 @@
-import { Plan, PROD_IMG_Prefix } from "@/api/endpoints";
+import { Plan, PROD_IMG_Prefix, Product } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Counter from "@/components/common/counter";
 import ProductsSelect from "@/components/common/products-select";
 import Spinner from "@/components/common/Spinner";
+import useGet from "@/hooks/use-get";
 import usePost from "@/hooks/use-post";
 import useUpdate from "@/hooks/use-update";
 import { Field, Form, Formik } from "formik";
@@ -20,34 +21,18 @@ const addCategorySchema = Yup.object({
   duration: Yup.string().required("Duration is required"),
   icon: Yup.mixed().required("Image is required"),
   tag: Yup.string().required("Tag is required"),
+  // products: Yup.string().required("Products is Required"),
 });
 
-const productsData = [
-  {
-    _id: '001',
-    name: 'Product One',
-    image1: 'https://example.com/product1_image1.jpg',
-    image2: 'https://example.com/product1_image2.jpg',
-  },
-  {
-    _id: '002',
-    name: 'Product Two',
-    image1: 'https://example.com/product2_image1.jpg',
-    image2: 'https://example.com/product2_image2.jpg',
-  },
-  {
-    _id: '003',
-    name: 'Product Three',
-    image1: 'https://example.com/product3_image1.jpg',
-    image2: 'https://example.com/product3_image2.jpg',
-  },
-  // Add more products as needed
-];
-
 const AddSubscription = ({ data, setOpen, Refetch }) => {
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  console.log("data=>", data)
+  // Call AddOns API ..
+  const { data: { data: products = {} } = {}, isLoading: productLoading } =
+    useGet({
+      key: "productsData",
+      endpoint: `${Product.AllProduct}?page=1&limit=1000`,
+    });
 
+    const [selectedProducts, setSelectedProducts] = useState(data?.products.map(product => product._id) || []);
   const [imagePreview, setImagePreview] = useState(
     data?.icon ? PROD_IMG_Prefix + data?.icon : null
   );
@@ -77,34 +62,29 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     }
   };
 
-
   const handleSubmit = async (values, { resetForm }) => {
-    const formData = new FormData();
-    formData.append("paymentGatewayId", values?.paymentGatewayId);
-    formData.append("order", values?.order);
-    formData.append("name", values?.name);
-    if (!data?.icon) {
-      formData.append("icon", values?.icon);
-    }
-    formData.append("key", values?.key);
-    formData.append("amount", values?.amount);
-    formData.append("mrp", values?.mrp);
-    formData.append("duration", values?.duration);
-    formData.append("tag", values?.tag);
-    formData.append("products", selectedProducts);
-
-    console.log("formData : ", formData)
-
     try {
-      const response = data
-        ? await UpdatePlanMutation(formData)
-        : await PlanMutation(formData);
-      if (response?.status === 201) {
+      const formData = new FormData();
+      formData.append("paymentGatewayId", values?.paymentGatewayId);
+      formData.append("order", values?.order);
+      formData.append("name", values?.name);
+      formData.append("icon", values?.icon);
+      formData.append("key", values?.key);
+      formData.append("amount", values?.amount);
+      formData.append("mrp", values?.mrp);
+      formData.append("duration", Number(values?.duration));
+      formData.append("tag", values?.tag);
+      formData?.append("status", values?.status);
+      formData.append("products", JSON.stringify(selectedProducts));
+      formData.append("discountPercent", 12);
+      
+      const response = data ? await UpdatePlanMutation(formData) : await PlanMutation(formData);
+      if (response?.status === 201 || response?.status === 200 ) {
         resetForm();
         setImagePreview(null);
         Refetch();
         setOpen(false);
-        toast.success(response?.data);
+        toast.success(data ? "Update Subscription Plan Successfully " : "Add New Subscription Plan Successfully");
       }
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -114,15 +94,16 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
-          paymentGatewayId: data?.paymentGatewayId || "668bd0744ec648ceb6efab25",
+          paymentGatewayId: data?.paymentGatewayId || "66b9c15a878a11234a5a1146",
           order: data?.order || 0,
           name: data?.name || "",
           key: data?.key || "",
           icon: data?.icon || null,
           amount: data?.amount || null,
           mrp: data?.mrp || null,
-          duration: data?.duration || "",
+          duration: data?.duration || null,
           tag: data?.tag || "",
+          status: data?.status || "live",
         }}
         validationSchema={addCategorySchema}
         onSubmit={handleSubmit}
@@ -130,7 +111,7 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
         {({ values, handleChange, isSubmitting, setFieldValue }) => (
           <Form className="py-5">
             <Field name="title">
-              {({  form: { touched, errors }, meta }) => (
+              {({ form: { touched, errors }, meta }) => (
                 <TextField
                   title="Order"
                   className={` ${
@@ -392,17 +373,18 @@ const AddSubscription = ({ data, setOpen, Refetch }) => {
                   className2={"py-0 pr-0"}
                   value={
                     <div>
-                      <label
-                        htmlFor="product"
-                        className=""
-                      >
-                        <ProductsSelect
-                          selectedProducts={selectedProducts}
-                          setSelectedProducts={setSelectedProducts}
-                          productsData={productsData} 
-                          className="border-0 "
-                        />
-                      </label>
+                      {productLoading ? (
+                        <Spinner />
+                      ) : (
+                        <label htmlFor="product" className="">
+                          <ProductsSelect
+                            selectedProducts={selectedProducts}
+                            setSelectedProducts={setSelectedProducts}
+                            productsData={products?.data?.docs || []}
+                            className="border-0 "
+                          />
+                        </label>
+                      )}
 
                       {meta.touched && meta.error && (
                         <p className="text-sm px-4 text-red-600 error">

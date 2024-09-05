@@ -42,7 +42,7 @@ export default function SettingDialog() {
       settingRefecth();
       toast.success(res.data.message);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(
         error.response.data.message ||
           "Failed to update refund duration settings"

@@ -101,7 +101,7 @@ export const ShippingColumn = ({ ShippingRefetch }) => {
               );
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
         return (

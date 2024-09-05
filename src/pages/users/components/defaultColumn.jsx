@@ -300,7 +300,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
               toast.success(res?.data?.message || "User is Blocked Success !");
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
 
