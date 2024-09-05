@@ -46,7 +46,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error(err?.response?.data?.message);
     } finally {
       setSubmitting(false);
@@ -78,7 +78,7 @@ const Login = () => {
                     type="email"
                     name="emailOrUsername"
                     placeholder="Enter Your Mail ID"
-                    className={`appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-green-500 focus:border-green-500 focus:ring-1 sm:text-sm ${
+                    className={`text-[16px] appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-green-500 focus:border-green-500 focus:ring-1 sm:text-sm ${
                       touched.emailOrUsername && errors.emailOrUsername
                         ? "border-red-500"
                         : ""
@@ -104,7 +104,7 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Enter Your Password"
-                    className={`appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-yellow-500 focus:border-yellow-500 focus:ring-1  ${
+                    className={`appearance-none text-[16px] font-normal block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-yellow-500 focus:border-yellow-500 focus:ring-1  ${
                       touched.password && errors.password
                         ? "border-red-500"
                         : ""

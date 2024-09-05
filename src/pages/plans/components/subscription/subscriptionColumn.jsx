@@ -12,7 +12,7 @@ import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
 import { formatDate } from "@/utils/dateConfig";
-import { Plan } from "@/api/endpoints";
+import { Plan, PROD_IMG_Prefix } from "@/api/endpoints";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import Spinner from "@/components/common/Spinner";
@@ -39,9 +39,18 @@ export const SubscriptionColumn = ({ PlanRefetch }) => {
           <IdendityIcon /> Name
         </div>
       ),
-      cell: ({ row }) => (
-        <div className="font-semibold text-[15px]">{row?.original?.name}</div>
-      ),
+      cell: ({ row }) => {
+        const icon = row?.original?.icon ? PROD_IMG_Prefix + row?.original?.icon : "/Logo.svg";
+        return (
+          <div className="flex space-x-2 ">
+            <img src={icon} alt="icon" className="w-5 h-5 rounded-full" />
+            <p className="font-semibold text-[15px]">
+            {row?.original?.name}
+            </p>
+           
+          </div>
+        );
+      },
     },
     {
       accessorKey: "createdAt",
@@ -158,7 +167,7 @@ export const SubscriptionColumn = ({ PlanRefetch }) => {
             }
             PlanRefetch();
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
         return (
@@ -223,7 +232,7 @@ export const SubscriptionColumn = ({ PlanRefetch }) => {
                 </div>
               }
             >
-              <AddSubscription setOpen={setROpen} data={row?.original}/>
+              <AddSubscription setOpen={setROpen} data={row?.original} />
             </CommonModal>
             <DeleteModal
               open={open}

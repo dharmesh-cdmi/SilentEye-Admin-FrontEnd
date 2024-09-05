@@ -47,7 +47,7 @@ const EditCategory = () => {
         toast.success(res?.data?.message || "Category Update Successfully !");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
   return (

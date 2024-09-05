@@ -75,9 +75,6 @@ export default function AddProduct() {
       formData.append("mrp", Number(values?.mrp));
       formData.append("status", values?.status);
       formData.append("description", values?.description);
-      
-      console.log(values);
-      console.log("formData : ", formData);
 
       const response = data ? await UpdateProductMutation(formData) : await ProductMutation(formData);
       

@@ -7,7 +7,6 @@ export const getCookie = (name) => {
 };
 
 export const setCookie = (name, value, days = 1) => {
-  console.log("Value", value)
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   document.cookie = `${name}=${value}; path=/; expires=${expires}; Secure; HttpOnly`;
 };

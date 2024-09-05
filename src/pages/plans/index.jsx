@@ -28,6 +28,7 @@ import AddShipping from "./components/shippings/AddShipping";
 import AddProduct from "./components/products/AddProduct";
 import { useNavigate } from "react-router-dom";
 import LimitSelector from "@/components/common/limit-selector";
+import SettingTracking from "./components/setting-tracking/SettingTracking";
 
 export default function Plans() {
   const navigate = useNavigate();
@@ -91,8 +92,6 @@ export default function Plans() {
     endpoint: `${Product.AllProduct}?${new URLSearchParams(filterParams)}`,
   });
 
-  console.log("products data : ", productsData);
-
   // Call Shipping API ..
   const {
     data: { data: { data: shippingData } = {} } = {},
@@ -103,17 +102,30 @@ export default function Plans() {
     endpoint: `${Shipping.AllShipping}?${new URLSearchParams(filterParams)}`,
   });
 
+
+
   const [subModalOpen, setSubModalOpen] = useState(false);
   const [addonModalOpen, setAddonModalOpen] = useState(false);
   const [upsellModalOpen, setUpsellModalOpen] = useState(false);
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [shippingModalOpen, setShippingModalOpen] = useState(false);
+  const [settingModalOpen,setSettingModalOpen] = useState(false); 
 
   return (
     <div>
       <Header title="Plans" className=" ">
         <CommonSearch onSearch={setSearchTerm} />
         <LimitSelector limit={limit} setLimit={setLimit} />
+        {
+          isActive === "shipping" && 
+          <div className="items-center flex justify-center cursor-pointer hover:bg-gray-300 w-10 rounded-lg h-10 bg-white border shadow"
+          onClick={() => {
+            setSettingModalOpen(!settingModalOpen);
+          }}>
+            <SettingIcon size={24} />
+          </div>
+        }
+        
       </Header>
 
       <div className="w-full">
@@ -269,7 +281,7 @@ export default function Plans() {
         setOpen={setSubModalOpen}
         title={<div className="flex space-x-3 items-center"><CircleDollarSign /> <h2>Add New Subscription Plan </h2></div>}
       >
-        <AddSubscription setOpen={setSubModalOpen}/>
+        <AddSubscription setOpen={setSubModalOpen} Refetch={PlanRefetch}/>
       </CommonModal>
 
       <CommonModal
@@ -277,7 +289,7 @@ export default function Plans() {
         setOpen={setUpsellModalOpen}
         title={<div className="flex space-x-3 items-center"><OrdersIcon /> <h2>Add New UpSell Plan </h2></div>}
       >
-        <AddUpsell  setOpen={setUpsellModalOpen}/>
+        <AddUpsell  setOpen={setUpsellModalOpen} Refetch={UpsellRefetch}/>
       </CommonModal>
 
       <CommonModal
@@ -302,6 +314,14 @@ export default function Plans() {
         title={<div className="flex space-x-3 items-center"><Plane /> <h2>Add New Shipping</h2></div>}
       >
         <AddShipping  setOpen={setShippingModalOpen} Refetch={ShippingRefetch} />
+      </CommonModal>
+
+      <CommonModal
+        open={settingModalOpen}
+        setOpen={setSettingModalOpen}
+        title={<div className="flex space-x-3 items-center"><SettingIcon /> <h2>Shipping Tracking Settings</h2></div>}
+      >
+        <SettingTracking />
       </CommonModal>
     </div>
   );

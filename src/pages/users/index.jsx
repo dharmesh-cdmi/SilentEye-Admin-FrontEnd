@@ -165,7 +165,6 @@ export default function Users() {
     }
   }, [statusSelected]);
 
-  console.log(isActive);
   return (
     <div>
       {usersLoading || !isActive ? (

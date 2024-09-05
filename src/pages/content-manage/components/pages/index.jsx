@@ -63,13 +63,12 @@ const AddPages = ({ data }) => {
       ? await UpdatePageMutation({ ...values })
       : await AddPageMutation({ ...values });
 
-        console.log("Response ", response);
         if (response?.status === 200) {
           toast.success(response?.data);
           navigate("/content-manage")
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
         toast.error("Something went wrong !");
       }
     },

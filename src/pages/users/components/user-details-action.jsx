@@ -59,7 +59,7 @@ const UserDetailsAction = ({ id }) => {
       }
       UserRefetch();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -73,7 +73,7 @@ const UserDetailsAction = ({ id }) => {
       }
       UserRefetch();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

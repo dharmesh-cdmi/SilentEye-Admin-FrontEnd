@@ -17,7 +17,6 @@ const AuthUserProvider = ({ children }) => {
     refetchOnWindowFocus: false,
     cacheTime: 0,
   });
-  // console.log("userData", userData);
 
   const userContextValues = {
     // states
