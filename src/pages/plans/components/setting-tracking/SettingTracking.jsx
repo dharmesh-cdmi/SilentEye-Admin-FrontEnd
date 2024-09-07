@@ -12,6 +12,7 @@ import useGet from "@/hooks/use-get";
 
 const SettingTracking = () => {
   const [id, setId] = useState("");
+  const [sid, setSId] = useState("");
   const [open, setOpen] = useState(false);
   const [openSubDelete, setOpenSubDelete] = useState(false);
   const [topicModal, setTopicModal] = useState(false);
@@ -75,7 +76,7 @@ const SettingTracking = () => {
                   className="flex justify-between items-center border-b  pl-8 pr-4 py-2"
                 >
                   <span className="text-[14px] font-medium text-black ">
-                    {subTopic}
+                    {subTopic?.name}
                   </span>
                   <Button
                     size="icon"
@@ -84,6 +85,7 @@ const SettingTracking = () => {
                     onClick={() => {
                       setOpenSubDelete(true);
                       setId(topic._id);
+                      setSId(subTopic?._id)
                     }}
                   >
                     <Trash2 className="w-5 h-5 " />
@@ -116,7 +118,7 @@ const SettingTracking = () => {
         open={openSubDelete}
         setOpen={setOpenSubDelete}
         endpoint={TrackingSetting.AddTopic + `/${id}`}
-        id={"subtopics"}
+        id={`subtopics/${sid}`}
         dataRefetch={TrackingRefetch}
       />
 
