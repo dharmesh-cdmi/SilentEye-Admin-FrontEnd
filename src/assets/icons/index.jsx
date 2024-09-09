@@ -738,6 +738,29 @@ const DolarIcon = ({ className = "", size = 20 }) => (
   </svg>
 );
 
+const DolarRoundIcon = ({ className = "", size = 24 }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 32 32"
+    fill="none"
+  >
+    <path
+      d="M29.3334 16.0003C29.3334 23.3641 23.3638 29.3337 16 29.3337C8.63622 29.3337 2.66669 23.3641 2.66669 16.0003C2.66669 8.63653 8.63622 2.66699 16 2.66699C23.3638 2.66699 29.3334 8.63653 29.3334 16.0003Z"
+      stroke="black"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M19.6136 13.4151C19.4815 12.3982 18.3139 10.7553 16.2144 10.7552C13.7749 10.7552 12.7485 12.1063 12.5402 12.7818C12.2153 13.6854 12.2803 15.5431 15.1396 15.7457C18.7139 15.999 20.1457 16.4209 19.9636 18.6083C19.7813 20.7957 17.7889 21.2683 16.2144 21.2175C14.6397 21.167 12.0635 20.4437 11.9636 18.4981M15.9645 9.33105V10.7601M15.9645 21.2045V22.6643"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const PointerIcon = ({ className = "", size = 20 }) => (
   <svg
     className={className}
@@ -1855,4 +1878,5 @@ export {
   FaqsIcon,
   RatingsHalf,
   DiscountSqaureIcon,
+  DolarRoundIcon,
 };

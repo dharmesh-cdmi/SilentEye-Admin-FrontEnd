@@ -7,9 +7,7 @@ import toast from "react-hot-toast";
 import { SupportTicketAPI } from "@/api/endpoints";
 
 const validationSchema = Yup.object({
-  comment: Yup.string()
-    .required("Comment is required")
-    .min(5, "Comment should be at least 5 characters"),
+  comment: Yup.string().required("Comment is required"),
 });
 
 export default function CommentInput({ refetch, ticketId }) {
@@ -42,11 +40,11 @@ export default function CommentInput({ refetch, ticketId }) {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="flex justify-between border-t"
+      className="flex justify-between relative"
     >
       <input
         className={cn(
-          "w-full py-3 px-4 outline-none",
+          "w-full py-3 px-4 outline-none border-y rounded-bl-xl",
           formik.touched.comment &&
             formik.errors.comment &&
             "border border-red-500"

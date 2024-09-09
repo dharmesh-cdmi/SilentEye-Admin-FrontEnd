@@ -45,6 +45,7 @@ export default function ContactForm() {
               <Loader />
             ) : (
               <DataTable
+                className="rounded-xl"
                 data={contactData?.result?.contactsForm || []}
                 columns={ContactColums(contactRefecth)}
                 pagination={{

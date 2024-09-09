@@ -124,7 +124,7 @@ export default function SupportTicketView() {
         </div>
       </Header>
 
-      <div className="w-full flex flex-col divide-y-[1.5px] border rounded-xl overflow-hidden">
+      <div className="w-full flex flex-col divide-y-[1.5px] border-x border-t rounded-xl overflow-hidden">
         <div className="flex justify-between gap-4">
           <div className="w-1/2 inline-flex items-center text-xl px-5">
             {ticketData?.user?.email}
