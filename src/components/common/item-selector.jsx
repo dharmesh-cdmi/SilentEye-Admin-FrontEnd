@@ -6,7 +6,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion"; // Make sure these are correctly imported
 import { cn } from "@/lib/utils";
-import { Spline } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 
 export default function ItemSelector({
   items,
@@ -33,7 +33,7 @@ export default function ItemSelector({
       <AccordionItem value="item-1" className="border-none">
         <AccordionTrigger className="flex justify-between items-center hover:no-underline py-3 px-4 font-semibold">
           <p className="w-full text-left">{label}</p>
-          <Spline size={20} className="mr-4" />
+          <RefreshCcw size={20} className="mr-4" onClick={()=> setSelectedItems([])}/>
         </AccordionTrigger>
         <AccordionContent className="py-0">
           <div className="max-h-80 flex flex-col divide-y overflow-y-auto border-t">

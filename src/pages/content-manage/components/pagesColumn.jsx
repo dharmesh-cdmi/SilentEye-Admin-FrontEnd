@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
 import Spinner from "@/components/common/Spinner";
-import { formatDate } from "@/utils/dateConfig";
+import { formatDatewithTime } from "@/utils/dateConfig";
 import { useNavigate } from "react-router-dom";
 
 export const PagesColumn = ({ PageRefetch }) => {
@@ -44,7 +44,7 @@ export const PagesColumn = ({ PageRefetch }) => {
       cell: ({ row }) => {
         return (
           <div className="flex justify-start items-center ">
-            {formatDate(row?.original?.updateAt)}
+            {formatDatewithTime(row?.original?.updateAt)}
           </div>
         );
       },
