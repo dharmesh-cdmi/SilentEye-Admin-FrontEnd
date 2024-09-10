@@ -33,7 +33,7 @@ export default function DiscountColumns(discountRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-base text-nowrap uppercase">
+          <div className="font-medium text-base text-nowrap uppercase">
             {row.getValue("coupon")}
           </div>
         );
@@ -49,7 +49,7 @@ export default function DiscountColumns(discountRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-nowrap text-base text-black font-medium">
+          <div className="text-nowrap text-base text-black font-normal">
             {formatDateTime(row.original.createdAt)}
           </div>
         );
@@ -66,7 +66,7 @@ export default function DiscountColumns(discountRefetch) {
       cell: ({ row }) => {
         const isValidity = row.original.validity !== "No Limit";
         return (
-          <div className="text-nowrap text-black text-base font-medium">
+          <div className="text-nowrap text-black text-base font-normal">
             {isValidity ? formatDateTime(row.original.validity) : "No limit"}
           </div>
         );
@@ -82,7 +82,7 @@ export default function DiscountColumns(discountRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-base text-black font-medium">
+          <div className="text-base text-black font-normal">
             {row.original.useLimit || "-"}
           </div>
         );
@@ -115,7 +115,7 @@ export default function DiscountColumns(discountRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-base text-black font-medium">
+          <div className="text-base text-black font-normal">
             {row.getValue("used")}
           </div>
         );

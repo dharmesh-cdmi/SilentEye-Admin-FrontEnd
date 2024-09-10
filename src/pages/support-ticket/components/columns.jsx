@@ -59,7 +59,7 @@ export default function TicketColumns(ticketRefecth) {
         </div>
       ),
       cell: ({ row }) => (
-        <div className="text-black font-medium text-center text-nowrap opacity-60">
+        <div className="text-base text-black font-normal text-center text-nowrap opacity-60">
           #{row.original.index}
         </div>
       ),
@@ -75,7 +75,7 @@ export default function TicketColumns(ticketRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-base text-black font-medium opacity-60">
+          <div className="text-base text-black font-normal opacity-60">
             #{row.original.ticketId}
           </div>
         );
@@ -154,7 +154,7 @@ export default function TicketColumns(ticketRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate font-normal text-base text-black">
+          <div className="w-72 line-clamp-2 font-normal text-base text-black">
             {row.original.message}
           </div>
         );
@@ -186,7 +186,7 @@ export default function TicketColumns(ticketRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 sm:max-w-72 md:max-w-[31rem] truncate font-normal text-base text-black">
+          <div className="w-56 line-clamp-2 font-normal text-base text-black">
             {row.original.lastReply || "-"}
           </div>
         );

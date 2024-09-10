@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { SupportTicketAPI } from "@/api/endpoints";
+import { MessageReplyIcon } from "@/assets/icons";
+import Spinner from "@/components/common/Spinner";
 
 const validationSchema = Yup.object({
   comment: Yup.string().required("Comment is required"),
@@ -59,9 +61,19 @@ export default function CommentInput({ refetch, ticketId }) {
       <button
         type="submit"
         disabled={loading}
-        className="px-4 bg-black text-white"
+        className="flex items-center gap-1.5 px-4 bg-black text-base text-white"
       >
-        {loading ? "Sending" : "Reply"}
+        {loading ? (
+          <>
+            <Spinner />
+            Sending
+          </>
+        ) : (
+          <>
+            <MessageReplyIcon />
+            Reply
+          </>
+        )}
       </button>
     </form>
   );

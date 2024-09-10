@@ -42,7 +42,7 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="w-[16rem] text-left truncate text-base text-black font-medium">
+          <div className="w-72 line-clamp-2 text-left text-base text-black font-normal">
             {row?.getValue("subject")}
           </div>
         );
@@ -58,7 +58,7 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+          <div className="w-72 line-clamp-2 text-base text-black font-normal">
             {row?.getValue("message")}
           </div>
         );
@@ -74,7 +74,7 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-normal">
             {row?.getValue("name")}
           </div>
         );
@@ -90,7 +90,7 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-normal">
             {row?.getValue("email")}
           </div>
         );
@@ -106,7 +106,7 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-normal">
             {row?.getValue("contact")}
           </div>
         );
@@ -122,7 +122,7 @@ export default function ContactColums(contactRefetch) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="h-6 max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-medium">
+          <div className="h-6 max-w-40 sm:max-w-72 md:max-w-[31rem] truncate text-base text-black font-normal">
             {formatDateTime(row.original.createdAt)}
           </div>
         );

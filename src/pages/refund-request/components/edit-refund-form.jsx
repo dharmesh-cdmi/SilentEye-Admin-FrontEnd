@@ -14,7 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArrowLeft, Info, Package } from "lucide-react";
+import { ArrowLeft, Info } from "lucide-react";
 import { RefundRequestAPI } from "@/api/endpoints";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
+import { RefundIcons } from "@/assets/icons";
 
 const schema = Yup.object({
   status: Yup.string()
@@ -109,8 +110,8 @@ export default function EditRefundForm({
               </Button>
             </DialogClose>
             <div>
-              <DialogTitle className="flex items-center gap-3">
-                <Package /> Edit Refund Request
+              <DialogTitle className="flex items-center gap-3 font-normal text-xl">
+                <RefundIcons size={30} /> Edit Refund Request
               </DialogTitle>
             </div>
           </DialogHeader>

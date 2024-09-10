@@ -94,7 +94,7 @@ const PurchasedIcon = ({ className = "", width = 20, height = 20 }) => (
     </g>
     <defs>
       <clipPath id="clip0_1_1811">
-        <rect width="20" height="20" fill="white" />
+        <rect width={size} height={size} fill="white" />
       </clipPath>
     </defs>
   </svg>
@@ -1812,6 +1812,39 @@ const DiscountSqaureIcon = ({ className, size = 24 }) => (
     />
   </svg>
 );
+
+const MessageReplyIcon = ({ className, size = 20 }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    fill="none"
+  >
+    <path
+      d="M18.3332 9.16683C18.3332 8.75733 18.3288 8.34783 18.32 7.93716C18.2656 5.38255 18.2384 4.10524 17.2958 3.15905C16.3531 2.21286 15.0413 2.1799 12.4175 2.11397C10.8004 2.07334 9.19927 2.07334 7.58219 2.11396C4.95845 2.17988 3.64657 2.21284 2.70396 3.15904C1.76135 4.10523 1.73412 5.38254 1.67964 7.93715C1.66212 8.75858 1.66213 9.57508 1.67965 10.3965C1.73412 12.9512 1.76136 14.2284 2.70397 15.1747C3.64657 16.1208 4.95845 16.1537 7.5822 16.2197C8.39077 16.24 9.19527 16.2502 9.99985 16.2502"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5.83325 6.25L8.28494 7.69953C9.71427 8.54458 10.2856 8.54458 11.7149 7.69953L14.1666 6.25"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M18.3335 17.9167C18.2368 15.813 18.3225 15.0476 16.9533 14.0659C16.2803 13.5834 14.9263 13.2655 13.0982 13.4371M14.5433 11.3271L12.6294 13.1218C12.4677 13.2836 12.4665 13.5466 12.6267 13.7099L14.5433 15.5332"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 export {
   OrdersIcon,
   RefundIcons,
@@ -1879,4 +1912,5 @@ export {
   RatingsHalf,
   DiscountSqaureIcon,
   DolarRoundIcon,
+  MessageReplyIcon,
 };
