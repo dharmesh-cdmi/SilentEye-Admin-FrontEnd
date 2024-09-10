@@ -135,7 +135,7 @@ export const FeatureColumn = ({ FeatureRefetch }) => {
               toast.error("Something went wrong !");
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
         return (

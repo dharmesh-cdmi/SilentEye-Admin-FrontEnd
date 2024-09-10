@@ -27,9 +27,16 @@ const AddShipping = ({ data, setOpen, Refetch }) => {
     isMultiPart: false,
     endpoint: Shipping.AllShipping,
   });
-  const str = data && data?.daysRange;
-  const [min, max] = data && str.split("-").map((part) => part.trim());
-  const maxDays = max.split(" ")[0];
+  const str = data?.daysRange; // Safely access `daysRange`
+
+  let min = null;
+  let maxDays = null;
+
+  if (str) {
+    const [minTemp, maxTemp] = str.split("-").map((part) => part.trim());
+    min = minTemp;
+    maxDays = maxTemp?.split(" ")[0];
+  }
 
   const {
     mutateAsync: UpdateFeatureMutation,

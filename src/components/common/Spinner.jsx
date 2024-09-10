@@ -1,6 +1,6 @@
 import { Loader } from 'lucide-react';
 
-const Spinner = ({ size = 24, color = '#000' }) => {
+const Spinner = ({ size = 24, color = '#ffffff' }) => {
   return (
     <div className="spinner-loader">
       <Loader size={size} color={color} className="animate-spin"/>

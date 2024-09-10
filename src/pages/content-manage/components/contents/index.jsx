@@ -71,7 +71,7 @@ const ContentDetails = () => {
         toast.success(res?.data || "Status is updated!");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

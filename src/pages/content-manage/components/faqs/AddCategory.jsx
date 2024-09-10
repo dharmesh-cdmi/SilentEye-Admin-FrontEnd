@@ -16,7 +16,6 @@ const addCategorySchema = Yup.object({
 });
 
 const AddCategory = ({ setOpen, Refetch , data }) => {
-  console.log("data : ", data);
   const [imagePreview, setImagePreview] = useState( data ? PROD_IMG_Prefix+data?.image : null);
 
   const { mutateAsync: CatMutation, isLoading: catLoading } = usePost({

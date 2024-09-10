@@ -7,7 +7,7 @@ import { BagIcon } from "@/assets/icons";
 import { cn } from "@/lib/utils";
 import { PROD_IMG_Prefix } from "@/api/endpoints";
 
-export default function ProductsSelect({
+export default function PlanSelect({
   selectedProducts,
   setSelectedProducts,
   productsData,
@@ -16,19 +16,7 @@ export default function ProductsSelect({
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleCheckboxChange = (id) => {
-    setSelectedProducts((prev) =>
-      prev.includes(id)
-        ? prev.filter((productId) => productId !== id)
-        : [...prev, id]
-    );
-  };
-
-  const handleSelectAllChange = (checked) => {
-    if (checked) {
-      setSelectedProducts(productsData.map((product) => product._id));
-    } else {
-      setSelectedProducts([]);
-    }
+    setSelectedProducts(prev => (prev.includes(id) ? [] : [id]));
   };
 
   const handleSearchChange = (event) => {
@@ -75,20 +63,6 @@ export default function ProductsSelect({
                 className="w-full p-3 mt-1 ring-0 border-0 focus:outline-none focus:ring-0 focus:border-0"
               />
             </div>
-          </div>
-
-          <div className="px-4 flex items-center gap-2.5 py-2.5 border-b">
-            <Checkbox
-              checked={selectedProducts.length === productsData?.length}
-              onCheckedChange={handleSelectAllChange}
-              className={cn(
-                "form-checkbox h-5 w-5 rounded-md",
-                selectedProducts.length === productsData?.length
-                  ? "bg-green-200 text-green-500 border border-green-500"
-                  : "bg-white border border-gray-300"
-              )}
-            />
-            <span className="text-sm font-normal">All Products</span>
           </div>
 
           <div

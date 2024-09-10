@@ -1,35 +1,30 @@
-import { Plan, PROD_IMG_Prefix } from "@/api/endpoints";
+import { Plan, PROD_IMG_Prefix, Product, Upsell } from "@/api/endpoints";
 import { Field as TextField } from "@/components/common/common-form";
 import Counter from "@/components/common/counter";
+import ProductsSelect from "@/components/common/products-select";
 import Spinner from "@/components/common/Spinner";
 import useGet from "@/hooks/use-get";
 import usePost from "@/hooks/use-post";
 import useUpdate from "@/hooks/use-update";
 import { Field, Form, Formik } from "formik";
-import { CircleDollarSign, DollarSign, PackagePlus } from "lucide-react";
+import { CircleDollarSign, DollarSign } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const addCategorySchema = Yup.object({
-  plan: Yup.string().required("Plan Name is required"),
+  plan: Yup.mixed().required("Plan Name is required"),
   name: Yup.string().required("Upsell Name is required"),
   key: Yup.string().required("Unique Key is required"),
   amount: Yup.number().required("Amount is required"),
   mrp: Yup.number().required("MRP is required"),
-  duration: Yup.string().required("Duration is required"),
-  icon: Yup.mixed().required("Image is required"),
-  product: Yup.mixed().required("Product is required"),
+  image: Yup.mixed().required("Image is required"),
+  // product: Yup.mixed().required("Product is required"),
   tag: Yup.string().required("Tag is required"),
 });
 
 const AddUpSell = ({ data, setOpen, Refetch }) => {
-  const [imagePreview, setImagePreview] = useState(
-    data?.icon ? PROD_IMG_Prefix + data?.icon : null
-  );
-  const [productPreview, setProductPreview] = useState(
-    data?.product ? PROD_IMG_Prefix + data?.product : null
-  );
+
   // Call Plan API ..
   const {
     data: { data: { data: plansData } = {} } = {},
@@ -38,20 +33,34 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
     endpoint: `${Plan.AllPlans}?page=1&limit=1000`,
   });
 
+  // Call Products API ..
+  const { data: { data: products = {} } = {}, isLoading: productLoading } =
+    useGet({
+      key: "productsData",
+      endpoint: `${Product.AllProduct}?page=1&limit=1000`,
+    });
+  
+    const [imagePreview, setImagePreview] = useState(
+      data?.upsell?.image ? PROD_IMG_Prefix + data?.upsell?.image : null
+    );
+    const [selectedProducts, setSelectedProducts] = useState(data?.products.map(product => product._id) || []);
+
+
+
   const { mutateAsync: PlanMutation, isLoading: PlanLoading } = usePost({
     isMultiPart: true,
-    endpoint: Plan.AllPlans,
+    endpoint: Upsell.AllUpsell,
   });
 
   const { mutateAsync: UpdatePlanMutation, isLoading: FeatureUpdateLoading } =
     useUpdate({
       isMultiPart: true,
-      endpoint: Plan.SinglePlan + data?._id,
+      endpoint: Upsell.UpdateUpsell + data?._id,
     });
 
   const handleImageChange = (event, setFieldValue) => {
     const file = event.currentTarget.files[0];
-    setFieldValue("icon", file);
+    setFieldValue("image", file);
 
     // Create an image preview
     const reader = new FileReader();
@@ -62,42 +71,36 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
       reader.readAsDataURL(file);
     }
   };
-  const handleProductImageChange = (event, setFieldValue) => {
-    const file = event.currentTarget.files[0];
-    setFieldValue("product", file);
 
-    // Create an image preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProductPreview(reader.result);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (values, { resetForm }) => {
+   
     const formData = new FormData();
-    formData.append("status", values?.status);
-    formData.append("stopHere", values?.stopHere);
-    formData.append("title", values.title);
-    if (!data?.icon) {
-      formData.append("icon", values?.icon);
-    }
-    formData.append("description", values.description);
-    formData.append("process", values.process);
-    formData.append("failCount", values.failCount);
+      formData.append("order", values?.order);
+      formData.append("plan",values?.plan);
+      formData.append("name", values?.name);
+      formData.append("key", values?.key);
+      formData.append("image", values?.image);
+      formData.append("device", Number(values?.device));
+      formData.append("amount", values?.amount);
+      formData.append("mrp", values?.mrp);
+      formData.append("products", JSON.stringify(selectedProducts));
+      formData.append("tag", values?.tag);
+      formData.append("status", values?.status);
+      formData.append("discountPercent", 1);
+      formData.append("discountValue", 0);
+      formData.append("count", 0); 
 
     try {
       const response = data
         ? await UpdatePlanMutation(formData)
         : await PlanMutation(formData);
-      if (response?.status === 200) {
+      if (response?.status === 200 || response?.status === 201) {
         resetForm();
         setImagePreview(null);
         Refetch();
         setOpen(false);
-        toast.success(response?.data);
+        toast.success(data ? "Update Upsell Plan " : "Add New Upsell Plan");
       }
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -107,29 +110,29 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
     <div>
       <Formik
         initialValues={{
-          order: data?.order || "", 
-          plan: data?.plan || "", 
-          name: data?.name || "",
+          order: data?.order || 0, 
+          plan: data?.plan?._id || "", 
+          name: data?.upsell?.name || "",
           key: data?.key || "",
-          icon: data?.icon || null,
+          image: data?.upsell?.image || null,
           device: data?.device || 0,
           amount: data?.amount || null,
           mrp: data?.mrp || null,
-          duration: data?.duration || "",
-          product: data?.product || null,
+          products: data?.product || null,
           tag: data?.tag || "",
+          status : data?.status || "live"
         }}
         validationSchema={addCategorySchema}
         onSubmit={handleSubmit}
       >
         {({ values, handleChange, isSubmitting, setFieldValue }) => (
           <Form className="py-5">
-            <Field name="title">
+            <Field name="plan">
               {({ field, form: { touched, errors }, meta }) => (
                 <TextField
                   title="Plan"
                   className={` ${
-                    touched.order && errors.order
+                    touched.plan && errors.plan
                       ? "border-red-500 border rounded-t-lg"
                       : "border border-b rounded-t-lg"
                   }`}
@@ -157,6 +160,33 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
                         </p>
                       )}
                     </div>
+                  }
+                />
+              )}
+            </Field>
+            <Field name="order">
+              {({ form: { touched, errors }, meta }) => (
+                <TextField
+                  title="Order"
+                  className={` ${
+                    touched.order && errors.order
+                      ? "border-red-500 border"
+                      : "border border-b "
+                  }`}
+                  value={
+                    <>
+                      <Counter
+                        count={values.order}
+                        onChange={(newCount) =>
+                          setFieldValue("order", newCount)
+                        }
+                      />
+                      {meta.touched && meta.error && (
+                        <p className="text-sm px-4 text-red-600 error">
+                          {meta.error}
+                        </p>
+                      )}
+                    </>
                   }
                 />
               )}
@@ -224,12 +254,12 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
               )}
             </Field>
 
-            <Field name="icon">
+            <Field name="image">
               {({ form: { touched, errors }, meta }) => (
                 <TextField
                   title="Upsell Icon"
                   className={`border border-b border-t-0 ${
-                    touched.icon && errors.icon
+                    touched.image && errors.image
                       ? "border-red-500 border border-t-0"
                       : "border border-b"
                   }`}
@@ -238,14 +268,14 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
                     <>
                       <input
                         type="file"
-                        id="icon"
+                        id="image"
                         className="hidden"
                         onChange={(event) =>
                           handleImageChange(event, setFieldValue)
                         }
                       />
                       <label
-                        htmlFor="icon"
+                        htmlFor="image"
                         className="flex items-center cursor-pointer space-x-2 divide-x-2 justify-between"
                       >
                         {imagePreview ? (
@@ -377,80 +407,30 @@ const AddUpSell = ({ data, setOpen, Refetch }) => {
               )}
             </Field>
 
-            <Field name="duration">
-              {({ field, form: { touched, errors }, meta }) => (
-                <TextField
-                  title="Duration"
-                  className={` ${
-                    touched.duration && errors.duration
-                      ? "border-red-500 border"
-                      : "border border-b "
-                  }`}
-                  value={
-                    <>
-                      <input
-                        className={`border-0  w-full  px-4 py-2 text-black text-[16px] focus:border-0 focus:outline-none 
-                        ${
-                          touched.duration && errors.duration
-                            ? " h-1/2"
-                            : "h-full"
-                        }`}
-                        name="duration"
-                        placeholder="Enter Duration"
-                        value={values.duration}
-                        onChange={handleChange}
-                        {...field}
-                      />
-                      {meta.touched && meta.error && (
-                        <p className="text-sm px-4 text-red-600 error">
-                          {meta.error}
-                        </p>
-                      )}
-                    </>
-                  }
-                />
-              )}
-            </Field>
-
-            <Field name="product">
+            <Field name="products">
               {({ form: { touched, errors }, meta }) => (
                 <TextField
                   title="Products"
                   className={`border border-b border-t-0 ${
-                    touched.product && errors.product
+                    touched.products && errors.products
                       ? "border-red-500 border border-t-0"
                       : "border border-b"
                   }`}
                   className2={"py-0 pr-0"}
                   value={
                     <div>
-                      <input
-                        type="file"
-                        id="product"
-                        className="hidden"
-                        onChange={(event) =>
-                          handleProductImageChange(event, setFieldValue)
-                        }
-                      />
-                      <label
-                        htmlFor="product"
-                        className="flex items-center cursor-pointer space-x-2 divide-x-2 justify-between"
-                      >
-                        {productPreview ? (
-                          <img
-                            src={productPreview}
-                            alt="Preview"
-                            width={30}
-                            height={30}
-                            className=""
+                      {productLoading ? (
+                        <Spinner />
+                      ) : (
+                        <label htmlFor="products" className="">
+                          <ProductsSelect
+                            selectedProducts={selectedProducts}
+                            setSelectedProducts={setSelectedProducts}
+                            productsData={products?.data?.docs || []}
+                            className="border-0 "
                           />
-                        ) : (
-                          <PackagePlus className="w-6 h-6" />
-                        )}
-                        <span className="text-black pl-2 bg-gray-100 w-full h-full py-2 ">
-                          + Select Products
-                        </span>
-                      </label>
+                        </label>
+                      )}
 
                       {meta.touched && meta.error && (
                         <p className="text-sm px-4 text-red-600 error">

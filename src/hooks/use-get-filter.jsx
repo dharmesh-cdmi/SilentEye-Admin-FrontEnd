@@ -11,7 +11,7 @@ const useGetFilterData = (initialFilters,endpoint) => {
   const [page, setPage] = useState(1); // Start on page 1
   const [pageSize] = useState(10); // Fixed page size
   const [filters, setFilters] = useState(initialFilters ? initialFilters : ""); 
-  // console.log({filters})
+
 
   const buildUrl = (filters, page, pageSize) => {
     const urlParams = new URLSearchParams({

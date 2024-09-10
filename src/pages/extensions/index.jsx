@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   CaptchaIcon,
   ChatBotIcon,
@@ -39,7 +40,6 @@ const Extensions = () => {
 
   useEffect(() => {
     if (extensions.length !== extForm.length) {
-      console.log("Itea");
       extensions.map(({ id }, ind) =>
         extForm.push({
           id,

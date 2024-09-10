@@ -6,20 +6,21 @@ import {
   DiscountIcon,
   EyeIcon,
   IdendityIcon,
-  RefundIcons,
+  OrdersIcon,
 } from "@/assets/icons";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
-import RefundModal from "@/components/common/modals/refund-modal";
 import { formatDate } from "@/utils/dateConfig";
-import { Upsell } from "@/api/endpoints";
+import { PROD_IMG_Prefix, Upsell } from "@/api/endpoints";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import Spinner from "@/components/common/Spinner";
 import useUpdate from "@/hooks/use-update";
 import toast from "react-hot-toast";
+import CommonModal from "@/components/common/modals/common-modal";
+import AddUpSell from "./AddUpsell";
 
 export const UpsellColumn = ({ UpsellRefetch }) => {
   return [
@@ -36,14 +37,22 @@ export const UpsellColumn = ({ UpsellRefetch }) => {
       accessorKey: "name",
       header: () => (
         <div className="flex items-center gap-2 text-base text-black">
-          <IdendityIcon /> Name
+          <IdendityIcon /> Plan
         </div>
       ),
-      cell: ({ row }) => (
-        <div className="font-semibold text-[15px]">
-          {row?.original?.planName?.name}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const icon = row?.original?.plan?.icon
+          ? PROD_IMG_Prefix + row?.original?.plan?.icon
+          : "/Logo.svg";
+        return (
+          <div className="flex space-x-2 ">
+            <img src={icon} alt="icon" className="w-5 h-5 rounded-full" />
+            <p className="font-semibold text-[15px]">
+              {row?.original?.plan?.name}
+            </p>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "upsell",
@@ -52,12 +61,20 @@ export const UpsellColumn = ({ UpsellRefetch }) => {
           <IdendityIcon /> UpSell
         </div>
       ),
-      cell: ({ row }) => (
-        <div className="font-semibold text-[15px] flex justify-start items-center">
-          <p>{row?.original?.upsell?.name}</p>
-          <p>{" (" + row?.original?.upsell?.count + ")"}</p>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const icon = row?.original?.upsell?.image
+          ? PROD_IMG_Prefix + row?.original?.upsell?.image
+          : "/Logo.svg";
+        return (
+          <div className="flex space-x-2 ">
+            <img src={icon} alt="icon" className="w-5 h-5 rounded-full" />
+            <div className="font-semibold text-[15px] flex justify-start items-center">
+              <p>{row?.original?.upsell?.name}</p>
+              <p>{" (" + row?.original?.upsell?.count + ")"}</p>
+            </div>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "createdAt",
@@ -177,7 +194,7 @@ export const UpsellColumn = ({ UpsellRefetch }) => {
               );
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         };
         return (
@@ -218,7 +235,7 @@ export const UpsellColumn = ({ UpsellRefetch }) => {
                 className="rounded-lg hover:bg-blue-500 hover:text-white"
                 onClick={() => setROpen(true)}
               >
-                <RefundIcons size={24} className="" />
+                <Edit size={19} className="" />
               </Button>
 
               <Button
@@ -233,7 +250,21 @@ export const UpsellColumn = ({ UpsellRefetch }) => {
                 <Trash2 className="w-5 h-5 " />
               </Button>
             </div>
-            <RefundModal open={ropen} setOpen={setROpen} />
+            <CommonModal
+              open={ropen}
+              setOpen={setROpen}
+              title={
+                <div className="flex space-x-3 items-center">
+                  <OrdersIcon /> <h2>Update UpSell Plan </h2>
+                </div>
+              }
+            >
+              <AddUpSell
+                setOpen={setROpen}
+                Refetch={UpsellRefetch}
+                data={row?.original}
+              />
+            </CommonModal>
             <DeleteModal
               open={open}
               setOpen={setOpen}

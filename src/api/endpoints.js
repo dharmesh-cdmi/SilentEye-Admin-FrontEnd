@@ -134,6 +134,10 @@ const Shipping = {
   UpdateShipping: "shipping/",
 };
 
+const TrackingSetting = {
+  AllTracking : "shipping-tracking/settings",
+  AddTopic : "shipping-tracking/topics", 
+}
 export {
   PROD_ADMIN_BASE_URL,
   PROD_IMG_Prefix,
@@ -154,4 +158,5 @@ export {
   DiscountAPI,
   PaymentGateWayAPI,
   CountryAPI,
+  TrackingSetting
 };

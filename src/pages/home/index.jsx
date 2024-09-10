@@ -64,8 +64,6 @@ const Home = () => {
     );
   };
 
-  console.log("planData", planData);
-
   return (
     <>
       {showAll ? (
