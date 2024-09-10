@@ -81,10 +81,10 @@ export function DataTable({
   // };
 
   return (
-    <div className={cn("border rounded-b-lg", className)}>
+    <div className={cn("border rounded-b-lg overflow-hidden", className)}>
       <div className="flex justify-between">
         {Object.keys(rowSelection)?.length > 0 ? (
-          <div className="flex items-center p-4">
+          <div className="w-full h-12 flex items-center px-4 bg-gray-100 border-b">
             <Checkbox
               checked={
                 table.getIsAllPageRowsSelected() ||
@@ -104,7 +104,7 @@ export function DataTable({
                   "ml-2 font-semibold  flex justify-center items-center w-32 text-[15px] bg-white shadow-md hover:shadow-lg px-2 rounded-full  border ",
                   button.className
                 )}
-                onClick={() => button.onClick(table)}
+                onClick={() => button?.onClick(table)}
               >
                 {button.icon && (
                   <button.icon
@@ -147,9 +147,10 @@ export function DataTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="data-[state=selected]:bg-gray-50"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="py-2.5" key={cell.id}>
                       {flexRender(
                         cell?.column?.columnDef.cell,
                         cell?.getContext()
@@ -162,7 +163,7 @@ export function DataTable({
               <TableRow>
                 <TableCell
                   colSpan={columns?.length}
-                  className="h-24 text-center"
+                  className="h-16 text-base text-center"
                 >
                   No results.
                 </TableCell>

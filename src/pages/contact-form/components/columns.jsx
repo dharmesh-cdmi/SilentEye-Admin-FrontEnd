@@ -25,7 +25,7 @@ export default function ContactColums(contactRefetch) {
         </div>
       ),
       cell: ({ row }) => (
-        <div className="text-black font-medium text-center opacity-60 ">
+        <div className="text-base text-black font-normal text-center opacity-60 ">
           #{Number(row.id) + 1}
         </div>
       ),
