@@ -36,9 +36,7 @@ const schema = Yup.object({
   status: Yup.string()
     .oneOf(["Pending", "Approved", "Rejected", "Refunded", "True Refunded"])
     .required("Status is required"),
-  message: Yup.string()
-    .required("Message is required")
-    .min(10, "Message should be at least 10 characters"),
+  reason: Yup.string().required("Message is required"),
 });
 
 const optionColor = {
@@ -71,7 +69,7 @@ export default function EditRefundForm({
       try {
         const res = await refundMutation({
           status: values.status,
-          message: values.message,
+          reason: values.reason,
         });
         dataRefetch();
         setOpen(false);
@@ -181,26 +179,26 @@ export default function EditRefundForm({
                 <div className="relative w-full">
                   <textarea
                     rows={3}
-                    name="message"
+                    name="reason"
                     className={cn(
                       "h-full w-full px-5 py-2 outline-none",
-                      formik.errors.message && "border border-rose-500"
+                      formik.errors.reason && "border border-rose-500"
                     )}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.message}
+                    value={formik.values.reason}
                     placeholder="Write your message"
                   >
-                    {formik.values.message}
+                    {formik.values.reason}
                   </textarea>
 
-                  {formik.errors.message && (
+                  {formik.errors.reason && (
                     <Tooltip>
                       <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
                         <Info size={20} />
                       </TooltipTrigger>
                       <TooltipContent className="border-none bg-rose-50 text-rose-500">
-                        {formik.errors.message}
+                        {formik.errors.reason}
                       </TooltipContent>
                     </Tooltip>
                   )}
