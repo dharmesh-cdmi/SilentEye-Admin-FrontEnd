@@ -16,6 +16,7 @@ import useFilteredParams from "@/hooks/useFilterParams";
 import { fileDownload } from "@/lib/utils";
 import CountryOrder from "@/components/common/country-order";
 import LimitSelector from "@/components/common/limit-selector";
+import { formatDate } from "@/utils/dateConfig";
 
 export default function Orders() {
   // this is tabsConfig
@@ -38,8 +39,8 @@ export default function Orders() {
       status: isActive,
       search: searchTerm || null,
       country: selectedCountries || null,
-      startDate: dateRange.from || null,
-      endDate: dateRange.to || null,
+      startDate: formatDate(dateRange.from) || null,
+      endDate: formatDate(dateRange.to) || null,
       page: currentPage,
       limit: limit,
     }),

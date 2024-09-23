@@ -12,6 +12,7 @@ import { fileDownload, fileDownloadPost } from "@/lib/utils";
 import CommonButton from "@/components/ui/common-button";
 import { useState } from "react";
 import Header from "@/components/common/header";
+import { formatDate } from "@/utils/dateConfig";
 
 const Home = () => {
   const [dateRange, setDateRange] = useState({ from: null, to: null });
@@ -24,8 +25,8 @@ const Home = () => {
   };
 
   const analyticsFilter = {
-    startDate: dateRange.from || null,
-    endDate: dateRange.to || null,
+    startDate: formatDate(dateRange.from) || null,
+    endDate: formatDate(dateRange.to) || null,
   };
   const filterParams = useFilteredParams(analyticsFilter);
 
@@ -139,7 +140,7 @@ const Home = () => {
                 )}
               </div>
 
-              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
+              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-2 gap-5">
                 <HomeCard
                   title="Visitor"
                   value={analyticsData?.visitorDetails?.totalVisitorsCount}
@@ -159,7 +160,7 @@ const Home = () => {
               amount="$32,000.00"
             />  */}
               </div>
-              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-3 gap-5">
+              <div className="mt-[30px] grid lg:grid-cols-3 xl:grid-cols-5 grid-cols-2 md:grid-cols-2 gap-5">
                 <HomeCard
                   title="Payment Initiated"
                   value={analyticsData?.orders?.paymentInitiated?.count}

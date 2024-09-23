@@ -94,7 +94,7 @@ export default function CountryOrder({ selectedCountries, setSelectedCountries }
                     : "bg-white border border-gray-300"
                 )}
               />
-              <span className="text-sm font-normal">All countriesdata</span>
+              <span className="text-sm font-normal">All Countries</span>
             </div>
           </div>
           <div className="space-y-2 max-h-80 overflow-y-auto">

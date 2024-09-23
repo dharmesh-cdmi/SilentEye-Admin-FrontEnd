@@ -19,6 +19,7 @@ import { TrashIcon } from "@/assets/icons";
 import toast from "react-hot-toast";
 import adminAPI from "@/api/adminAPI";
 import LimitSelector from "@/components/common/limit-selector";
+import { formatDate } from "@/utils/dateConfig";
 
 export default function Users() {
   // this is tabsConfig
@@ -58,10 +59,10 @@ export default function Users() {
       params.append("country", selectedCountries.join(","));
     }
     if (dateRange?.start) {
-      params.append("fromDate", dateRange.start);
+      params.append("fromDate", formatDate(dateRange.start));
     }
     if (dateRange?.end) {
-      params.append("toDate", dateRange.end);
+      params.append("toDate", formatDate(dateRange.end));
     }
     if (processSelected && processSelected.length > 0) {
       params.append("process", processSelected);

@@ -38,7 +38,7 @@ export default function Plans() {
     { value: "upsell", icon: OrdersIcon, label: "UpSell" },
     { value: "addons", icon: AddonsIcon, label: "Add Ons" },
     { value: "products", icon: ProductsIcon, label: "Products" },
-    { value: "shipping", icon: Plane, label: "Shipping" },
+    { value: "shipping", icon: Plane, label: "Shippings" },
   ];
   const [isActive, setIsActive] = useState("subscription");
   const [searchTerm, setSearchTerm] = useState("");

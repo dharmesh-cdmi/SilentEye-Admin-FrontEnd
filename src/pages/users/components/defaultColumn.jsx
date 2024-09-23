@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/custom/button";
 import { useState } from "react";
 import DeleteModal from "@/components/common/modals/delet-modal";
-import { formatDate } from "@/utils/dateConfig";
+import { formatDatewithTime } from "@/utils/dateConfig";
 import { UserAPI } from "@/api/endpoints";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RightDrawer } from "@/components/common/drawers/common-right-drawer";
@@ -179,7 +179,7 @@ export const DefaultColumn = ({ UserRefetch }) => {
         </div>
       ),
       cell: ({ row }) => {
-        return <div className="">{formatDate(row?.original?.joined)}</div>;
+        return <div className="">{formatDatewithTime(row?.original?.joined)}</div>;
       },
     },
     {
@@ -231,9 +231,9 @@ export const DefaultColumn = ({ UserRefetch }) => {
           <div className="flex justify-start items-center space-x-2 w-[120px]">
             {row?.original?.device && row?.original?.deviceType === "IOS" ? (
               <IosIcon size={20} />
-            ) : row?.original?.deviceType === "android" ? (
+            ) : row?.original?.deviceType === "Android" ? (
               <AndroidIcon size={20} />
-            ) : row?.original?.deviceType === "laptop" ? (
+            ) : row?.original?.deviceType === "Browser" ? (
               <Laptop2Icon size={20} />
             ) : (
               <AndroidIcon size={20} />
