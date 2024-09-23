@@ -94,7 +94,7 @@ const CouponForm = ({
         <DialogTrigger>
           <span onClick={() => setOpen(true)}>{children}</span>
         </DialogTrigger>
-        <DialogContent className="max-w-xl p-0">
+        <DialogContent className="max-w-lg p-0 rounded-xl">
           <DialogHeader className="flex flex-row items-center gap-5 p-4 border-b">
             <DialogClose asChild>
               <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-50 border shadow-sm">
@@ -103,7 +103,7 @@ const CouponForm = ({
             </DialogClose>
 
             <div className="h-full">
-              <DialogTitle className="flex items-center gap-2 font-normal text-2xl">
+              <DialogTitle className="flex items-center gap-2 font-normal text-xl lg:text-2xl text-nowrap">
                 <DiscountSqaureIcon size={32} />
                 {isEmptyObject(initialValues)
                   ? "Add New Coupon"

@@ -66,7 +66,7 @@ export default function SettingDialog() {
           </DialogClose>
 
           <div>
-            <DialogTitle className="flex items-center gap-3 font-normal text-xl">
+            <DialogTitle className="flex items-center gap-3 font-normal text-lg lg:text-2xl text-nowrap">
               <RefundIcons size={30} /> Edit Refund Request Durations
             </DialogTitle>
           </div>

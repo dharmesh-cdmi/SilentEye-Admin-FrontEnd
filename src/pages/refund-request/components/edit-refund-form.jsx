@@ -108,7 +108,7 @@ export default function EditRefundForm({
               </Button>
             </DialogClose>
             <div>
-              <DialogTitle className="flex items-center gap-3 font-normal text-xl">
+              <DialogTitle className="flex items-center gap-3 font-normal text-xl lg:text-2xl text-nowrap">
                 <RefundIcons size={30} /> Edit Refund Request
               </DialogTitle>
             </div>
