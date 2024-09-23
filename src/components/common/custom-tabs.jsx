@@ -31,7 +31,7 @@ export default function CustomTabs({ tabs, setIsActive, className, setData }) {
                 className="w-6 h-6 rounded-full  flex justify-center items-center "
               />
             )}
-            <h3 className="text-[18px] px-1 font-medium">
+            <h3 className="text-[18px] px-1 font-normal">
               {tab.label || tab?.title}
             </h3>
           </TabsTrigger>

@@ -125,7 +125,7 @@ const CouponForm = ({
                           "h-12 w-full px-5 outline-none",
                           formik.touched.coupon &&
                             formik.errors.coupon &&
-                            "border border-red-400"
+                            "border border-red-400 rounded-tr-lg"
                         )}
                         name="coupon"
                         type="text"
@@ -292,7 +292,7 @@ const CouponForm = ({
                         "relative h-full flex items-center",
                         formik.touched.useLimit &&
                           formik.errors.useLimit &&
-                          "border border-red-500"
+                          "border border-red-500 rounded-br-lg"
                       )}
                     >
                       <div className="w-full flex flex-col">

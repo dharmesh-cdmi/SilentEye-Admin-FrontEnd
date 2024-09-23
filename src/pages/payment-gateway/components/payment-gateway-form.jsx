@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Info, Package, Plus } from "lucide-react";
+import { ArrowLeft, Image, Info, Plus } from "lucide-react";
 import { Button } from "@/components/custom/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PROD_IMG_Prefix } from "@/api/endpoints";
+import { DolarRoundIcon } from "@/assets/icons";
 
 const validationSchema = Yup.object({
   status: Yup.string().default("test").required("Order mode is required"),
@@ -60,8 +61,7 @@ const PaymentGatewayForm = ({
       } else if (typeof initialValues.icon === "string") {
         try {
           const file = await fetchImageAsFile(
-            PROD_IMG_Prefix + initialValues.icon,
-            "icon.png"
+            PROD_IMG_Prefix + initialValues.icon
           );
           const preview = URL.createObjectURL(file);
           setIconPreview(preview);
@@ -109,7 +109,7 @@ const PaymentGatewayForm = ({
         <DialogTrigger asChild>
           <span onClick={() => setOpen(true)}>{trigger}</span>
         </DialogTrigger>
-        <DialogContent className="max-w-2xl p-0 !rounded-xl">
+        <DialogContent className="max-w-xl p-0 !rounded-xl">
           <DialogHeader className="flex flex-row gap-5 p-4 border-b">
             <DialogClose asChild>
               <Button className="w-12 h-10 p-3 bg-white text-black hover:bg-gray-200 border shadow">
@@ -117,8 +117,8 @@ const PaymentGatewayForm = ({
               </Button>
             </DialogClose>
             <div>
-              <DialogTitle className="flex items-center gap-3">
-                <Package />
+              <DialogTitle className="flex items-center gap-2 font-normal text-2xl">
+                <DolarRoundIcon size={32} />
                 {isEmptyObject(initialValues)
                   ? "Add New Payment Gateway"
                   : "Edit Payment Gateway"}
@@ -219,10 +219,10 @@ const PaymentGatewayForm = ({
                           className="h-12 w-14 object-fill aspect-square p-1"
                         />
                       ) : (
-                        <Package />
+                        <Image />
                       )}
                     </div>
-                    <div className="w-full flex flex-col">
+                    <div className="h-full w-full flex flex-col bg-black/10">
                       <div className="w-full flex items-center gap-2 py-2.5 cursor-pointer px-3">
                         <Plus size={18} />
                         <input
@@ -294,7 +294,7 @@ const PaymentGatewayForm = ({
                       "h-12 w-full px-5 outline-none",
                       formik.touched.saltKey &&
                         formik.errors.saltKey &&
-                        "border border-red-400"
+                        "border border-red-400 rounded-br-lg"
                     )}
                     name="saltKey"
                     value={formik.values.saltKey}

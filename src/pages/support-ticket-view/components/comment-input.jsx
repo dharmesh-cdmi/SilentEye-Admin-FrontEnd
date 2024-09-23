@@ -5,11 +5,11 @@ import * as Yup from "yup";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { SupportTicketAPI } from "@/api/endpoints";
+import { MessageReplyIcon } from "@/assets/icons";
+import Spinner from "@/components/common/Spinner";
 
 const validationSchema = Yup.object({
-  comment: Yup.string()
-    .required("Comment is required")
-    .min(5, "Comment should be at least 5 characters"),
+  comment: Yup.string().required("Comment is required"),
 });
 
 export default function CommentInput({ refetch, ticketId }) {
@@ -42,11 +42,11 @@ export default function CommentInput({ refetch, ticketId }) {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="flex justify-between border-t"
+      className="flex justify-between relative"
     >
       <input
         className={cn(
-          "w-full py-3 px-4 outline-none",
+          "w-full py-3 px-4 outline-none border-y rounded-bl-xl",
           formik.touched.comment &&
             formik.errors.comment &&
             "border border-red-500"
@@ -61,9 +61,19 @@ export default function CommentInput({ refetch, ticketId }) {
       <button
         type="submit"
         disabled={loading}
-        className="px-4 bg-black text-white"
+        className="flex items-center gap-1.5 px-4 bg-black text-base text-white"
       >
-        {loading ? "Sending" : "Reply"}
+        {loading ? (
+          <>
+            <Spinner />
+            Sending
+          </>
+        ) : (
+          <>
+            <MessageReplyIcon />
+            Reply
+          </>
+        )}
       </button>
     </form>
   );

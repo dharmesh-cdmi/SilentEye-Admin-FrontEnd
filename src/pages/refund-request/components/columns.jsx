@@ -63,7 +63,7 @@ export default function RefundColumns(refundRefecth) {
         </div>
       ),
       cell: ({ row }) => (
-        <div className="text-black font-medium text-center text-nowrap opacity-60">
+        <div className="text-base text-black font-normal text-center text-nowrap opacity-60">
           #{row.getValue("index")}
         </div>
       ),
@@ -79,7 +79,7 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-base text-black font-medium opacity-60">
+          <div className="text-base text-black font-normal opacity-60">
             #{row.getValue("requestId")}
           </div>
         );
@@ -122,7 +122,7 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="text-nowrap text-base text-black font-medium">
+          <div className="text-nowrap text-base text-black font-normal">
             {row.getValue("email")}
           </div>
         );
@@ -138,7 +138,7 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="flex items-center gap-2 text-base text-black font-medium">
+          <div className="flex items-center gap-2 text-base text-black font-normal">
             {row.getValue("planId")?.name ? (
               <>
                 <PlanIcon size={22} className="fill-none" />
@@ -161,7 +161,7 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="flex items-end text-base text-black font-medium">
+          <div className="flex items-end gap-0.5 text-base text-black font-normal">
             <span>$</span>
             <h3 className="text-xl">
               {row.original.amount ? Math.round(row.original.amount) : "00"}
@@ -206,7 +206,7 @@ export default function RefundColumns(refundRefecth) {
       ),
       cell: ({ row }) => {
         return (
-          <div className="max-w-40 truncate sm:max-w-72 md:max-w-[31rem] text-base text-black font-medium">
+          <div className="text-nowrap text-base text-black font-normal">
             {formatDateTime(row.original.createdAt)}
           </div>
         );

@@ -44,7 +44,7 @@ const RefundSettingForm = ({ children, initialValues, onSubmit }) => {
                     "h-12 w-full px-5 outline-none",
                     formik.touched.underProcessing &&
                       formik.errors.underProcessing &&
-                      "border border-red-400"
+                      "border border-red-400 rounded-tr-lg"
                   )}
                   name="underProcessing"
                   type="text"
@@ -115,7 +115,7 @@ const RefundSettingForm = ({ children, initialValues, onSubmit }) => {
                     "h-12 w-full px-5 outline-none",
                     formik.touched.refunded &&
                       formik.errors.refunded &&
-                      "border border-red-400"
+                      "border border-red-400 rounded-br-lg"
                   )}
                   name="refunded"
                   type="text"
