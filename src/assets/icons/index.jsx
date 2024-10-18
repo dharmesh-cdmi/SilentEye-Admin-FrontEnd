@@ -69,10 +69,10 @@ const EmailIcon = ({ className = "", size = 20 }) => (
   </svg>
 );
 
-const PurchasedIcon = ({ className = "", width = 20, height = 20 }) => (
+const PurchasedIcon = ({ className = "", size=20 }) => (
   <svg
-    width={width}
-    height={height}
+    width={size}
+    height={size}
     viewBox="0 0 20 20"
     className={className}
     fill="none"
