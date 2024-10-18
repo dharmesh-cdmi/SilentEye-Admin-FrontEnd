@@ -187,7 +187,7 @@ export default function TicketColumns(ticketRefecth) {
       cell: ({ row }) => {
         return (
           <div className="w-56 line-clamp-2 font-normal text-base text-black">
-            {row.original.lastReply || "-"}
+            {row.original.lastMessage || "-"}
           </div>
         );
       },
