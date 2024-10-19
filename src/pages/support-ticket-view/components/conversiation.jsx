@@ -1,8 +1,20 @@
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
 export default function Conversiation({ comments }) {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [comments]);
+
   return (
-    <div className="max-h-[28rem] overflow-y-scroll px-4 py-6 flex flex-col gap-y-3 gap-x-10">
+    <div
+      ref={containerRef}
+      className="h-full overflow-y-scroll px-4 py-6 flex flex-col gap-y-3 gap-x-10"
+    >
       {comments.map(({ text, createdBy, _id }) => (
         <Message key={_id} message={text} isOwner={createdBy === "admin"} />
       ))}

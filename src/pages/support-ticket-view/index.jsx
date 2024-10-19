@@ -12,6 +12,7 @@ import { cn, formatDateTime } from "@/lib/utils";
 import Header from "@/components/common/header";
 import Loader from "@/components/common/loader";
 import { Ban, XCircleIcon } from "lucide-react";
+import { IconReload } from "@tabler/icons-react";
 import useUpdate from "@/hooks/use-update";
 import useDelete from "@/hooks/use-delete";
 import useGet from "@/hooks/use-get";
@@ -126,11 +127,17 @@ export default function SupportTicketView() {
 
       <div className="w-full flex flex-col divide-y-[1px] border-x border-t rounded-xl overflow-hidden">
         <div className="flex justify-between gap-4">
-          <div className="w-1/2 inline-flex items-center text-xl px-5">
+          <div className="w-1/2 inline-flex items-center text-base lg:text-xl px-5 overflow-x-scroll">
             {ticketData?.user?.email}
           </div>
 
           <div className="w-1/2 overflow-x-scroll flex xl:justify-end divide-x-[1.5px]">
+            <button
+              onClick={ticketRefetch}
+              className="min-w-fit inline-flex items-center gap-2 text-xl text-nowrap py-3 px-5 border-l hover:bg-black hover:text-white duration-300"
+            >
+              <IconReload />
+            </button>
             <button
               onClick={handleClose}
               className="min-w-fit inline-flex items-center gap-2 text-xl text-nowrap py-3 px-5 border-l hover:bg-black hover:text-white duration-300"

@@ -117,7 +117,7 @@ const PaymentGatewayForm = ({
               </Button>
             </DialogClose>
             <div>
-              <DialogTitle className="flex items-center gap-2 font-normal text-2xl">
+              <DialogTitle className="flex items-center gap-2 font-normal text-xl lg:text-2xl text-nowrap">
                 <DolarRoundIcon size={32} />
                 {isEmptyObject(initialValues)
                   ? "Add New Payment Gateway"

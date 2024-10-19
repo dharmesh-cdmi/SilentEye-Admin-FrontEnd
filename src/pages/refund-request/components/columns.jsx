@@ -8,8 +8,10 @@ import {
   DolarIcon,
   EditIcon,
   EmailIcon,
+  MessageIcon,
   PersonQuestionMarkIcon,
   PlanIcon,
+  PlanStandardIcon,
   PointerIcon,
   TrashIcon,
 } from "@/assets/icons";
@@ -137,12 +139,15 @@ export default function RefundColumns(refundRefecth) {
         </div>
       ),
       cell: ({ row }) => {
+        const plan = row.original?.plan?.name;
+        const IconPlan = plan === "Standard" ? PlanStandardIcon : PlanIcon;
+
         return (
           <div className="flex items-center gap-2 text-base text-black font-normal">
-            {row.getValue("planId")?.name ? (
+            {plan ? (
               <>
-                <PlanIcon size={22} className="fill-none" />
-                {row.getValue("planId")?.name}
+                <IconPlan size={20} className="fill-none" />
+                {plan}
               </>
             ) : (
               "-"
@@ -164,7 +169,9 @@ export default function RefundColumns(refundRefecth) {
           <div className="flex items-end gap-0.5 text-base text-black font-normal">
             <span>$</span>
             <h3 className="text-xl">
-              {row.original.amount ? Math.round(row.original.amount) : "00"}
+              {row.original?.plan?.amount
+                ? Math.round(row.original.plan.amount)
+                : "00"}
             </h3>
             <span>.00</span>
           </div>
@@ -192,6 +199,22 @@ export default function RefundColumns(refundRefecth) {
             ) : (
               <p className="w-full text-center">-</p>
             )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "reason",
+      header: () => (
+        <div className="inline-flex items-center gap-2 text-base text-nowrap text-black">
+          <MessageIcon />
+          Reason
+        </div>
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="w-56 line-clamp-2 font-normal text-base text-black">
+            {row.original.reason || "-"}
           </div>
         );
       },

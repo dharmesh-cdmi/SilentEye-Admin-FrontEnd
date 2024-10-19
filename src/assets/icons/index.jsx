@@ -1845,6 +1845,30 @@ const MessageReplyIcon = ({ className, size = 20 }) => (
     />
   </svg>
 );
+
+const PlanStandardIcon = ({ className, size = 20 }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    fill="none"
+  >
+    <path
+      d="M4.81853 3.48493C5.3584 3.06933 5.62834 2.86153 5.93991 2.72769C6.08118 2.66701 6.22807 2.61798 6.37883 2.58117C6.71134 2.5 7.06392 2.5 7.76908 2.5H12.2309C12.9361 2.5 13.2887 2.5 13.6212 2.58117C13.7719 2.61798 13.9188 2.66701 14.0601 2.72769C14.3717 2.86153 14.6416 3.06933 15.1815 3.48493C16.9703 4.86207 17.8648 5.55064 18.1714 6.44232C18.3078 6.83894 18.3588 7.25607 18.3215 7.67051C18.2377 8.60225 17.5316 9.455 16.1194 11.1604L12.7915 15.1794C11.5105 16.7265 10.87 17.5 10 17.5C9.13001 17.5 8.48951 16.7265 7.20849 15.1794L3.8806 11.1604C2.46841 9.455 1.76231 8.60225 1.67851 7.67051C1.64123 7.25607 1.69221 6.83894 1.82859 6.44232C2.13521 5.55064 3.02965 4.86207 4.81853 3.48493Z"
+      stroke="black"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M8.33333 7.0835H11.6667"
+      stroke="black"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 export {
   OrdersIcon,
   RefundIcons,
@@ -1913,4 +1937,5 @@ export {
   DiscountSqaureIcon,
   DolarRoundIcon,
   MessageReplyIcon,
+  PlanStandardIcon,
 };

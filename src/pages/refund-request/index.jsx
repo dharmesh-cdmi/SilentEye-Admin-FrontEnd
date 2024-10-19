@@ -138,8 +138,8 @@ export default function RefundRequest() {
     {
       className:
         "w-fit h-9 px-4 bg-orange-500 hover:shadow-none hover:opacity-90 font-normal text-white text-nowrap shadow-none duration-300",
-      label: "True Refuned",
-      onClick: (table) => handleBulkEdit(table, "True Refuned"),
+      label: "True Refunded",
+      onClick: (table) => handleBulkEdit(table, "True Refunded"),
     },
   ];
 
