@@ -82,3 +82,10 @@ export const fileDownloadPost = async (
     toast.error("Error downloading the file");
   }
 };
+
+export const formatAmount = (amount) => {
+  console.log(amount);
+  if (!amount) return { integer: "00", decimal: "00" };
+  const [integer, decimal] = String(amount).split(".");
+  return { integer, decimal: decimal ? decimal.slice(0, 2) : "00" };
+};

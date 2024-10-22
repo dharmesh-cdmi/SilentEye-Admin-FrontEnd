@@ -21,6 +21,7 @@ import DeleteModal from "@/components/common/modals/delet-modal";
 import { useState } from "react";
 import EditRefundForm from "./edit-refund-form";
 import { RefundRequestAPI } from "@/api/endpoints";
+import { formatAmount } from "@/lib/utils";
 
 const statusVariants = (status) => {
   const variants = {
@@ -165,15 +166,12 @@ export default function RefundColumns(refundRefecth) {
         </div>
       ),
       cell: ({ row }) => {
+        const { integer, decimal } = formatAmount(row.original?.plan?.amount);
         return (
           <div className="flex items-end gap-0.5 text-base text-black font-normal">
             <span>$</span>
-            <h3 className="text-xl">
-              {row.original?.plan?.amount
-                ? Math.round(row.original.plan.amount)
-                : "00"}
-            </h3>
-            <span>.00</span>
+            <h3 className="text-xl">{integer}</h3>
+            <span>.{decimal}</span>
           </div>
         );
       },
