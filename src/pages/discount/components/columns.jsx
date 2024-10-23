@@ -143,15 +143,14 @@ export default function DiscountColumns(discountRefetch) {
         });
 
         const handleStatusChange = async (updatedIsLive) => {
-          setIsLive((prev) => !prev);
           try {
             const res = await discountMutateAsync({
               status: updatedIsLive ? "live" : "test",
             });
             setIsLive(updatedIsLive);
             toast.success(res.data.message);
+            discountRefetch();
           } catch (error) {
-            setIsLive(row.original.status === "test" ? false : true);
             toast.success(
               error.response?.data?.message ||
                 "Failed to change discount status"

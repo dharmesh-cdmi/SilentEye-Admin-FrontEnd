@@ -134,9 +134,9 @@ export default function SupportTicketView() {
           <div className="w-1/2 overflow-x-scroll flex xl:justify-end divide-x-[1.5px]">
             <button
               onClick={ticketRefetch}
-              className="min-w-fit inline-flex items-center gap-2 text-xl text-nowrap py-3 px-5 border-l hover:bg-black hover:text-white duration-300"
+              className="min-w-fit inline-flex items-center gap-2 text-xl text-nowrap py-3 px-5 border-l hover:bg-black hover:text-white duration-300 group"
             >
-              <IconReload />
+              <IconReload className="group-hover:rotate-180 duration-500" />
             </button>
             <button
               onClick={handleClose}

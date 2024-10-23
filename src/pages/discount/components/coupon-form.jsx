@@ -144,7 +144,7 @@ const CouponForm = ({
                         </div>
                       ) : formik.errors.coupon ? (
                         <Tooltip>
-                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
+                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 pr-2">
                             <Info size={20} />
                           </TooltipTrigger>
                           <TooltipContent className="border-none bg-rose-50 text-rose-500">
@@ -198,7 +198,7 @@ const CouponForm = ({
                       {formik.touched.discountPercent &&
                       formik.errors.discountPercent ? (
                         <Tooltip>
-                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
+                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 pr-2">
                             <Info size={20} />
                           </TooltipTrigger>
                           <TooltipContent className="border-none bg-rose-50 text-rose-500">
@@ -231,7 +231,7 @@ const CouponForm = ({
                       <div className="h-full w-full flex justify-between items-center divide-x-[1.5px]">
                         <div className="h-full w-full grid grid-cols-2 divide-x-[1.5px]">
                           <input
-                            className="h-full w-full pl-5 pr-2 outline-none"
+                            className="h-full w-full px-2 outline-none"
                             name="validityDate"
                             type="date"
                             value={formik.values.validityDate}
@@ -242,7 +242,7 @@ const CouponForm = ({
                           />
 
                           <input
-                            className="h-full w-full pl-5 pr-2 outline-none"
+                            className="h-full w-full px-2 outline-none"
                             name="validityTime"
                             type="time"
                             value={formik.values.validityTime}
@@ -253,7 +253,7 @@ const CouponForm = ({
                           />
                         </div>
 
-                        <div className="h-full inline-flex items-center justify-center px-9">
+                        <div className="h-full inline-flex items-center justify-center pl-2 px-5">
                           <Switch
                             name="isValidity"
                             checked={formik.values.isValidity}
@@ -268,7 +268,7 @@ const CouponForm = ({
                       {(formik.errors.validityTime ||
                         formik.errors.validityDate) && (
                         <Tooltip>
-                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
+                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 pr-2">
                             <Info size={20} />
                           </TooltipTrigger>
                           <TooltipContent className="border-none bg-rose-50 text-rose-500">
@@ -309,7 +309,7 @@ const CouponForm = ({
 
                       {formik.touched.useLimit && formik.errors.useLimit ? (
                         <Tooltip>
-                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
+                          <TooltipTrigger className="absolute top-3 right-0 text-rose-500 pr-2">
                             <Info size={20} />
                           </TooltipTrigger>
                           <TooltipContent className="border-none bg-rose-50 text-rose-500">
