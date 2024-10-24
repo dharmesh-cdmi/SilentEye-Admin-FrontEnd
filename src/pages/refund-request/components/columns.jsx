@@ -21,6 +21,8 @@ import DeleteModal from "@/components/common/modals/delet-modal";
 import { useState } from "react";
 import EditRefundForm from "./edit-refund-form";
 import { RefundRequestAPI } from "@/api/endpoints";
+import { formatAmount } from "@/lib/utils";
+import { CustomTooltip } from "@/components/custom/tooltip";
 
 const statusVariants = (status) => {
   const variants = {
@@ -165,15 +167,12 @@ export default function RefundColumns(refundRefecth) {
         </div>
       ),
       cell: ({ row }) => {
+        const { integer, decimal } = formatAmount(row.original?.plan?.amount);
         return (
           <div className="flex items-end gap-0.5 text-base text-black font-normal">
             <span>$</span>
-            <h3 className="text-xl">
-              {row.original?.plan?.amount
-                ? Math.round(row.original.plan.amount)
-                : "00"}
-            </h3>
-            <span>.00</span>
+            <h3 className="text-xl">{integer}</h3>
+            <span>.{decimal}</span>
           </div>
         );
       },
@@ -190,12 +189,17 @@ export default function RefundColumns(refundRefecth) {
         return (
           <div className="flex justify-start text-nowrap text-base text-black font-medium">
             {row.original.type ? (
-              <Badge
-                variant="outline"
-                className="font-normal text-base shadow-md"
-              >
-                {row.original.type}
-              </Badge>
+              <CustomTooltip
+                trigger={
+                  <Badge
+                    variant="outline"
+                    className="font-normal text-base shadow-md"
+                  >
+                    {row.original.type}
+                  </Badge>
+                }
+                content={row.original.reason}
+              />
             ) : (
               <p className="w-full text-center">-</p>
             )}
@@ -204,7 +208,7 @@ export default function RefundColumns(refundRefecth) {
       },
     },
     {
-      accessorKey: "reason",
+      accessorKey: "reasonByAdmin",
       header: () => (
         <div className="inline-flex items-center gap-2 text-base text-nowrap text-black">
           <MessageIcon />
@@ -214,7 +218,7 @@ export default function RefundColumns(refundRefecth) {
       cell: ({ row }) => {
         return (
           <div className="w-56 line-clamp-2 font-normal text-base text-black">
-            {row.original.reason || "-"}
+            {row.original.reasonByAdmin || "-"}
           </div>
         );
       },

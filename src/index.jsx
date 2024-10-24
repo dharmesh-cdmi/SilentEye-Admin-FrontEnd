@@ -10,16 +10,19 @@ import "./index.css";
 import AuthUserProvider from "./context/AuthUserProvider.jsx";
 import { QueryClientProvider } from "@tanstack/react-query";
 import adminQueryClient from "./api/adminQueryClient.js";
+import { TooltipProvider } from "./components/ui/tooltip.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <QueryClientProvider client={adminQueryClient}>
-        <AuthUserProvider>
-          <RouterProvider router={router} />
-          <ToastProvider />
-        </AuthUserProvider>
-      </QueryClientProvider>
+      <TooltipProvider>
+        <QueryClientProvider client={adminQueryClient}>
+          <AuthUserProvider>
+            <RouterProvider router={router} />
+            <ToastProvider />
+          </AuthUserProvider>
+        </QueryClientProvider>
+      </TooltipProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

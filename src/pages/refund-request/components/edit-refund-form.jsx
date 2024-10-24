@@ -36,7 +36,7 @@ const schema = Yup.object({
   status: Yup.string()
     .oneOf(["Pending", "Approved", "Rejected", "Refunded", "True Refunded"])
     .required("Status is required"),
-  reason: Yup.string().required("Message is required"),
+  reasonByAdmin: Yup.string().required("Message is required"),
 });
 
 const optionColor = {
@@ -69,7 +69,8 @@ export default function EditRefundForm({
       try {
         const res = await refundMutation({
           status: values.status,
-          reason: values.reason,
+          reasonByAdmin: values.reasonByAdmin,
+          checked: true,
         });
         dataRefetch();
         setOpen(false);
@@ -179,26 +180,26 @@ export default function EditRefundForm({
                 <div className="relative w-full">
                   <textarea
                     rows={3}
-                    name="reason"
+                    name="reasonByAdmin"
                     className={cn(
                       "h-full w-full px-5 py-2 outline-none",
-                      formik.errors.reason && "border border-rose-500"
+                      formik.errors.reasonByAdmin && "border border-rose-500"
                     )}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.reason}
+                    value={formik.values.reasonByAdmin}
                     placeholder="Write your message"
                   >
-                    {formik.values.reason}
+                    {formik.values.reasonByAdmin}
                   </textarea>
 
-                  {formik.errors.reason && (
+                  {formik.errors.reasonByAdmin && (
                     <Tooltip>
                       <TooltipTrigger className="absolute top-3 right-0 text-rose-500 px-3">
                         <Info size={20} />
                       </TooltipTrigger>
                       <TooltipContent className="border-none bg-rose-50 text-rose-500">
-                        {formik.errors.reason}
+                        {formik.errors.reasonByAdmin}
                       </TooltipContent>
                     </Tooltip>
                   )}
